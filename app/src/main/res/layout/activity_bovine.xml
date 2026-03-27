@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".BovineActivity">
 
     <TextView
         android:id="@+id/txtViewTitle"
@@ -25,20 +25,20 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
-        android:labelFor="@id/editTextBrinco"
-        android:text="@string/cad_bov_text_brinco"
+        android:labelFor="@id/editTextTag"
+        android:text="@string/cad_bov_text_tag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewTitle" />
 
     <EditText
-        android:id="@+id/editTextBrinco"
+        android:id="@+id/editTextTag"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/cade_bov_hint_codeBrinco"
+        android:hint="@string/cade_bov_hint_codeTag"
         android:inputType="text"
         android:text=""
         android:visibility="visible"
@@ -56,7 +56,7 @@
         android:labelFor="@id/editTextName"
         android:text="@string/cad_bov_text_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextBrinco" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTag" />
 
     <EditText
         android:id="@+id/editTextName"
@@ -66,7 +66,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/cad_bov_hint_AnimalName"
+        android:hint="@string/cad_bov_hint_animalName"
         android:inputType="text"
         android:text=""
         android:visibility="visible"
@@ -128,7 +128,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="144dp"
+        android:onClick="cleanFields"
         android:text="@string/cad_bov_btn_text_clear"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSave"
@@ -136,21 +136,21 @@
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.532" />
+        app:layout_constraintVertical_bias="0.179" />
 
     <Button
         android:id="@+id/btnSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="156dp"
-        android:layout_marginTop="176dp"
         android:layout_marginEnd="16dp"
+        android:onClick="saveValues"
         android:text="@string/cad_bov_btn_text_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnClear"
         app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.033" />
+        app:layout_constraintVertical_bias="0.179" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
