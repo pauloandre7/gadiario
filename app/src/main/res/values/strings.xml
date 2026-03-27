@@ -19,4 +19,8 @@
     <string name="reg_bov_toast_text_nameValue">"Nome: "</string>
     <string name="reg_bov_toast_text_birthValue">"Nascimento: "</string>
     <string name="reg_bov_text_vaccines">Vacinas Aplicadas</string>
+    <string name="reg_bov_checkbox_vaccines_respiratory">Vacinas Intranasais</string>
+    <string name="reg_bov_checkbox_vaccines_salmonellosis">Vacina para Salmonelose</string>
+    <string name="reg_bov_toast_text_isVaccinated">Animal Vacinado</string>
+    <string name="reg_bov_toast_text_notVaccinated">Animal Não Vacinado</string>
 </resources>
