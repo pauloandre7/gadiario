@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +18,7 @@ public class BovineActivity extends AppCompatActivity {
     private EditText editTextTag, editTextName, editTextDate;
     private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
     private RadioGroup radioGroupSex;
+    private Spinner spinnerBreed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +31,44 @@ public class BovineActivity extends AppCompatActivity {
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op1));
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op2));
         radioGroupSex = findViewById(R.id.radioGroupSex);
+        spinnerBreed = findViewById(R.id.spinnerBreed);
+
+        // fillSpinner();
     }
+
+    /* First Method to populate Spinner showed by teacher
+        The another one is using String Arrays at resources
+    private void fillSpinner(){
+
+        // Spinner's data (First Method)
+        List<String> breedList = new ArrayList<>();
+
+        // de Corte (Zebuínas e Taurinas)
+        breedList.add("Nelore");
+        breedList.add("Angus");
+        breedList.add("Brahman");
+        breedList.add("Brangus");
+        breedList.add("Senepol");
+
+        // Leiteiras
+        breedList.add("Holandesa");
+        breedList.add("Gir Leiteiro");
+        breedList.add("Girolando");
+        breedList.add("Jersey");
+
+        // Outras / Mestiços
+        breedList.add("Guzerá");
+        breedList.add("Tabapuã");
+        breedList.add("Cruzamento Industrial");
+
+        // Renderiza cada linha do array no Spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                                                        android.R.layout.simple_list_item_1,
+                                                        breedList);
+
+        spinnerBreed.setAdapter(adapter );
+    }
+    */
 
     public void cleanFields(View view){
         editTextTag.setText(null);
@@ -37,6 +76,7 @@ public class BovineActivity extends AppCompatActivity {
         editTextDate.setText(null);
         checkBoxVaccines.get(0).setChecked(false);
         radioGroupSex.clearCheck();
+        spinnerBreed.setSelection(0);
 
         Toast.makeText(this,
                 R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
@@ -98,11 +138,21 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
+        String animalBreed = spinnerBreed.getSelectedItem().toString();
+        if (animalBreed == null){
+
+            Toast.makeText(this,
+                            R.string.reg_bov_toast_text_warningSpinnerEmpty,
+                            Toast.LENGTH_LONG);
+        }
+
         String resultFields = getString(R.string.reg_bov_toast_text_tagValue)+tag+"\n"
                             +getString(R.string.reg_bov_toast_text_nameValue)+name+"\n"
                             +getString(R.string.reg_bov_toast_text_birthValue)+date+"\n"
                             +(isVaccinated ? getString(R.string.reg_bov_toast_text_isVaccinated) : getString(R.string.reg_bov_toast_text_notVaccinated))+"\n"
-                            +getString(R.string.reg_bov_toast_text_sexValue)+animalSex;
+                            +getString(R.string.reg_bov_toast_text_sexValue)+animalSex+"\n"
+                            +getString(R.string.reg_bov_toast_text_breedValue)+animalBreed;
+
         Toast.makeText(this,
                         resultFields, Toast.LENGTH_LONG).show();
     }
