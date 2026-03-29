@@ -70,11 +70,12 @@ public class BovineActivity extends AppCompatActivity {
     }
     */
 
-    public void cleanFields(View view){
+    public void clearFields(View view){
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
         checkBoxVaccines.get(0).setChecked(false);
+        checkBoxVaccines.get(1).setChecked(false);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
 
