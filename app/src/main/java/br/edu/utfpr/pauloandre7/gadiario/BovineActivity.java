@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +16,7 @@ public class BovineActivity extends AppCompatActivity {
 
     private EditText editTextTag, editTextName, editTextDate;
     private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
+    private RadioGroup radioGroupSex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +28,7 @@ public class BovineActivity extends AppCompatActivity {
         editTextDate = findViewById(R.id.editTextDate);
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op1));
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op2));
+        radioGroupSex = findViewById(R.id.radioGroupSex);
     }
 
     public void cleanFields(View view){
@@ -33,6 +36,7 @@ public class BovineActivity extends AppCompatActivity {
         editTextName.setText(null);
         editTextDate.setText(null);
         checkBoxVaccines.get(0).setChecked(false);
+        radioGroupSex.clearCheck();
 
         Toast.makeText(this,
                 R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
@@ -77,10 +81,28 @@ public class BovineActivity extends AppCompatActivity {
             }
         }
 
+        String animalSex;
+        int radioButtonId = radioGroupSex.getCheckedRadioButtonId();
+        if (radioButtonId == R.id.radioBtnFemale){
+
+            animalSex = getString(R.string.reg_bov_text_female);
+        } else if (radioButtonId == R.id.radioBtnMale){
+
+            animalSex = getString(R.string.reg_bov_text_male);
+        } else{
+            // if the animal sex was not selected
+            Toast.makeText(this,
+                    R.string.reg_bov_toast_text_animalSexMissing, Toast.LENGTH_LONG).show();
+
+            radioGroupSex.requestFocus();
+            return;
+        }
+
         String resultFields = getString(R.string.reg_bov_toast_text_tagValue)+tag+"\n"
                             +getString(R.string.reg_bov_toast_text_nameValue)+name+"\n"
                             +getString(R.string.reg_bov_toast_text_birthValue)+date+"\n"
-                            +(isVaccinated ? getString(R.string.reg_bov_toast_text_isVaccinated) : getString(R.string.reg_bov_toast_text_notVaccinated));
+                            +(isVaccinated ? getString(R.string.reg_bov_toast_text_isVaccinated) : getString(R.string.reg_bov_toast_text_notVaccinated))+"\n"
+                            +getString(R.string.reg_bov_toast_text_sexValue)+animalSex;
         Toast.makeText(this,
                         resultFields, Toast.LENGTH_LONG).show();
     }
