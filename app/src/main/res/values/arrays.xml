@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="animalBreed">
+        <item>Nelore</item>
+        <item>Angus</item>
+        <item>Brahman</item>
+        <item>Brangus</item>
+        <item>Senepol</item>
+        <item>Holandesa</item>
+        <item>Gir Leiteiro</item>
+        <item>Girolando</item>
+        <item>Jersey</item>
+        <item>Guzerá</item>
+        <item>Tabapuã</item>
+        <item>Cruzamento Industrial</item>
+    </string-array>
+
+</resources>

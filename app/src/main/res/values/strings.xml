@@ -25,4 +25,7 @@
     <string name="reg_bov_toast_text_notVaccinated">Animal Não Vacinado</string>
     <string name="reg_bov_toast_text_animalSexMissing">O sexo do animal não foi informado!</string>
     <string name="reg_bov_toast_text_sexValue">"Sexo: "</string>
+    <string name="reg_bov_label_breed">Raça do Animal</string>
+    <string name="reg_bov_toast_text_warningSpinnerEmpty">O Spinner de raças não possui valores!</string>
+    <string name="reg_bov_toast_text_breedValue">"Raça: "</string>
 </resources>
