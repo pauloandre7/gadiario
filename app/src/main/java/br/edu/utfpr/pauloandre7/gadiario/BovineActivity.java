@@ -75,6 +75,7 @@ public class BovineActivity extends AppCompatActivity {
         editTextName.setText(null);
         editTextDate.setText(null);
         checkBoxVaccines.get(0).setChecked(false);
+        checkBoxVaccines.get(1).setChecked(false);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
 
