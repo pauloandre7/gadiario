@@ -70,7 +70,7 @@ public class BovineActivity extends AppCompatActivity {
     }
     */
 
-    public void cleanFields(View view){
+    public void clearFields(View view){
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
