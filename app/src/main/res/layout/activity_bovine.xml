@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioGroupSex"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -132,7 +132,7 @@
         android:labelFor="@id/editTextDate"
         android:text="@string/reg_bov_text_vaccines"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupSex" />
 
     <Button
         android:id="@+id/btnClear"
