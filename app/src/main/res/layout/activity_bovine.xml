@@ -11,7 +11,7 @@
         android:id="@+id/txtViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/cad_bov_title"
+        android:text="@string/reg_bov_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.056"
@@ -26,7 +26,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:labelFor="@id/editTextTag"
-        android:text="@string/cad_bov_text_tag"
+        android:text="@string/reg_bov_text_tag"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtViewTitle" />
 
@@ -38,7 +38,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/cade_bov_hint_codeTag"
+        android:hint="@string/reg_bov_hint_codeTag"
         android:inputType="text"
         android:text=""
         android:visibility="visible"
@@ -54,7 +54,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:labelFor="@id/editTextName"
-        android:text="@string/cad_bov_text_name"
+        android:text="@string/reg_bov_text_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextTag" />
 
@@ -66,7 +66,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:ems="10"
-        android:hint="@string/cad_bov_hint_animalName"
+        android:hint="@string/reg_bov_hint_animalName"
         android:inputType="text"
         android:text=""
         android:visibility="visible"
@@ -82,7 +82,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="28dp"
         android:labelFor="@id/editTextDate"
-        android:text="@string/cad_bov_text_birth"
+        android:text="@string/reg_bov_text_birth"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
@@ -92,7 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:ems="10"
-        android:hint="@string/cad_bov_hint_date"
+        android:hint="@string/reg_bov_hint_date"
         android:inputType="date"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.079"
@@ -100,7 +100,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewDate" />
 
     <RadioGroup
-        android:id="@+id/radioGroup"
+        android:id="@+id/radioGroupSex"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -114,14 +114,25 @@
             android:id="@+id/radioBtnMale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cad_bov_text_male" />
+            android:text="@string/reg_bov_text_male" />
 
         <RadioButton
             android:id="@+id/radioBtnFemale"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cad_bov_text_female" />
+            android:text="@string/reg_bov_text_female" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/textViewVaccines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:labelFor="@id/editTextDate"
+        android:text="@string/reg_bov_text_vaccines"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupSex" />
 
     <Button
         android:id="@+id/btnClear"
@@ -129,14 +140,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:onClick="cleanFields"
-        android:text="@string/cad_bov_btn_text_clear"
+        android:text="@string/reg_bov_btn_text_clear"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnSave"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.179" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_vaccines_op2"
+        app:layout_constraintVertical_bias="0.836" />
 
     <Button
         android:id="@+id/btnSave"
@@ -145,12 +156,31 @@
         android:layout_marginStart="156dp"
         android:layout_marginEnd="16dp"
         android:onClick="saveValues"
-        android:text="@string/cad_bov_btn_text_save"
+        android:text="@string/reg_bov_btn_text_save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnClear"
-        app:layout_constraintTop_toBottomOf="@+id/radioGroup"
-        app:layout_constraintVertical_bias="0.179" />
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_vaccines_op2"
+        app:layout_constraintVertical_bias="0.84" />
+
+    <CheckBox
+        android:id="@+id/checkBox_vaccines_op1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/reg_bov_checkbox_vaccines_respiratory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewVaccines" />
+
+    <CheckBox
+        android:id="@+id/checkBox_vaccines_op2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/reg_bov_checkbox_vaccines_salmonellosis"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/checkBox_vaccines_op1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
