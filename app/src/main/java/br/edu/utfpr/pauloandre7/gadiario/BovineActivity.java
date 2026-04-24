@@ -148,11 +148,11 @@ public class BovineActivity extends AppCompatActivity {
         }
 
         String resultFields = getString(R.string.reg_bov_toast_text_tagValue)+tag+"\n"
-                            +getString(R.string.reg_bov_toast_text_nameValue)+name+"\n"
-                            +getString(R.string.reg_bov_toast_text_birthValue)+date+"\n"
-                            +(isVaccinated ? getString(R.string.reg_bov_toast_text_isVaccinated) : getString(R.string.reg_bov_toast_text_notVaccinated))+"\n"
-                            +getString(R.string.reg_bov_toast_text_sexValue)+animalSex+"\n"
-                            +getString(R.string.reg_bov_toast_text_breedValue)+animalBreed;
+                            +getString(R.string.bov_list_text_nameValue)+name+"\n"
+                            +getString(R.string.bov_list_text_birthValue)+date+"\n"
+                            +(isVaccinated ? getString(R.string.bov_list_text_isVaccinated) : getString(R.string.bov_list_text_notVaccinated))+"\n"
+                            +getString(R.string.bov_list_text_sexValue)+animalSex+"\n"
+                            +getString(R.string.bov_list_text_breedValue)+animalBreed;
 
         Toast.makeText(this,
                         resultFields, Toast.LENGTH_LONG).show();

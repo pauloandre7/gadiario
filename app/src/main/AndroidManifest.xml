@@ -12,13 +12,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gadiario">
         <activity
-            android:name=".BovineActivity"
+            android:name=".BovinesActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".BovineActivity"
+            android:exported="true">
+
         </activity>
     </application>
 
