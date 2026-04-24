@@ -1,8 +1,10 @@
 package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,12 +16,28 @@ public class BovinesActivity extends AppCompatActivity {
     private ListView listViewBovines;
     private List<Bovine> listBovines;
 
+    BovineAdapter adapterBovine;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bovines);
 
         listViewBovines = findViewById(R.id.listViewBovines);
+
+        listViewBovines.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, // ListView
+                                    View view, // Item da List
+                                    int position, long id) {
+
+                Bovine bovine = (Bovine) parent.getItemAtPosition(position);
+
+                Toast.makeText(getApplicationContext(), getString(R.string.bov_toast_bovine_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
+
         fillListBovines();
     }
 
@@ -55,10 +73,8 @@ public class BovinesActivity extends AppCompatActivity {
             listBovines.add(bovine);
         }
 
-        ArrayAdapter<Bovine> adapter = new ArrayAdapter<>(this,
-                                                            android.R.layout.simple_list_item_1,
-                                                            listBovines);
+        adapterBovine = new BovineAdapter(this, listBovines);
 
-        listViewBovines.setAdapter(adapter);
+        listViewBovines.setAdapter(adapterBovine);
     }
 }
