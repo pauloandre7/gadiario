@@ -16,16 +16,19 @@
     <string name="reg_bov_toast_text_tagMissing">Faltou informar o Código do Brinco.</string>
     <string name="reg_bov_toast_text_birthMissing">Faltou informar a data de nascimento.</string>
     <string name="reg_bov_toast_text_tagValue">"Brinco: "</string>
-    <string name="reg_bov_toast_text_nameValue">"Nome: "</string>
-    <string name="reg_bov_toast_text_birthValue">"Nascimento: "</string>
+    <string name="bov_list_text_nameValue">"Nome: "</string>
+    <string name="bov_list_text_birthValue">"Nascimento: "</string>
     <string name="reg_bov_text_vaccines">Vacinas Aplicadas</string>
     <string name="reg_bov_checkbox_vaccines_respiratory">Vacinas Intranasais</string>
     <string name="reg_bov_checkbox_vaccines_salmonellosis">Vacina para Salmonelose</string>
-    <string name="reg_bov_toast_text_isVaccinated">Animal Vacinado</string>
-    <string name="reg_bov_toast_text_notVaccinated">Animal Não Vacinado</string>
+    <string name="bov_list_text_isVaccinated">Animal Vacinado</string>
+    <string name="bov_list_text_notVaccinated">Animal Não Vacinado</string>
     <string name="reg_bov_toast_text_animalSexMissing">O sexo do animal não foi informado!</string>
-    <string name="reg_bov_toast_text_sexValue">"Sexo: "</string>
+    <string name="bov_list_text_sexValue">"Sexo: "</string>
     <string name="reg_bov_label_breed">Raça do Animal</string>
     <string name="reg_bov_toast_text_warningSpinnerEmpty">O Spinner de raças não possui valores!</string>
-    <string name="reg_bov_toast_text_breedValue">"Raça: "</string>
+    <string name="bov_list_text_breedValue">"Raça: "</string>
+    <string name="bov_list_text_VaccineValue">"Vacinação: "</string>
+    <string name="bov_toast_bovine_with_tag">Bovino de tag \"</string>
+    <string name="bov_toast_bovClicked">\" clicado!</string>
 </resources>
