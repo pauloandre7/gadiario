@@ -2,28 +2,47 @@ package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BovinesActivity extends AppCompatActivity {
 
-    private ListView listViewBovines;
+    private RecyclerView recyclerViewBovines;
+
+    // Precisa definir um layout manager para o RecyclerView
+    private RecyclerView.LayoutManager layoutManager;
+
+    // Objeto baseado naquele contrado de clickListener da Recycler
+    private BovineRecyclerViewAdapter.OnItemClickListener onItemClickListener;
     private List<Bovine> listBovines;
 
-    BovineAdapter adapterBovine;
+    BovineRecyclerViewAdapter bovineRecyclerViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bovines);
 
-        listViewBovines = findViewById(R.id.listViewBovines);
+        recyclerViewBovines = findViewById(R.id.recyclerViewBovines);
+
+        // Tipo de de Gerenciador de Layout que expõe linha a linha (padrão vertical)
+        layoutManager = new LinearLayoutManager(this);
+        recyclerViewBovines.setLayoutManager(layoutManager);
+
+        // Otimiza a renderização das linhas com tamanho fixo
+        recyclerViewBovines.setHasFixedSize(true);
+        // Adiciona um divisor de linhas para separar os itens.
+        recyclerViewBovines.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        /*
+            ESSE MÉTODO FUNCIONA APENAS PARA O LISTVIEW
 
         listViewBovines.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -37,7 +56,29 @@ public class BovinesActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+        */
 
+        onItemClickListener = new BovineRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                // Quando o click acontecer, então o comportamento do método definido no contrato
+                // será o mesmo do Listener do ListView.
+
+                Bovine bovine = listBovines.get(position);
+
+                Toast.makeText(getApplicationContext(), getString(R.string.bov_toast_bovine_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                Bovine bovine = listBovines.get(position);
+
+                Toast.makeText(getApplicationContext(), getString(R.string.bov_toast_bovine_with_tag)+bovine.getTag()+
+                                                                getString(R.string.bov_toast_longClick),
+                        Toast.LENGTH_LONG).show();
+            }
+        };
         fillListBovines();
     }
 
@@ -73,8 +114,8 @@ public class BovinesActivity extends AppCompatActivity {
             listBovines.add(bovine);
         }
 
-        adapterBovine = new BovineAdapter(this, listBovines);
+        bovineRecyclerViewAdapter = new BovineRecyclerViewAdapter(this, listBovines, onItemClickListener);
 
-        listViewBovines.setAdapter(adapterBovine);
+        recyclerViewBovines.setAdapter(bovineRecyclerViewAdapter);
     }
 }
