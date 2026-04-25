@@ -1,9 +1,17 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.Gadiario" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.Gadiario" parent="Theme.Material3.Light">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Gadiario" parent="Base.Theme.Gadiario" />
+    <style name="Theme.Gadiario" parent="Base.Theme.Gadiario">
+        <item name="android:statusBarColor">@color/agro_primary_green</item>
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="colorPrimary">@color/agro_primary_green</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSurface">@color/agro_background_cream</item>
+        <item name="colorOnSurface">@color/black</item>
+    </style>
 </resources>

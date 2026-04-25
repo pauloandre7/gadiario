@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!-- Paleta Agro Escuro -->
+    <color name="agro_primary_green">#A5D6A7</color>
+    <color name="agro_secondary_green">#81C784</color>
+    <color name="agro_accent_brown">#D7CCC8</color>
+    <color name="agro_highlight_wheat">#FFE082</color>
+    <color name="agro_background_cream">#1D1B16</color>
+</resources>
