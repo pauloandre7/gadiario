@@ -31,4 +31,5 @@
     <string name="bov_list_text_VaccineValue">"Vacinação: "</string>
     <string name="bov_toast_bovine_with_tag">Bovino de tag \"</string>
     <string name="bov_toast_bovClicked">\" clicado!</string>
+    <string name="bov_toast_longClick">"\" recebeu um click longo! "</string>
 </resources>
