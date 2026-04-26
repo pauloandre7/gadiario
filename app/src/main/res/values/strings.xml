@@ -47,4 +47,5 @@
     </string>
     <string name="about_class_text_about">Sobre</string>
     <string name="bov_list_activityTitle">Lista de Bovinos</string>
+    <string name="bov_list_btn_RegisterBovine">Cadastrar Bovino</string>
 </resources>

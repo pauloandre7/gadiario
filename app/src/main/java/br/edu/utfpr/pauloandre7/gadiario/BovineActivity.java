@@ -1,5 +1,6 @@
 package br.edu.utfpr.pauloandre7.gadiario;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -15,6 +16,14 @@ import java.util.List;
 
 public class BovineActivity extends AppCompatActivity {
 
+    // Constantes de resultado para IntentResult
+    public static final String KEY_TAG = "KEY_TAG";
+    public static final String KEY_NAME = "KEY_NAME";
+    public static final String KEY_BIRTH = "KEY_BIRTH";
+    public static final String KEY_SEX = "KEY_SEX";
+    public static final String KEY_BREED = "KEY_BREED";
+    public static final String KEY_VACCINES = "KEY_VACCINES";
+
     private EditText editTextTag, editTextName, editTextDate;
     private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
     private RadioGroup radioGroupSex;
@@ -24,6 +33,7 @@ public class BovineActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bovine);
+        setTitle(getString(R.string.reg_bov_title));
 
         editTextTag = findViewById(R.id.editTextTag);
         editTextName = findViewById(R.id.editTextName);
@@ -112,24 +122,28 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
-        boolean isVaccinated = false;
+        String[] vaccines = new String[checkBoxVaccines.size()];
+        int cont= 0;
         // For-each em java pega cada elemento que tiver no array e guarda na variável option
         // Cada elemento é considerado como um ciclo, então facilita minha vida na hora de percorrer array.
         for (CheckBox option : checkBoxVaccines){
-            isVaccinated = option.isChecked();
-            if (isVaccinated == true){
-                break;
+            if (option.isChecked()){
+                vaccines[cont] = option.getText().toString();
+            } else {
+                vaccines[cont] = "\n";
             }
+
+            cont++;
         }
 
-        String animalSex;
+        AnimalSex animalSex;
         int radioButtonId = radioGroupSex.getCheckedRadioButtonId();
         if (radioButtonId == R.id.radioBtnFemale){
 
-            animalSex = getString(R.string.reg_bov_text_female);
+            animalSex = AnimalSex.FEMALE;
         } else if (radioButtonId == R.id.radioBtnMale){
 
-            animalSex = getString(R.string.reg_bov_text_male);
+            animalSex = AnimalSex.MALE;
         } else{
             // if the animal sex was not selected
             Toast.makeText(this,
@@ -147,14 +161,22 @@ public class BovineActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG);
         }
 
-        String resultFields = getString(R.string.reg_bov_toast_text_tagValue)+tag+"\n"
-                            +getString(R.string.bov_list_text_nameValue)+name+"\n"
-                            +getString(R.string.bov_list_text_birthValue)+date+"\n"
-                            +(isVaccinated ? getString(R.string.bov_list_text_isVaccinated) : getString(R.string.bov_list_text_notVaccinated))+"\n"
-                            +getString(R.string.bov_list_text_sexValue)+animalSex+"\n"
-                            +getString(R.string.bov_list_text_breedValue)+animalBreed;
+        // Para passar resultados entre activities, é necessário usar um Intent;
+        Intent intentResult = new Intent();
 
-        Toast.makeText(this,
-                        resultFields, Toast.LENGTH_LONG).show();
+
+        // Para passar um objeto construído, é necessário fazer com que seja serializável (mas não é recomendado)
+        intentResult.putExtra(KEY_TAG, tag);
+        intentResult.putExtra(KEY_NAME, name);
+        intentResult.putExtra(KEY_BIRTH, date);
+        intentResult.putExtra(KEY_SEX, animalSex.toString());
+        intentResult.putExtra(KEY_BREED, animalBreed);
+        intentResult.putExtra(KEY_VACCINES, vaccines);
+
+        // seta o resultado com a resposta e o objeto de intenção de resposta;
+        setResult(BovineActivity.RESULT_OK, intentResult);
+
+        // precisa encerrar a activity para que o resultado seja passado;
+        finish();
     }
 }

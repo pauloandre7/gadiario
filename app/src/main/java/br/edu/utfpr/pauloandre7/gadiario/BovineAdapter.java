@@ -88,7 +88,11 @@ public class BovineAdapter extends BaseAdapter {
         if(bovine.getVaccines().isEmpty()){
             holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
         } else {
-            holder.textViewVaccineValue.setText(bovine.getVaccines().get(0));
+            String vaccine_text = "";
+            for(int i = 0; i < bovine.getVaccines().size(); i++){
+                vaccine_text = vaccine_text + bovine.getVaccines().get(i) + " | ";
+            }
+            holder.textViewVaccineValue.setText(vaccine_text);
         }
 
         return convertView;
