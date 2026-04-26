@@ -16,15 +16,17 @@
         android:layout_marginBottom="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="352dp"
+            android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
             android:adjustViewBounds="true"
             android:contentDescription="@string/about_img_text_logoUtfpr"
@@ -33,7 +35,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_Description" />
 
         <TextView
             android:id="@+id/textView_Description"
@@ -52,12 +54,16 @@
         <TextView
             android:id="@+id/textView_StudName"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Paulo André Oliveira da Silva"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:onClick="openAuthorSite"
+            android:text="@string/about_text_author"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_UtfprURL" />
 
         <TextView
             android:id="@+id/textView_Course"
@@ -66,20 +72,34 @@
             android:layout_marginTop="8dp"
             android:text="@string/about_text_EngSoftware"
             android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textView_StudName" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_Email" />
 
         <TextView
             android:id="@+id/textView_Email"
             android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:gravity="center"
+            android:onClick="sendEmailToAuthor"
+            android:text="@string/about_text_email"
+            android:textAlignment="center"
+            android:textColor="@color/agro_primary_green"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView_StudName" />
+
+        <TextView
+            android:id="@+id/textView_UtfprURL"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="paulos.2001@alunos.utfpr.edu.br"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="@+id/imageView"
-            app:layout_constraintStart_toStartOf="@+id/imageView"
-            app:layout_constraintTop_toBottomOf="@+id/textView_Course" />
+            android:autoLink="web"
+            android:text="@string/about_text_utfprSite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
