@@ -1,5 +1,6 @@
 package br.edu.utfpr.pauloandre7.gadiario;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,6 +24,8 @@ public class BovinesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bovines);
 
+        setTitle(getString(R.string.bov_list_activityTitle));
+
         listViewBovines = findViewById(R.id.listViewBovines);
 
         listViewBovines.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -39,6 +42,15 @@ public class BovinesActivity extends AppCompatActivity {
         });
 
         fillListBovines();
+    }
+
+    public void onClickAbout(View view){
+        // Criação de intent explícita: digo onde estou e onde quero ir
+        Intent intentOpen = new Intent(this, AboutActivity.class);
+
+        // start é um método da activity. Passar o intent nesse método irá abrir a activity desejada
+        startActivity(intentOpen);
+
     }
 
     private void fillListBovines(){
