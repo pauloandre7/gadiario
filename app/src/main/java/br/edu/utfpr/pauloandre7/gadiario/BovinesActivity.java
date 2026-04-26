@@ -7,6 +7,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -53,15 +57,81 @@ public class BovinesActivity extends AppCompatActivity {
 
     }
 
+    // A tipagem em Intent é para um contrato genérico;
+    // Se for usar activities mais complexas, é recomendado pelo prof. usar uma intent específica.
+    ActivityResultLauncher<Intent> launcherRegBovine = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    /* Esse método é específico para esse launcher;
+                    * O prof comentou em aula sobre a antiga prática de ter um método desse
+                    * na classe da Activity que receberia os resultados de várias activities. */
+
+                    if (result.getResultCode() == RESULT_OK){
+                        Intent intent = result.getData();
+
+                        // Para receber a resposta aqui, precisa construir Intent de resposta na
+                        // Activity que vai retornar;
+
+                        // abre os resultados em um bundle
+                        if (intent == null){
+                            throw new RuntimeException("Intent is null");
+                        }
+
+                        Bundle bundle = intent.getExtras();
+
+                        if (bundle != null){
+                            String tag = bundle.getString(BovineActivity.KEY_TAG);
+                            String name = bundle.getString(BovineActivity.KEY_NAME);
+                            String date = bundle.getString(BovineActivity.KEY_BIRTH);
+                            String animalSex = bundle.getString(BovineActivity.KEY_SEX);
+                            String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
+                            String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+
+                            Bovine bovine;
+                            if (vaccines != null){
+                                List<String> vaccines_list = List.<String>of(vaccines);
+
+                                bovine = new Bovine(tag, name, date,
+                                                    AnimalSex.valueOf(animalSex), animalBreed,
+                                                    vaccines_list);
+                            } else {
+                                bovine = new Bovine(tag, name, date,
+                                        AnimalSex.valueOf(animalSex), animalBreed,
+                                        null);
+                            }
+
+                            listBovines.add(bovine);
+
+                            // Avisa o adapter que a base de dados dele foi modificada;
+                            adapterBovine.notifyDataSetChanged();
+                        }
+                    }
+                }
+            });
+
+    public void onClickRegisterBov(View view){
+
+        Intent intentOpen = new Intent(this, BovineActivity.class);
+
+        // Aqui utiliza-se o launcher configurado para abrir a activity BovineActivity;
+        // Usando o launcher, ele irá gerir a resposta e chamar o contrato onActivityResult;
+        launcherRegBovine.launch(intentOpen);
+    }
+
     private void fillListBovines(){
+        /* ANTIGA PRÁTICA DE PEGAR VALORES DE ARRAY NO XML
         String[] bovines_tags       = getResources().getStringArray(R.array.bovines_Tags);
         String[] bovines_names      = getResources().getStringArray(R.array.bovines_names);
         String[] bovines_births     = getResources().getStringArray(R.array.bovines_births);
         int[] bovines_sex           = getResources().getIntArray(R.array.bovines_sex);
         String[] bovines_breeds      = getResources().getStringArray(R.array.bovines_breeds);
+        */
 
         listBovines = new ArrayList<>();
 
+        /* ANTIGA PRÁTICA DE CRIAR OBJETOS A PARTIR DOS VALORES DE ARRAY
         Bovine bovine;
         AnimalSex animalSex;
         AnimalSex[] sex_values = AnimalSex.values();
@@ -84,6 +154,7 @@ public class BovinesActivity extends AppCompatActivity {
 
             listBovines.add(bovine);
         }
+        */
 
         adapterBovine = new BovineAdapter(this, listBovines);
 
