@@ -48,4 +48,11 @@
     <string name="about_class_text_about">Sobre</string>
     <string name="bov_list_activityTitle">Lista de Bovinos</string>
     <string name="bov_list_btn_RegisterBovine">Cadastrar Bovino</string>
+    <string name="about_text_utfprSite">www.utfpr.edu.br</string>
+    <!--é possível usar algumas tags html, como anchor, por exemplo-->
+    <string name="about_text_author">Autoria: <a href="https://pauloandre7.github.io/frontend-curriculum/">Paulo André Oliveira da Silva</a></string>
+    <string name="about_class_toastError_noActivityToOpenUrl">Nenhum aplicativo encontrado para abrir o site</string>
+    <string name="about_class_toastError_noActivityToEmail">Nenhum aplicativo encontrado para enviar o email</string>
+    <string name="about_class_text_contactByApp">Contato pelo aplicativo Gadiario</string>
+    <string name="about_text_email"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
 </resources>
