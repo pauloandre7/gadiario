@@ -2,6 +2,28 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Nos testes em meu celular Android 16, vi que o sistema cega os aplicativos
+        para que ele não tenha conhecimento de outros apps. Isso me retornava Null
+        ao tentar abrir URL com intent implícita.
+        Para resolver, essa querie abaixo é necessária para que o sistema saiba que
+        eu preciso ter conhecimento da existência de alguma Acitivty que possa resolver
+        essa intent.-->
+    <queries>
+        <!-- Para URLs-->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
+        </intent>
+
+        <!-- Para Emails-->
+        <intent>
+            <action android:name="android.intent.action.SENDTO" />
+            <!-- O esquema mailto é o que define que buscamos apps de e-mail -->
+            <data android:scheme="mailto" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
