@@ -112,14 +112,15 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
-        boolean isVaccinated = false;
+        String[] vaccines = new String[checkBoxVaccines.size()];
+        int cont= 0;
         // For-each em java pega cada elemento que tiver no array e guarda na variável option
         // Cada elemento é considerado como um ciclo, então facilita minha vida na hora de percorrer array.
         for (CheckBox option : checkBoxVaccines){
-            isVaccinated = option.isChecked();
-            if (isVaccinated == true){
-                break;
+            if (option.isChecked()){
+                vaccines[cont] = option.getText().toString();
             }
+            cont++;
         }
 
         String animalSex;
@@ -147,14 +148,5 @@ public class BovineActivity extends AppCompatActivity {
                             Toast.LENGTH_LONG);
         }
 
-        String resultFields = getString(R.string.reg_bov_toast_text_tagValue)+tag+"\n"
-                            +getString(R.string.bov_list_text_nameValue)+name+"\n"
-                            +getString(R.string.bov_list_text_birthValue)+date+"\n"
-                            +(isVaccinated ? getString(R.string.bov_list_text_isVaccinated) : getString(R.string.bov_list_text_notVaccinated))+"\n"
-                            +getString(R.string.bov_list_text_sexValue)+animalSex+"\n"
-                            +getString(R.string.bov_list_text_breedValue)+animalBreed;
-
-        Toast.makeText(this,
-                        resultFields, Toast.LENGTH_LONG).show();
     }
 }
