@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gadiario">
         <activity
+            android:name=".AboutActivity"
+            android:exported="false" />
+        <activity
             android:name=".BovinesActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -23,9 +25,7 @@
         </activity>
         <activity
             android:name=".BovineActivity"
-            android:exported="true">
-
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>
