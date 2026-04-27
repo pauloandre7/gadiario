@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -27,24 +28,84 @@ public class BovineActivity extends AppCompatActivity {
     public static final String KEY_BREED = "KEY_BREED";
     public static final String KEY_VACCINES = "KEY_VACCINES";
 
+    public static final String KEY_MODE = "MODE";
+    public static final int MODE_NEW = 0;
+    public static final int MODE_EDIT = 1;
+
+    // CLASS ATTRIBUTES
     private EditText editTextTag, editTextName, editTextDate;
     private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
     private RadioGroup radioGroupSex;
+    private RadioButton radioButtonFemale, radioButtonMale;
     private Spinner spinnerBreed;
+
+    private int mode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bovine);
-        setTitle(getString(R.string.reg_bov_title));
 
-        editTextTag = findViewById(R.id.editTextTag);
-        editTextName = findViewById(R.id.editTextName);
-        editTextDate = findViewById(R.id.editTextDate);
+        editTextTag         = findViewById(R.id.editTextTag);
+        editTextName        = findViewById(R.id.editTextName);
+        editTextDate        = findViewById(R.id.editTextDate);
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op1));
         checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op2));
-        radioGroupSex = findViewById(R.id.radioGroupSex);
-        spinnerBreed = findViewById(R.id.spinnerBreed);
+        radioGroupSex       = findViewById(R.id.radioGroupSex);
+        radioButtonFemale   = findViewById(R.id.radioBtnFemale);
+        radioButtonMale     = findViewById(R.id.radioBtnMale);
+        spinnerBreed        = findViewById(R.id.spinnerBreed);
+
+        // recebe a intent que originou a activity
+        Intent intentOpen = getIntent();
+
+        Bundle bundle = intentOpen.getExtras();
+
+        if(bundle != null){
+            mode = bundle.getInt(KEY_MODE);
+
+            if(mode == MODE_NEW){
+                setTitle(getString(R.string.reg_bov_title));
+            } else if (mode == MODE_EDIT){
+                setTitle(getString(R.string.bov_edit_title));
+
+                String tag = bundle.getString(BovineActivity.KEY_TAG);
+                String name = bundle.getString(BovineActivity.KEY_NAME);
+                String date = bundle.getString(BovineActivity.KEY_BIRTH);
+                String animalSex = bundle.getString(BovineActivity.KEY_SEX);
+                String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
+                String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+
+                AnimalSex animalSex_enum = AnimalSex.valueOf(animalSex);
+
+                editTextTag.setText(tag);
+                editTextName.setText(name);
+                editTextDate.setText(date);
+                if(animalSex_enum == AnimalSex.FEMALE){
+                    radioButtonFemale.setChecked(true);
+                } else {
+                    radioButtonMale.setChecked(true);
+                }
+
+                // Pego o array de raças que tem no string para poder comparar.
+                String[] breedArray = getResources().getStringArray(R.array.animalBreed);
+
+                for (int i = 0; i < breedArray.length; i++){
+                    if(breedArray[i].equals(animalBreed)){
+                        spinnerBreed.setSelection(i);
+                    }
+                }
+
+                for (int i = 0; i < vaccines.length; i++){
+                    if(vaccines[i] != null || !vaccines[i].isEmpty() || !vaccines[i].equals("")){
+                        checkBoxVaccines.get(i).setChecked(true);
+                    }
+                }
+
+
+
+            }
+        }
 
         // fillSpinner();
     }
@@ -133,7 +194,7 @@ public class BovineActivity extends AppCompatActivity {
             if (option.isChecked()){
                 vaccines[cont] = option.getText().toString();
             } else {
-                vaccines[cont] = "\n";
+                vaccines[cont] = "";
             }
 
             cont++;
