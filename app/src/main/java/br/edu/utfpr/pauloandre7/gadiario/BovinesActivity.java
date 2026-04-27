@@ -2,6 +2,8 @@ package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -48,7 +51,7 @@ public class BovinesActivity extends AppCompatActivity {
         fillListBovines();
     }
 
-    public void onClickAbout(View view){
+    public void onClickAbout(){
         // Criação de intent explícita: digo onde estou e onde quero ir
         Intent intentOpen = new Intent(this, AboutActivity.class);
 
@@ -111,7 +114,7 @@ public class BovinesActivity extends AppCompatActivity {
                 }
             });
 
-    public void onClickRegisterBov(View view){
+    public void onClickRegisterBov(){
 
         Intent intentOpen = new Intent(this, BovineActivity.class);
 
@@ -159,5 +162,28 @@ public class BovinesActivity extends AppCompatActivity {
         adapterBovine = new BovineAdapter(this, listBovines);
 
         listViewBovines.setAdapter(adapterBovine);
+    }
+
+    // Criar e infla o menu options
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.bovines_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if (idMenuItem == R.id.menuItemRegister){
+            onClickRegisterBov();
+            return true;
+        } else if (idMenuItem == R.id.menuItemAbout){
+            onClickAbout();
+            return true;
+        } else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
