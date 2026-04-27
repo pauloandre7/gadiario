@@ -2,6 +2,8 @@ package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -9,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -80,7 +83,7 @@ public class BovineActivity extends AppCompatActivity {
     }
     */
 
-    public void clearFields(View view){
+    public void clearFields(){
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
@@ -178,5 +181,25 @@ public class BovineActivity extends AppCompatActivity {
 
         // precisa encerrar a activity para que o resultado seja passado;
         finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.bovine_options, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        if(idMenuItem == R.id.menuItem_clear){
+            clearFields();
+            return true;
+        } else{
+            return super.onOptionsItemSelected(item);
+        }
     }
 }
