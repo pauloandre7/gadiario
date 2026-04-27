@@ -2,6 +2,7 @@ package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,6 +50,8 @@ public class BovinesActivity extends AppCompatActivity {
         });
 
         fillListBovines();
+
+        registerForContextMenu(listViewBovines);
     }
 
     public void onClickAbout(){
@@ -184,6 +187,46 @@ public class BovinesActivity extends AppCompatActivity {
             return true;
         } else {
             return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        // infla o context menu
+        getMenuInflater().inflate(R.menu.bovines_item_selected, menu);
+    }
+
+    public void editBovine(int position){
+
+    }
+
+    public void deleteBovine(int position){
+        listBovines.remove(position);
+
+        adapterBovine.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        int idMenuItem = item.getItemId();
+
+        // Só funciona em listview;
+        // Pega a posição do item clicado;
+        AdapterView.AdapterContextMenuInfo info;
+        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        if (idMenuItem == R.id.contextMenuItem_Edit){
+
+            editBovine(info.position);
+            return true;
+        } else if (idMenuItem == R.id.contextMenuItem_Delete){
+            deleteBovine(info.position);
+            return true;
+        } else{
+            return super.onContextItemSelected(item);
         }
     }
 }
