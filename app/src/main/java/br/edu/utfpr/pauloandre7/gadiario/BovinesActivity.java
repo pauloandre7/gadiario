@@ -25,6 +25,8 @@ public class BovinesActivity extends AppCompatActivity {
     private ListView listViewBovines;
     private List<Bovine> listBovines;
 
+    private int positionSelected = -1;
+
     BovineAdapter adapterBovine;
 
     @Override
@@ -120,6 +122,8 @@ public class BovinesActivity extends AppCompatActivity {
     public void onClickRegisterBov(){
 
         Intent intentOpen = new Intent(this, BovineActivity.class);
+        intentOpen.putExtra(BovineActivity.KEY_MODE, BovineActivity.MODE_NEW);
+
 
         // Aqui utiliza-se o launcher configurado para abrir a activity BovineActivity;
         // Usando o launcher, ele irá gerir a resposta e chamar o contrato onActivityResult;
@@ -198,11 +202,71 @@ public class BovinesActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.bovines_item_selected, menu);
     }
 
-    public void editBovine(int position){
+    ActivityResultLauncher<Intent> launcherEditBovine = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
 
+                    if (result.getResultCode() == RESULT_OK){
+                        Intent intent = result.getData();
+
+                        if (intent == null){
+                            throw new RuntimeException("Intent is null");
+                        }
+
+                        Bundle bundle = intent.getExtras();
+
+                        if (bundle != null){
+                            String tag = bundle.getString(BovineActivity.KEY_TAG);
+                            String name = bundle.getString(BovineActivity.KEY_NAME);
+                            String date = bundle.getString(BovineActivity.KEY_BIRTH);
+                            String animalSex = bundle.getString(BovineActivity.KEY_SEX);
+                            String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
+                            String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+
+                            Bovine bovine = listBovines.get(positionSelected);
+
+                            bovine.setTag(tag);
+                            bovine.setName(name);
+                            bovine.setDate(date);
+                            bovine.setAnimalSex(AnimalSex.valueOf(animalSex));
+                            bovine.setBreed(animalBreed);
+
+                            if (vaccines != null){
+                                bovine.setVaccines(List.of(vaccines));
+                            } else {
+                                bovine.setVaccines(null);
+                            }
+
+                            adapterBovine.notifyDataSetChanged();
+                        }
+                    }
+                    positionSelected = -1;
+                }
+            });
+
+    private void editBovine(int position){
+        positionSelected = position;
+
+        Bovine bovine = listBovines.get(position);
+
+        // prepara a intent de abertura com o modo de uso da classe.
+        Intent intentOpen = new Intent(this, BovineActivity.class);
+        intentOpen.putExtra(BovineActivity.KEY_MODE, BovineActivity.MODE_EDIT);
+
+        // mapeia os dados do objeto para a intent
+        intentOpen.putExtra(BovineActivity.KEY_TAG, bovine.getTag());
+        intentOpen.putExtra(BovineActivity.KEY_NAME, bovine.getName());
+        intentOpen.putExtra(BovineActivity.KEY_BIRTH, bovine.getDate());
+        intentOpen.putExtra(BovineActivity.KEY_SEX, bovine.getAnimalSex().toString());
+        intentOpen.putExtra(BovineActivity.KEY_BREED, bovine.getBreed());
+        intentOpen.putExtra(BovineActivity.KEY_VACCINES, bovine.getVaccines().toArray(new String[0]));
+
+        launcherEditBovine.launch(intentOpen);
     }
 
-    public void deleteBovine(int position){
+    private void deleteBovine(int position){
         listBovines.remove(position);
 
         adapterBovine.notifyDataSetChanged();
