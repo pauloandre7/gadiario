@@ -57,4 +57,5 @@
     <string name="about_text_email"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
     <string name="menu_text_edit">Editar</string>
     <string name="menu_text_delete">Excluir</string>
+    <string name="bov_edit_title">Editar Bovino</string>
 </resources>
