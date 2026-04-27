@@ -55,4 +55,6 @@
     <string name="about_class_toastError_noActivityToEmail">Nenhum aplicativo encontrado para enviar o email</string>
     <string name="about_class_text_contactByApp">Contato pelo aplicativo Gadiario</string>
     <string name="about_text_email"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
+    <string name="menu_text_edit">Editar</string>
+    <string name="menu_text_delete">Excluir</string>
 </resources>
