@@ -281,6 +281,11 @@ public class BovinesActivity extends AppCompatActivity {
                         }
                     }
                     positionSelected = -1;
+
+                    // fecha o menu se ele voltar e tiver um menu aberto
+                    if(actionMode != null){
+                        actionMode.finish();
+                    }
                 }
             });
 
