@@ -252,10 +252,9 @@ public class BovinesActivity extends AppCompatActivity {
                 }
             });
 
-    private void editBovine(int position){
-        positionSelected = position;
+    private void editBovine(){
 
-        Bovine bovine = listBovines.get(position);
+        Bovine bovine = listBovines.get(positionSelected);
 
         // prepara a intent de abertura com o modo de uso da classe.
         Intent intentOpen = new Intent(this, BovineActivity.class);
@@ -272,8 +271,8 @@ public class BovinesActivity extends AppCompatActivity {
         launcherEditBovine.launch(intentOpen);
     }
 
-    private void deleteBovine(int position){
-        listBovines.remove(position);
+    private void deleteBovine(){
+        listBovines.remove(positionSelected);
 
         adapterBovine.notifyDataSetChanged();
     }
@@ -290,13 +289,16 @@ public class BovinesActivity extends AppCompatActivity {
 
         if (idMenuItem == R.id.contextMenuItem_Edit){
 
-            editBovine(info.position);
-            return true;
-        } else if (idMenuItem == R.id.contextMenuItem_Delete){
-            deleteBovine(info.position);
-            return true;
-        } else{
-            return super.onContextItemSelected(item);
+                editBovine();
+                return true;
+            } else if (idMenuItem == R.id.contextMenuItem_Delete){
+                deleteBovine();
+                // fecha o menu
+                mode.finish();
+                return true;
+            } else{
+                return false;
+            }
         }
     }
 }
