@@ -71,7 +71,7 @@ public class BovinesActivity extends AppCompatActivity {
         // Criação de intent explícita: digo onde estou e onde quero ir
         Intent intentOpen = new Intent(this, AboutActivity.class);
 
-        // start é um método da activity. Passar o intent nesse método irá abrir a activity desejada
+        // start é um méthod da activity. Passar o intent nesse méthod irá abrir a activity desejada
         startActivity(intentOpen);
 
     }
@@ -83,8 +83,8 @@ public class BovinesActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    /* Esse método é específico para esse launcher;
-                    * O prof comentou em aula sobre a antiga prática de ter um método desse
+                    /* Esse méthod é específico para esse launcher;
+                    * O prof comentou em aula sobre a antiga prática de ter um méthod desse
                     * na classe da Activity que receberia os resultados de várias activities. */
 
                     if (result.getResultCode() == RESULT_OK){
