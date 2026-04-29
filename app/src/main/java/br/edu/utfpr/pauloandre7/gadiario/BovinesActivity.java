@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,9 @@ public class BovinesActivity extends AppCompatActivity {
     private Drawable drawableSelecionado;
 
     BovineAdapter adapterBovine;
+
+    // usado para o menu de ação contextual
+    private ActionMode actionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,10 +282,26 @@ public class BovinesActivity extends AppCompatActivity {
         adapterBovine.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
+    // O callback cuida da gestão do menu de ação contextual
+    private ActionMode.Callback actionCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Pega o inflador fornecido pela classe;
+            MenuInflater inflater = mode.getMenuInflater();
 
-        int idMenuItem = item.getItemId();
+            // infla o menu e, assim, exibe na activity
+            inflater.inflate(R.menu.bovines_item_selected, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int idMenuItem = item.getItemId();
 
         // Só funciona em listview;
         // Pega a posição do item clicado;
@@ -300,5 +321,22 @@ public class BovinesActivity extends AppCompatActivity {
                 return false;
             }
         }
-    }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+            if(viewSelecionada != null){
+                // volta o background original
+                viewSelecionada.setBackground(drawableSelecionado);
+            }
+
+            // destroi os objetos armazenados
+            actionMode = null;
+            viewSelecionada = null;
+            drawableSelecionado = null;
+
+            // ativa a listview;
+            listViewBovines.setEnabled(true);
+        }
+    };
 }
