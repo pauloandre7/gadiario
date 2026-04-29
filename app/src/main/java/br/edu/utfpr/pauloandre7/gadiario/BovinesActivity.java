@@ -62,6 +62,33 @@ public class BovinesActivity extends AppCompatActivity {
             }
         });
 
+        // Method para tratar click long na list view
+        listViewBovines.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Se o action mode já estiver aberto, não abre mais.
+                if (actionMode != null){
+                    return false;
+                }
+
+                positionSelected = position;
+
+                viewSelecionada = view;
+                drawableSelecionado = viewSelecionada.getBackground();
+
+                // muda a cor de fundo para um cinza claro
+                viewSelecionada.setBackgroundColor(Color.LTGRAY);
+
+                // desativa a view para que não seja clicada
+                listViewBovines.setEnabled(false);
+
+                actionMode = startSupportActionMode(actionCallback);
+
+                return true;
+            }
+        });
+
         fillListBovines();
 
         registerForContextMenu(listViewBovines);
