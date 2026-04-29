@@ -303,12 +303,12 @@ public class BovinesActivity extends AppCompatActivity {
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             int idMenuItem = item.getItemId();
 
-        // Só funciona em listview;
-        // Pega a posição do item clicado;
-        AdapterView.AdapterContextMenuInfo info;
-        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            // Só funciona em listview;
+            // Pega a posição do item clicado;
+            AdapterView.AdapterContextMenuInfo info;
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        if (idMenuItem == R.id.contextMenuItem_Edit){
+            if (idMenuItem == R.id.contextMenuItem_Edit){
 
                 editBovine();
                 return true;
