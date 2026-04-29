@@ -1,6 +1,8 @@
 package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -26,6 +28,10 @@ public class BovinesActivity extends AppCompatActivity {
     private List<Bovine> listBovines;
 
     private int positionSelected = -1;
+
+    // usado para o menu de ação contextual para mudar cor de fundo do item selecionado
+    private View viewSelecionada;
+    private Drawable drawableSelecionado;
 
     BovineAdapter adapterBovine;
 
