@@ -1,9 +1,12 @@
 package br.edu.utfpr.pauloandre7.gadiario;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -16,6 +19,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +31,14 @@ public class BovinesActivity extends AppCompatActivity {
 
     private int positionSelected = -1;
 
+    // usado para o menu de ação contextual para mudar cor de fundo do item selecionado
+    private View viewSelecionada;
+    private Drawable drawableSelecionado;
+
     BovineAdapter adapterBovine;
+
+    // usado para o menu de ação contextual
+    private ActionMode actionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +62,33 @@ public class BovinesActivity extends AppCompatActivity {
             }
         });
 
+        // Method para tratar click long na list view
+        listViewBovines.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                // Se o action mode já estiver aberto, não abre mais.
+                if (actionMode != null){
+                    return false;
+                }
+
+                positionSelected = position;
+
+                viewSelecionada = view;
+                drawableSelecionado = viewSelecionada.getBackground();
+
+                // muda a cor de fundo para um cinza claro
+                viewSelecionada.setBackgroundColor(Color.LTGRAY);
+
+                // desativa a view para que não seja clicada
+                listViewBovines.setEnabled(false);
+
+                actionMode = startSupportActionMode(actionCallback);
+
+                return true;
+            }
+        });
+
         fillListBovines();
 
         registerForContextMenu(listViewBovines);
@@ -60,7 +98,7 @@ public class BovinesActivity extends AppCompatActivity {
         // Criação de intent explícita: digo onde estou e onde quero ir
         Intent intentOpen = new Intent(this, AboutActivity.class);
 
-        // start é um método da activity. Passar o intent nesse método irá abrir a activity desejada
+        // start é um méthod da activity. Passar o intent nesse méthod irá abrir a activity desejada
         startActivity(intentOpen);
 
     }
@@ -72,8 +110,8 @@ public class BovinesActivity extends AppCompatActivity {
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    /* Esse método é específico para esse launcher;
-                    * O prof comentou em aula sobre a antiga prática de ter um método desse
+                    /* Esse méthod é específico para esse launcher;
+                    * O prof comentou em aula sobre a antiga prática de ter um méthod desse
                     * na classe da Activity que receberia os resultados de várias activities. */
 
                     if (result.getResultCode() == RESULT_OK){
@@ -243,13 +281,17 @@ public class BovinesActivity extends AppCompatActivity {
                         }
                     }
                     positionSelected = -1;
+
+                    // fecha o menu se ele voltar e tiver um menu aberto
+                    if(actionMode != null){
+                        actionMode.finish();
+                    }
                 }
             });
 
-    private void editBovine(int position){
-        positionSelected = position;
+    private void editBovine(){
 
-        Bovine bovine = listBovines.get(position);
+        Bovine bovine = listBovines.get(positionSelected);
 
         // prepara a intent de abertura com o modo de uso da classe.
         Intent intentOpen = new Intent(this, BovineActivity.class);
@@ -266,31 +308,67 @@ public class BovinesActivity extends AppCompatActivity {
         launcherEditBovine.launch(intentOpen);
     }
 
-    private void deleteBovine(int position){
-        listBovines.remove(position);
+    private void deleteBovine(){
+        listBovines.remove(positionSelected);
 
         adapterBovine.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onContextItemSelected(@NonNull MenuItem item) {
+    // O callback cuida da gestão do menu de ação contextual
+    private ActionMode.Callback actionCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Pega o inflador fornecido pela classe;
+            MenuInflater inflater = mode.getMenuInflater();
 
-        int idMenuItem = item.getItemId();
-
-        // Só funciona em listview;
-        // Pega a posição do item clicado;
-        AdapterView.AdapterContextMenuInfo info;
-        info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-
-        if (idMenuItem == R.id.contextMenuItem_Edit){
-
-            editBovine(info.position);
+            // infla o menu e, assim, exibe na activity
+            inflater.inflate(R.menu.bovines_item_selected, menu);
             return true;
-        } else if (idMenuItem == R.id.contextMenuItem_Delete){
-            deleteBovine(info.position);
-            return true;
-        } else{
-            return super.onContextItemSelected(item);
         }
-    }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            int idMenuItem = item.getItemId();
+
+            // Só funciona em listview;
+            // Pega a posição do item clicado;
+            AdapterView.AdapterContextMenuInfo info;
+            info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+            if (idMenuItem == R.id.contextMenuItem_Edit){
+
+                editBovine();
+                return true;
+            } else if (idMenuItem == R.id.contextMenuItem_Delete){
+                deleteBovine();
+                // fecha o menu
+                mode.finish();
+                return true;
+            } else{
+                return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+
+            if(viewSelecionada != null){
+                // volta o background original
+                viewSelecionada.setBackground(drawableSelecionado);
+            }
+
+            // destroi os objetos armazenados
+            actionMode = null;
+            viewSelecionada = null;
+            drawableSelecionado = null;
+
+            // ativa a listview;
+            listViewBovines.setEnabled(true);
+        }
+    };
 }

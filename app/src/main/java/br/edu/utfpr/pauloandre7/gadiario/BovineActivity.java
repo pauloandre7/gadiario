@@ -39,6 +39,9 @@ public class BovineActivity extends AppCompatActivity {
     private RadioButton radioButtonFemale, radioButtonMale;
     private Spinner spinnerBreed;
 
+    // Atributo para verificar mudanças no objeto original
+    private Bovine bovineOriginal;
+
     private int mode;
 
     @Override
@@ -77,6 +80,8 @@ public class BovineActivity extends AppCompatActivity {
                 String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
 
                 AnimalSex animalSex_enum = AnimalSex.valueOf(animalSex);
+
+                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed, List.of(vaccines));
 
                 editTextTag.setText(tag);
                 editTextName.setText(name);
@@ -223,6 +228,37 @@ public class BovineActivity extends AppCompatActivity {
             Toast.makeText(this,
                             R.string.reg_bov_toast_text_warningSpinnerEmpty,
                             Toast.LENGTH_LONG);
+        }
+
+
+
+        // Antes da Intent de resposta, verifica se os valores sofreram mudança
+        if(mode == MODE_EDIT) {
+
+            // Verifica se as vacinas são iguais
+            boolean isVaccinesEqual = false;
+            cont = 0;
+
+            for (String vaccine : vaccines) {
+                isVaccinesEqual = false;
+                if (vaccine.equals(bovineOriginal.getVaccines().get(cont))) {
+                    isVaccinesEqual = true;
+                }
+                cont++;
+            }
+
+            // Compara os outros atributos;
+            if (tag.equals(bovineOriginal.getTag())
+                    && name.equalsIgnoreCase(bovineOriginal.getName())
+                    && date.equals(bovineOriginal.getDate())
+                    && animalSex.equals(bovineOriginal.getAnimalSex())
+                    && animalBreed.equals(bovineOriginal.getBreed())
+                    && isVaccinesEqual) {
+
+                setResult(BovineActivity.RESULT_CANCELED);
+                finish();
+                return;
+            }
         }
 
         // Para passar resultados entre activities, é necessário usar um Intent;

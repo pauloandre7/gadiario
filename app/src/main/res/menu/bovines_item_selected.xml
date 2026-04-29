@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/contextMenuItem_Edit"
-        android:title="@string/menu_text_edit" />
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="@string/menu_text_edit"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/contextMenuItem_Delete"
-        android:title="@string/menu_text_delete" />
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="@string/menu_text_delete"
+        app:showAsAction="ifRoom" />
 </menu>
