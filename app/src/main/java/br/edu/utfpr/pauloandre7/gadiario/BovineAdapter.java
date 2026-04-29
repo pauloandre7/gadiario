@@ -14,7 +14,6 @@ public class BovineAdapter extends BaseAdapter {
     private Context context;
     private List<Bovine> listBovines;
 
-    private String[] types;
     public BovineAdapter(Context context, List<Bovine> listBovines) {
         this.context = context;
         this.listBovines = listBovines;
