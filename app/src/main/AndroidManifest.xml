@@ -40,7 +40,8 @@
         </activity>
         <activity
             android:name=".BovinesActivity"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
