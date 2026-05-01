@@ -35,7 +35,9 @@
         android:theme="@style/Theme.Gadiario">
         <activity
             android:name=".AboutActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:parentActivityName=".BovinesActivity">
+        </activity>
         <activity
             android:name=".BovinesActivity"
             android:exported="true">
@@ -47,7 +49,10 @@
         </activity>
         <activity
             android:name=".BovineActivity"
-            android:exported="true"></activity>
+            android:exported="true"
+            android:parentActivityName=".BovinesActivity">
+
+        </activity>
     </application>
 
 </manifest>
