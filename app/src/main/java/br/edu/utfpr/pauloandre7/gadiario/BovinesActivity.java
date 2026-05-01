@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BovinesActivity extends AppCompatActivity {
@@ -150,6 +151,8 @@ public class BovinesActivity extends AppCompatActivity {
 
                             listBovines.add(bovine);
 
+                            Collections.sort(listBovines, Bovine.ascendingTagSort);
+
                             // Avisa o adapter que a base de dados dele foi modificada;
                             adapterBovine.notifyDataSetChanged();
                         }
@@ -276,6 +279,8 @@ public class BovinesActivity extends AppCompatActivity {
                             } else {
                                 bovine.setVaccines(null);
                             }
+
+                            Collections.sort(listBovines, Bovine.ascendingTagSort);
 
                             adapterBovine.notifyDataSetChanged();
                         }
