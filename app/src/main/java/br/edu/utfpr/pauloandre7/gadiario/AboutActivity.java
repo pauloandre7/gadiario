@@ -3,11 +3,9 @@ package br.edu.utfpr.pauloandre7.gadiario;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AboutActivity extends AppCompatActivity {
@@ -70,6 +68,8 @@ public class AboutActivity extends AppCompatActivity {
 
     }
 
+    /***********************************************************************************************
+     * Exemplo de tratamento de up button na app bar
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int idMenuItem = item.getItemId();
@@ -83,4 +83,5 @@ public class AboutActivity extends AppCompatActivity {
             return super.onOptionsItemSelected(item);
         }
     }
+     **********************************************************************************************/
 }
