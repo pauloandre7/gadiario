@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -162,7 +161,7 @@ public class BovineActivity extends AppCompatActivity {
                 R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
     }
 
-    public void saveValues(View view){
+    public void saveValues(){
         String tag = editTextTag.getText().toString();
         String name = editTextName.getText().toString();
         String date = editTextDate.getText().toString();
@@ -292,8 +291,11 @@ public class BovineActivity extends AppCompatActivity {
 
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItem_clear){
+        if(idMenuItem == R.id.menuItem_clear) {
             clearFields();
+            return true;
+        }else if(idMenuItem == R.id.menuItem_save){
+            saveValues();
             return true;
         } else{
             return super.onOptionsItemSelected(item);
