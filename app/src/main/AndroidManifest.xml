@@ -34,12 +34,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gadiario">
         <activity
-            android:name=".AboutActivity"
+            android:name=".ui.main.AboutActivity"
             android:exported="false"
-            android:parentActivityName=".BovinesActivity">
+            android:parentActivityName=".ui.bovine.BovinesActivity">
         </activity>
         <activity
-            android:name=".BovinesActivity"
+            android:name=".ui.bovine.BovinesActivity"
             android:exported="true"
             android:launchMode="singleTask">
             <intent-filter>
@@ -49,9 +49,9 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".BovineActivity"
+            android:name=".ui.bovine.BovineActivity"
             android:exported="true"
-            android:parentActivityName=".BovinesActivity">
+            android:parentActivityName=".ui.bovine.BovinesActivity">
 
         </activity>
     </application>

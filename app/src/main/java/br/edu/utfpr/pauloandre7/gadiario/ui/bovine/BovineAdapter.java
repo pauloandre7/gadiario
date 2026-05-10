@@ -1,4 +1,4 @@
-package br.edu.utfpr.pauloandre7.gadiario;
+package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.List;
+
+import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 
 public class BovineAdapter extends BaseAdapter {
 

@@ -1,4 +1,4 @@
-package br.edu.utfpr.pauloandre7.gadiario;
+package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
+import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 
 public class BovineActivity extends AppCompatActivity {
 
