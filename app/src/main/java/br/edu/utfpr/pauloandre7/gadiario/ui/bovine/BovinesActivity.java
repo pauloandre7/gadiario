@@ -1,4 +1,4 @@
-package br.edu.utfpr.pauloandre7.gadiario;
+package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -24,6 +24,11 @@ import androidx.appcompat.view.ActionMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
+import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
 
 public class BovinesActivity extends AppCompatActivity {
 

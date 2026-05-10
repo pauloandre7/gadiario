@@ -1,4 +1,4 @@
-package br.edu.utfpr.pauloandre7.gadiario;
+package br.edu.utfpr.pauloandre7.gadiario.models;
 
 import java.util.Comparator;
 import java.util.List;
