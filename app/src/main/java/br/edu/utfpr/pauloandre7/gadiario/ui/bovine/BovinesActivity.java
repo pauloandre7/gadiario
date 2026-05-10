@@ -63,7 +63,7 @@ public class BovinesActivity extends AppCompatActivity {
 
                 Bovine bovine = (Bovine) parent.getItemAtPosition(position);
 
-                Toast.makeText(getApplicationContext(), getString(R.string.bov_toast_bovine_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
+                Toast.makeText(getApplicationContext(), getString(R.string.bov_list_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
                         Toast.LENGTH_LONG).show();
             }
         });
@@ -220,7 +220,7 @@ public class BovinesActivity extends AppCompatActivity {
     // Criar e infla o menu options
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.bovines_options, menu);
+        getMenuInflater().inflate(R.menu.listing_options, menu);
         return true;
     }
 
@@ -245,7 +245,7 @@ public class BovinesActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         // infla o context menu
-        getMenuInflater().inflate(R.menu.bovines_item_selected, menu);
+        getMenuInflater().inflate(R.menu.list_item_selected, menu);
     }
 
     ActivityResultLauncher<Intent> launcherEditBovine = registerForActivityResult(
@@ -332,7 +332,7 @@ public class BovinesActivity extends AppCompatActivity {
             MenuInflater inflater = mode.getMenuInflater();
 
             // infla o menu e, assim, exibe na activity
-            inflater.inflate(R.menu.bovines_item_selected, menu);
+            inflater.inflate(R.menu.list_item_selected, menu);
             return true;
         }
 

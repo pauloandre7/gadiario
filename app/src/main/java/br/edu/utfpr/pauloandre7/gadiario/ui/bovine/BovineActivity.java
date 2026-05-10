@@ -286,7 +286,7 @@ public class BovineActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.bovine_options, menu);
+        getMenuInflater().inflate(R.menu.register_options, menu);
         return true;
     }
 

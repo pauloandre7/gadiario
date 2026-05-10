@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arquivo para strings comuns para várias activities -->
+<resources>
+    <string name="app_name">Gadiario</string>
+
+    <string name="common_name">Nome</string>
+
+    <string name="common_edit">Editar</string>
+    <string name="common_delete">Excluir</string>
+    <string name="common_clear">Limpar</string>
+    <string name="common_save">Salvar</string>
+    <string name="common_description">Descrição</string>
+</resources>

@@ -1,0 +1,17 @@
+<!-- Neste arquivo, irei deixar apenas as strings que envolvem telas de listagem -->
+<resources>
+
+    <!-- Bovines list variables-->
+    <string name="bov_list_tagValue">"Brinco: "</string>
+    <string name="bov_list_nameValue">"Nome: "</string>
+    <string name="bov_list_birthValue">"Nascimento: "</string>
+    <string name="bov_list_breedValue">"Raça: "</string>
+    <string name="bov_list_VaccineValue">"Vacinação: "</string>
+    <string name="bov_list_sexValue">"Sexo: "</string>
+    <string name="bov_list_with_tag">Bovino de tag \"</string>
+    <string name="bov_list_text_isVaccinated">Animal Vacinado</string>
+    <string name="bov_list_text_notVaccinated">Animal Não Vacinado</string>
+    <string name="bov_toast_bovClicked">\" clicado!</string>
+    <string name="past_list_Title">Lista de Pastos</string>
+
+</resources>
