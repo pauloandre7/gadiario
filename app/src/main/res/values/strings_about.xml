@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- About Variables -->
+    <string name="about_img_text_logoUtfpr">Logo da UTFPR</string>
+    <string name="about_text_student">Aluno:</string>
+    <string name="about_text_course">Curso:</string>
+    <string name="about_text_EngSoftware">Engenharia de Software</string>
+    <string name="about_text_appDescription">Aplicativo para auxiliar no manejo de gado.
+        O aplicativo permite o registro de eventos como vacinação, inseminação, parto,
+        mudanças de pasto e abate de bovinos. (Criado para um curso universitário de
+        Desenvolvimento Mobile).
+    </string>
+    <string name="about_class_text_about">Sobre</string>
+    <string name="bov_list_activityTitle">Lista de Bovinos</string>
+    <string name="bov_list_btn_RegisterBovine">Cadastrar Bovino</string>
+    <string name="about_text_utfprSite">www.utfpr.edu.br</string>
+    <!--é possível usar algumas tags html, como anchor, por exemplo-->
+    <string name="about_text_author">Autoria: <a href="https://pauloandre7.github.io/frontend-curriculum/">Paulo André Oliveira da Silva</a></string>
+    <string name="about_class_toastError_noActivityToOpenUrl">Nenhum aplicativo encontrado para abrir o site</string>
+    <string name="about_class_toastError_noActivityToEmail">Nenhum aplicativo encontrado para enviar o email</string>
+    <string name="about_class_text_contactByApp">Contato pelo aplicativo Gadiario</string>
+    <string name="about_text_email"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
+</resources>
