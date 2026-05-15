@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -57,8 +56,6 @@ public class BovineActivity extends AppCompatActivity {
         editTextTag         = findViewById(R.id.editTextTag);
         editTextName        = findViewById(R.id.editTextName);
         editTextDate        = findViewById(R.id.editTextDate);
-        checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op1));
-        checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op2));
         radioGroupSex       = findViewById(R.id.radioGroupSex);
         radioButtonFemale   = findViewById(R.id.radioBtnFemale);
         radioButtonMale     = findViewById(R.id.radioBtnMale);
@@ -218,8 +215,6 @@ public class BovineActivity extends AppCompatActivity {
             if(!item.isEmpty()){
                 vaccinesList.add(item);
             }
-
-            cont++;
         }
 
         AnimalSex animalSex;
