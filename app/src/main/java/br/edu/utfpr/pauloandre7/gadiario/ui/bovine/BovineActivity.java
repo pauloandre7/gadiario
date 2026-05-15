@@ -36,11 +36,10 @@ public class BovineActivity extends AppCompatActivity {
     public static final int MODE_EDIT = 1;
 
     // CLASS ATTRIBUTES
-    private EditText editTextTag, editTextName, editTextDate;
-    private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
+    private EditText editTextTag, editTextName, editTextDate, editTextVaccines;
     private RadioGroup radioGroupSex;
     private RadioButton radioButtonFemale, radioButtonMale;
-    private Spinner spinnerBreed;
+    private Spinner spinnerBreed, spinnerRepStatus;
 
     // Atributo para verificar mudanças no objeto original
     private Bovine bovineOriginal;
@@ -60,7 +59,9 @@ public class BovineActivity extends AppCompatActivity {
         radioGroupSex       = findViewById(R.id.radioGroupSex);
         radioButtonFemale   = findViewById(R.id.radioBtnFemale);
         radioButtonMale     = findViewById(R.id.radioBtnMale);
-        spinnerBreed        = findViewById(R.id.spinnerBreed);
+        editTextVaccines    = findViewById(R.id.bov_editTextVaccines);
+        spinnerBreed        = findViewById(R.id.bov_spinnerBreed);
+        spinnerRepStatus    = findViewById(R.id.bov_spinnerRepStatus);
 
         // recebe a intent que originou a activity
         Intent intentOpen = getIntent();
