@@ -102,7 +102,7 @@ public class BovineActivity extends AppCompatActivity {
                     radioButtonMale.setChecked(true);
                 }
 
-                // Pego o array de raças que tem no string para poder comparar.
+                // Pego o array de raças que tem no string para poder comparar e selecionar.
                 String[] breedArray = getResources().getStringArray(R.array.animalBreed);
 
                 for (int i = 0; i < breedArray.length; i++){
@@ -120,13 +120,12 @@ public class BovineActivity extends AppCompatActivity {
 
                 String vaccines_text = "";
                 for (int i = 0; i < vaccines.length; i++){
-                    if(vaccines[i] != null || !vaccines[i].isEmpty() || !vaccines[i].equals("")){
-                        checkBoxVaccines.get(i).setChecked(true);
+                    if(vaccines[i] != null || !vaccines[i].isEmpty()){
+                        vaccines_text = vaccines_text + vaccines[i] + ", ";
                     }
                 }
 
-
-
+                editTextVaccines.setText(vaccines_text);
             }
         }
 
@@ -171,8 +170,7 @@ public class BovineActivity extends AppCompatActivity {
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
-        checkBoxVaccines.get(0).setChecked(false);
-        checkBoxVaccines.get(1).setChecked(false);
+        editTextVaccines.setText(null);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
         spinnerRepStatus.setSelection(0);
@@ -182,9 +180,10 @@ public class BovineActivity extends AppCompatActivity {
     }
 
     public void saveValues(){
-        String tag = editTextTag.getText().toString();
-        String name = editTextName.getText().toString();
-        String date = editTextDate.getText().toString();
+        String tag          = editTextTag.getText().toString();
+        String name         = editTextName.getText().toString();
+        String date         = editTextDate.getText().toString();
+        String vaccines     = editTextVaccines.getText().toString();
 
         if(tag == null || tag.trim().isEmpty()){
             Toast.makeText(this,
@@ -210,15 +209,14 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
-        String[] vaccines = new String[checkBoxVaccines.size()];
-        int cont= 0;
-        // For-each em java pega cada elemento que tiver no array e guarda na variável option
-        // Cada elemento é considerado como um ciclo, então facilita minha vida na hora de percorrer array.
-        for (CheckBox option : checkBoxVaccines){
-            if (option.isChecked()){
-                vaccines[cont] = option.getText().toString();
-            } else {
-                vaccines[cont] = "";
+        // Separa a string a cada vírgula e cria uma lista com os elementos
+        String[] vaccinesArray      = vaccines.split(",");
+        List<String> vaccinesList   = new ArrayList<>();
+        for (String vac : vaccinesArray){
+            // Se a vacina em questão não ficar vazia após o trim, significa que foi escrito algo (add isso na lista)
+            String item = vac.trim();
+            if(!item.isEmpty()){
+                vaccinesList.add(item);
             }
 
             cont++;
@@ -277,16 +275,7 @@ public class BovineActivity extends AppCompatActivity {
         if(mode == MODE_EDIT) {
 
             // Verifica se as vacinas são iguais
-            boolean isVaccinesEqual = false;
-            cont = 0;
-
-            for (String vaccine : vaccines) {
-                isVaccinesEqual = false;
-                if (vaccine.equals(bovineOriginal.getVaccines().get(cont))) {
-                    isVaccinesEqual = true;
-                }
-                cont++;
-            }
+            boolean isVaccinesEqual = vaccinesList.equals(bovineOriginal.getVaccines());
 
             // Compara os outros atributos;
             if (tag.equals(bovineOriginal.getTag())
@@ -313,7 +302,7 @@ public class BovineActivity extends AppCompatActivity {
         intentResult.putExtra(KEY_SEX, animalSex.toString());
         intentResult.putExtra(KEY_REPSTATUS, repStatus_enum.toString());
         intentResult.putExtra(KEY_BREED, animalBreed);
-        intentResult.putExtra(KEY_VACCINES, vaccines);
+        intentResult.putExtra(KEY_VACCINES, vaccinesList.toArray(new String[0]));
 
         // seta o resultado com a resposta e o objeto de intenção de resposta;
         setResult(BovineActivity.RESULT_OK, intentResult);
