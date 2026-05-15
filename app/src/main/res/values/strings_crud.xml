@@ -16,11 +16,12 @@
     <string name="reg_bov_toast_text_tagMissing">Faltou informar o Código do Brinco.</string>
     <string name="reg_bov_toast_text_birthMissing">Faltou informar a data de nascimento.</string>
     <string name="reg_bov_text_vaccines">Vacinas Aplicadas</string>
-    <string name="reg_bov_checkbox_vaccines_respiratory">Vacinas Intranasais</string>
-    <string name="reg_bov_checkbox_vaccines_salmonellosis">Vacina para Salmonelose</string>
+    <string name="reg_bov_hint_vaccines">EX: Vacina 1, Vacina 2, Vacina 3...</string>
     <string name="reg_bov_toast_text_animalSexMissing">O sexo do animal não foi informado!</string>
     <string name="reg_bov_label_breed">Raça do Animal</string>
     <string name="reg_bov_toast_text_warningSpinnerEmpty">O Spinner de raças não possui valores!</string>
+    <string name="reg_bov_label_Status">Reproductive Status</string>
+    <string name="reg_bov_toast_ReproductiveStatusMissing">Status Reprodutivo não informado!</string>
     <string name="bov_edit_title">Editar Bovino</string>
 
     <!-- Pasture variables -->

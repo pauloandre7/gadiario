@@ -28,6 +28,7 @@ import java.util.List;
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
 
 public class BovinesActivity extends AppCompatActivity {
@@ -139,6 +140,7 @@ public class BovinesActivity extends AppCompatActivity {
                             String date = bundle.getString(BovineActivity.KEY_BIRTH);
                             String animalSex = bundle.getString(BovineActivity.KEY_SEX);
                             String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
+                            String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
                             String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
 
                             Bovine bovine;
@@ -147,11 +149,11 @@ public class BovinesActivity extends AppCompatActivity {
 
                                 bovine = new Bovine(tag, name, date,
                                                     AnimalSex.valueOf(animalSex), animalBreed,
-                                                    vaccines_list);
+                                                    vaccines_list, ReproductiveStatus.valueOf(repStatus));
                             } else {
                                 bovine = new Bovine(tag, name, date,
                                         AnimalSex.valueOf(animalSex), animalBreed,
-                                        null);
+                                        null, ReproductiveStatus.valueOf(repStatus));
                             }
 
                             listBovines.add(bovine);
@@ -269,6 +271,7 @@ public class BovinesActivity extends AppCompatActivity {
                             String date = bundle.getString(BovineActivity.KEY_BIRTH);
                             String animalSex = bundle.getString(BovineActivity.KEY_SEX);
                             String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
+                            String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
                             String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
 
                             Bovine bovine = listBovines.get(positionSelected);
@@ -278,6 +281,7 @@ public class BovinesActivity extends AppCompatActivity {
                             bovine.setDate(date);
                             bovine.setAnimalSex(AnimalSex.valueOf(animalSex));
                             bovine.setBreed(animalBreed);
+                            bovine.setRepStatus(ReproductiveStatus.valueOf(repStatus));
 
                             if (vaccines != null){
                                 bovine.setVaccines(List.of(vaccines));
@@ -313,6 +317,7 @@ public class BovinesActivity extends AppCompatActivity {
         intentOpen.putExtra(BovineActivity.KEY_BIRTH, bovine.getDate());
         intentOpen.putExtra(BovineActivity.KEY_SEX, bovine.getAnimalSex().toString());
         intentOpen.putExtra(BovineActivity.KEY_BREED, bovine.getBreed());
+        intentOpen.putExtra(BovineActivity.KEY_REPSTATUS, bovine.getRepStatus().toString());
         intentOpen.putExtra(BovineActivity.KEY_VACCINES, bovine.getVaccines().toArray(new String[0]));
 
         launcherEditBovine.launch(intentOpen);

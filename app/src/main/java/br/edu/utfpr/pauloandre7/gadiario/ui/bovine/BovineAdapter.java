@@ -28,6 +28,7 @@ public class BovineAdapter extends BaseAdapter {
         public TextView textViewBirthValue;
         public TextView textViewBreedValue;
         public TextView textViewVaccineValue;
+        public TextView textViewRepStatusValue;
     }
 
     @Override
@@ -56,12 +57,13 @@ public class BovineAdapter extends BaseAdapter {
 
             // Cria o holder e seta os endereços
             holder = new BovineHolder();
-            holder.textViewTagValue = convertView.findViewById(R.id.textViewTagValue);
-            holder.textViewNameValue = convertView.findViewById(R.id.textViewNameValue);
-            holder.textViewSexValue = convertView.findViewById(R.id.textViewSexValue);
-            holder.textViewBirthValue = convertView.findViewById(R.id.textViewBirthValue);
-            holder.textViewBreedValue = convertView.findViewById(R.id.textViewBreedValue);
-            holder.textViewVaccineValue = convertView.findViewById(R.id.textViewVaccineValue);
+            holder.textViewTagValue = convertView.findViewById(R.id.line_bov_textView_TagValue);
+            holder.textViewNameValue = convertView.findViewById(R.id.line_bov_textView_NameValue);
+            holder.textViewSexValue = convertView.findViewById(R.id.line_bov_textView_genreValue);
+            holder.textViewBirthValue = convertView.findViewById(R.id.line_bov_textView_birthValue);
+            holder.textViewBreedValue = convertView.findViewById(R.id.line_bov_textView_breedValue);
+            holder.textViewVaccineValue = convertView.findViewById(R.id.line_bov_textView_vaccineValue);
+            holder.textViewRepStatusValue = convertView.findViewById(R.id.line_bov_textView_repStatusValue);
 
             convertView.setTag(holder);
         } else {
@@ -86,16 +88,35 @@ public class BovineAdapter extends BaseAdapter {
                 break;
         }
 
-
-        if(bovine.getVaccines().isEmpty()){
-            holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
-        } else {
-            String vaccine_text = "";
-            for(int i = 0; i < bovine.getVaccines().size(); i++){
-                vaccine_text = vaccine_text + bovine.getVaccines().get(i) + " | ";
-            }
-            holder.textViewVaccineValue.setText(vaccine_text);
+        switch (bovine.getRepStatus()){
+            case LACTANTE:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_lactating);
+                break;
+            case PRENHA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_pregnant);
+                break;
+            case SECA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_dry);
+                break;
+            case PRONTA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_ready);
+                break;
         }
+
+        if(bovine.getVaccines() == null){
+            holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
+        } else{
+            if(bovine.getVaccines().isEmpty()){
+                holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
+            } else {
+                String vaccine_text = "";
+                for(int i = 0; i < bovine.getVaccines().size(); i++){
+                    vaccine_text = vaccine_text + bovine.getVaccines().get(i) + " | ";
+                }
+                holder.textViewVaccineValue.setText(vaccine_text);
+            }
+        }
+
 
         return convertView;
     }

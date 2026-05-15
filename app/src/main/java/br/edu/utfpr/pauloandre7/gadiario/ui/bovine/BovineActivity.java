@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,6 +19,7 @@ import java.util.List;
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 
 public class BovineActivity extends AppCompatActivity {
 
@@ -30,17 +30,18 @@ public class BovineActivity extends AppCompatActivity {
     public static final String KEY_SEX = "KEY_SEX";
     public static final String KEY_BREED = "KEY_BREED";
     public static final String KEY_VACCINES = "KEY_VACCINES";
+    public static final String KEY_REPSTATUS = "KEY_REPSTATUS";
+
 
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
     public static final int MODE_EDIT = 1;
 
     // CLASS ATTRIBUTES
-    private EditText editTextTag, editTextName, editTextDate;
-    private final List<CheckBox> checkBoxVaccines = new ArrayList<>();
+    private EditText editTextTag, editTextName, editTextDate, editTextVaccines;
     private RadioGroup radioGroupSex;
     private RadioButton radioButtonFemale, radioButtonMale;
-    private Spinner spinnerBreed;
+    private Spinner spinnerBreed, spinnerRepStatus;
 
     // Atributo para verificar mudanças no objeto original
     private Bovine bovineOriginal;
@@ -55,12 +56,12 @@ public class BovineActivity extends AppCompatActivity {
         editTextTag         = findViewById(R.id.editTextTag);
         editTextName        = findViewById(R.id.editTextName);
         editTextDate        = findViewById(R.id.editTextDate);
-        checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op1));
-        checkBoxVaccines.add(findViewById(R.id.checkBox_vaccines_op2));
         radioGroupSex       = findViewById(R.id.radioGroupSex);
         radioButtonFemale   = findViewById(R.id.radioBtnFemale);
         radioButtonMale     = findViewById(R.id.radioBtnMale);
-        spinnerBreed        = findViewById(R.id.spinnerBreed);
+        editTextVaccines    = findViewById(R.id.bov_editTextVaccines);
+        spinnerBreed        = findViewById(R.id.bov_spinnerBreed);
+        spinnerRepStatus    = findViewById(R.id.bov_spinnerRepStatus);
 
         // recebe a intent que originou a activity
         Intent intentOpen = getIntent();
@@ -81,10 +82,13 @@ public class BovineActivity extends AppCompatActivity {
                 String animalSex = bundle.getString(BovineActivity.KEY_SEX);
                 String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
                 String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+                String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
 
                 AnimalSex animalSex_enum = AnimalSex.valueOf(animalSex);
+                ReproductiveStatus repStatus_enum = ReproductiveStatus.valueOf(repStatus);
 
-                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed, List.of(vaccines));
+                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed,
+                                            List.of(vaccines), repStatus_enum);
 
                 editTextTag.setText(tag);
                 editTextName.setText(name);
@@ -95,7 +99,7 @@ public class BovineActivity extends AppCompatActivity {
                     radioButtonMale.setChecked(true);
                 }
 
-                // Pego o array de raças que tem no string para poder comparar.
+                // Pego o array de raças que tem no string para poder comparar e selecionar.
                 String[] breedArray = getResources().getStringArray(R.array.animalBreed);
 
                 for (int i = 0; i < breedArray.length; i++){
@@ -104,14 +108,21 @@ public class BovineActivity extends AppCompatActivity {
                     }
                 }
 
-                for (int i = 0; i < vaccines.length; i++){
-                    if(vaccines[i] != null || !vaccines[i].isEmpty() || !vaccines[i].equals("")){
-                        checkBoxVaccines.get(i).setChecked(true);
+                String[] statusArray = getResources().getStringArray(R.array.reproductiveStatus);
+                for(int i = 0; i < statusArray.length; i++){
+                    if(statusArray[i].equals(repStatus)){
+                        spinnerRepStatus.setSelection(i);
                     }
                 }
 
+                String vaccines_text = "";
+                for (int i = 0; i < vaccines.length; i++){
+                    if(vaccines[i] != null || !vaccines[i].isEmpty()){
+                        vaccines_text = vaccines_text + vaccines[i] + ", ";
+                    }
+                }
 
-
+                editTextVaccines.setText(vaccines_text);
             }
         }
 
@@ -156,25 +167,26 @@ public class BovineActivity extends AppCompatActivity {
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
-        checkBoxVaccines.get(0).setChecked(false);
-        checkBoxVaccines.get(1).setChecked(false);
+        editTextVaccines.setText(null);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
+        spinnerRepStatus.setSelection(0);
 
         Toast.makeText(this,
                 R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
     }
 
     public void saveValues(){
-        String tag = editTextTag.getText().toString();
-        String name = editTextName.getText().toString();
-        String date = editTextDate.getText().toString();
+        String tag          = editTextTag.getText().toString();
+        String name         = editTextName.getText().toString();
+        String date         = editTextDate.getText().toString();
+        String vaccines     = editTextVaccines.getText().toString();
 
         if(tag == null || tag.trim().isEmpty()){
             Toast.makeText(this,
                     R.string.reg_bov_toast_text_tagMissing, Toast.LENGTH_LONG).show();
 
-            editTextName.requestFocus();
+            editTextTag.requestFocus();
             return;
         }
 
@@ -190,22 +202,19 @@ public class BovineActivity extends AppCompatActivity {
             Toast.makeText(this,
                     R.string.reg_bov_toast_text_birthMissing, Toast.LENGTH_LONG).show();
 
-            editTextName.requestFocus();
+            editTextDate.requestFocus();
             return;
         }
 
-        String[] vaccines = new String[checkBoxVaccines.size()];
-        int cont= 0;
-        // For-each em java pega cada elemento que tiver no array e guarda na variável option
-        // Cada elemento é considerado como um ciclo, então facilita minha vida na hora de percorrer array.
-        for (CheckBox option : checkBoxVaccines){
-            if (option.isChecked()){
-                vaccines[cont] = option.getText().toString();
-            } else {
-                vaccines[cont] = "";
+        // Separa a string a cada vírgula e cria uma lista com os elementos
+        String[] vaccinesArray      = vaccines.split(",");
+        List<String> vaccinesList   = new ArrayList<>();
+        for (String vac : vaccinesArray){
+            // Se a vacina em questão não ficar vazia após o trim, significa que foi escrito algo (add isso na lista)
+            String item = vac.trim();
+            if(!item.isEmpty()){
+                vaccinesList.add(item);
             }
-
-            cont++;
         }
 
         AnimalSex animalSex;
@@ -225,6 +234,28 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
+        ReproductiveStatus repStatus_enum;
+        String repStatus_string = spinnerRepStatus.getSelectedItem().toString().toUpperCase();
+        if(repStatus_string.equals(ReproductiveStatus.SECA.toString())){
+
+            repStatus_enum = ReproductiveStatus.SECA;
+        } else if (repStatus_string.equals(ReproductiveStatus.PRENHA.toString())){
+
+            repStatus_enum = ReproductiveStatus.PRENHA;
+        } else if(repStatus_string.equals(ReproductiveStatus.LACTANTE.toString())){
+
+            repStatus_enum = ReproductiveStatus.LACTANTE;
+        } else if(repStatus_string.equals(ReproductiveStatus.PRONTA.toString())){
+
+            repStatus_enum = ReproductiveStatus.PRONTA;
+        } else {
+            Toast.makeText(this,
+                    R.string.reg_bov_toast_ReproductiveStatusMissing, Toast.LENGTH_LONG).show();
+
+            spinnerRepStatus.requestFocus();
+            return;
+        }
+
         String animalBreed = spinnerBreed.getSelectedItem().toString();
         if (animalBreed == null){
 
@@ -239,16 +270,7 @@ public class BovineActivity extends AppCompatActivity {
         if(mode == MODE_EDIT) {
 
             // Verifica se as vacinas são iguais
-            boolean isVaccinesEqual = false;
-            cont = 0;
-
-            for (String vaccine : vaccines) {
-                isVaccinesEqual = false;
-                if (vaccine.equals(bovineOriginal.getVaccines().get(cont))) {
-                    isVaccinesEqual = true;
-                }
-                cont++;
-            }
+            boolean isVaccinesEqual = vaccinesList.equals(bovineOriginal.getVaccines());
 
             // Compara os outros atributos;
             if (tag.equals(bovineOriginal.getTag())
@@ -273,8 +295,9 @@ public class BovineActivity extends AppCompatActivity {
         intentResult.putExtra(KEY_NAME, name);
         intentResult.putExtra(KEY_BIRTH, date);
         intentResult.putExtra(KEY_SEX, animalSex.toString());
+        intentResult.putExtra(KEY_REPSTATUS, repStatus_enum.toString());
         intentResult.putExtra(KEY_BREED, animalBreed);
-        intentResult.putExtra(KEY_VACCINES, vaccines);
+        intentResult.putExtra(KEY_VACCINES, vaccinesList.toArray(new String[0]));
 
         // seta o resultado com a resposta e o objeto de intenção de resposta;
         setResult(BovineActivity.RESULT_OK, intentResult);
