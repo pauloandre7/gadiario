@@ -15,6 +15,13 @@
         <item>Cruzamento Industrial</item>
     </string-array>
 
+    <string-array name="reproductiveStatus">
+        <item>PRENHA</item>
+        <item>LACTANTE</item>
+        <item>SECA</item>
+        <item>PRONTA</item>
+    </string-array>
+
     <string-array name="bovines_Tags">
         <item>BV0001</item>
         <item>BV0002</item>

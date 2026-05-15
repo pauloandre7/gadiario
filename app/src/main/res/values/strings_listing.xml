@@ -6,12 +6,18 @@
     <string name="bov_list_nameValue">"Nome: "</string>
     <string name="bov_list_birthValue">"Nascimento: "</string>
     <string name="bov_list_breedValue">"Raça: "</string>
-    <string name="bov_list_VaccineValue">"Vacinação: "</string>
     <string name="bov_list_sexValue">"Sexo: "</string>
+    <string name="bov_list_VaccineValue">"Vacinação: "</string>
+    <string name="line_bov_label_repStatus">"Status Reprodutivo: "</string>
     <string name="bov_list_with_tag">Bovino de tag \"</string>
     <string name="bov_list_text_isVaccinated">Animal Vacinado</string>
     <string name="bov_list_text_notVaccinated">Animal Não Vacinado</string>
     <string name="bov_toast_bovClicked">\" clicado!</string>
+    <string name="bov_list_lactating">LACTANTE</string>
+    <string name="bov_list_repStatusValue_pregnant">PRENHA</string>
+    <string name="bov_list_repStatusValue_dry">SECA</string>
+    <string name="bov_list_repStatusValue_ready">PRONTA</string>
+
     <string name="past_list_Title">Lista de Pastos</string>
 
 </resources>
