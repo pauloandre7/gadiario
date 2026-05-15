@@ -20,6 +20,7 @@ import java.util.List;
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 
 public class BovineActivity extends AppCompatActivity {
 
@@ -30,6 +31,8 @@ public class BovineActivity extends AppCompatActivity {
     public static final String KEY_SEX = "KEY_SEX";
     public static final String KEY_BREED = "KEY_BREED";
     public static final String KEY_VACCINES = "KEY_VACCINES";
+    public static final String KEY_REPSTATUS = "KEY_REPSTATUS";
+
 
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
@@ -82,10 +85,13 @@ public class BovineActivity extends AppCompatActivity {
                 String animalSex = bundle.getString(BovineActivity.KEY_SEX);
                 String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
                 String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+                String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
 
                 AnimalSex animalSex_enum = AnimalSex.valueOf(animalSex);
+                ReproductiveStatus repStatus_enum = ReproductiveStatus.valueOf(repStatus);
 
-                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed, List.of(vaccines));
+                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed,
+                                            List.of(vaccines), repStatus_enum);
 
                 editTextTag.setText(tag);
                 editTextName.setText(name);
@@ -105,6 +111,14 @@ public class BovineActivity extends AppCompatActivity {
                     }
                 }
 
+                String[] statusArray = getResources().getStringArray(R.array.reproductiveStatus);
+                for(int i = 0; i < statusArray.length; i++){
+                    if(statusArray[i].equals(repStatus)){
+                        spinnerRepStatus.setSelection(i);
+                    }
+                }
+
+                String vaccines_text = "";
                 for (int i = 0; i < vaccines.length; i++){
                     if(vaccines[i] != null || !vaccines[i].isEmpty() || !vaccines[i].equals("")){
                         checkBoxVaccines.get(i).setChecked(true);
@@ -161,6 +175,7 @@ public class BovineActivity extends AppCompatActivity {
         checkBoxVaccines.get(1).setChecked(false);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
+        spinnerRepStatus.setSelection(0);
 
         Toast.makeText(this,
                 R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
@@ -226,6 +241,28 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
+        ReproductiveStatus repStatus_enum;
+        String repStatus_string = spinnerRepStatus.getSelectedItem().toString().toUpperCase();
+        if(repStatus_string.equals(ReproductiveStatus.SECA.toString())){
+
+            repStatus_enum = ReproductiveStatus.SECA;
+        } else if (repStatus_string.equals(ReproductiveStatus.PRENHA.toString())){
+
+            repStatus_enum = ReproductiveStatus.PRENHA;
+        } else if(repStatus_string.equals(ReproductiveStatus.LACTANTE.toString())){
+
+            repStatus_enum = ReproductiveStatus.LACTANTE;
+        } else if(repStatus_string.equals(ReproductiveStatus.PRONTA.toString())){
+
+            repStatus_enum = ReproductiveStatus.PRONTA;
+        } else {
+            Toast.makeText(this,
+                    R.string.reg_bov_toast_ReproductiveStatusMissing, Toast.LENGTH_LONG).show();
+
+            spinnerRepStatus.requestFocus();
+            return;
+        }
+
         String animalBreed = spinnerBreed.getSelectedItem().toString();
         if (animalBreed == null){
 
@@ -274,6 +311,7 @@ public class BovineActivity extends AppCompatActivity {
         intentResult.putExtra(KEY_NAME, name);
         intentResult.putExtra(KEY_BIRTH, date);
         intentResult.putExtra(KEY_SEX, animalSex.toString());
+        intentResult.putExtra(KEY_REPSTATUS, repStatus_enum.toString());
         intentResult.putExtra(KEY_BREED, animalBreed);
         intentResult.putExtra(KEY_VACCINES, vaccines);
 
