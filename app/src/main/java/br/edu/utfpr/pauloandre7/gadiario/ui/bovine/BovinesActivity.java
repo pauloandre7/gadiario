@@ -149,7 +149,7 @@ public class BovinesActivity extends AppCompatActivity {
 
                                 bovine = new Bovine(tag, name, date,
                                                     AnimalSex.valueOf(animalSex), animalBreed,
-                                                    vaccines_list);
+                                                    vaccines_list, ReproductiveStatus.valueOf(repStatus));
                             } else {
                                 bovine = new Bovine(tag, name, date,
                                         AnimalSex.valueOf(animalSex), animalBreed,
