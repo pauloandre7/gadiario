@@ -16,20 +16,40 @@ public class Bovine {
         }
     };
 
+    private int id;
     private String tag;
     private String name;
     private String date;
     private AnimalSex animalSex;
     private String breed;
     private List<String> vaccines;
+    private ReproductiveStatus reproductiveStatus;
+    private int idPasture;
+    private int idMother;
 
-    public Bovine(String tag, String name, String date, AnimalSex animalSex, String breed, List<String> vaccines) {
+    public Bovine(String tag, String name, String date, AnimalSex animalSex,
+                  String breed, List<String> vaccines, ReproductiveStatus repStatus) {
         this.tag = tag;
         this.name = name;
         this.date = date;
         this.animalSex = animalSex;
         this.breed = breed;
         this.vaccines = vaccines;
+        this.reproductiveStatus = repStatus;
+    }
+
+    public Bovine(String tag, String name, String date, AnimalSex animalSex,
+                    String breed, List<String> vaccines, ReproductiveStatus repStatus,
+                    int idPasture, int idMother) {
+        this.tag = tag;
+        this.name = name;
+        this.date = date;
+        this.animalSex = animalSex;
+        this.breed = breed;
+        this.vaccines = vaccines;
+        this.reproductiveStatus = repStatus;
+        this.idPasture = idPasture;
+        this.idMother = idMother;
     }
 
     public String getTag() {
@@ -70,6 +90,14 @@ public class Bovine {
 
     public void setBreed(String breed) {
         this.breed = breed;
+    }
+
+    public ReproductiveStatus getRepStatus(){
+        return reproductiveStatus;
+    }
+
+    public void setRepStatus(ReproductiveStatus repStatus){
+        this.reproductiveStatus = repStatus;
     }
 
     public List<String> getVaccines() {
