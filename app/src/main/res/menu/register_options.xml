@@ -5,11 +5,11 @@
     <item
         android:id="@+id/menuItem_save"
         android:icon="@android:drawable/ic_menu_save"
-        android:title="@string/reg_bov_btn_text_save"
+        android:title="@string/common_save"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menuItem_clear"
         android:icon="@android:drawable/ic_notification_clear_all"
-        android:title="@string/reg_bov_btn_text_clear"
+        android:title="@string/common_clear"
         app:showAsAction="ifRoom" />
 </menu>
