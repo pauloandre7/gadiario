@@ -57,12 +57,13 @@ public class BovineAdapter extends BaseAdapter {
 
             // Cria o holder e seta os endereços
             holder = new BovineHolder();
-            holder.textViewTagValue = convertView.findViewById(R.id.textViewTagValue);
-            holder.textViewNameValue = convertView.findViewById(R.id.textViewNameValue);
-            holder.textViewSexValue = convertView.findViewById(R.id.textViewSexValue);
-            holder.textViewBirthValue = convertView.findViewById(R.id.textViewBirthValue);
-            holder.textViewBreedValue = convertView.findViewById(R.id.textViewBreedValue);
-            holder.textViewVaccineValue = convertView.findViewById(R.id.textViewVaccineValue);
+            holder.textViewTagValue = convertView.findViewById(R.id.line_bov_textView_TagValue);
+            holder.textViewNameValue = convertView.findViewById(R.id.line_bov_textView_NameValue);
+            holder.textViewSexValue = convertView.findViewById(R.id.line_bov_textView_genreValue);
+            holder.textViewBirthValue = convertView.findViewById(R.id.line_bov_textView_birthValue);
+            holder.textViewBreedValue = convertView.findViewById(R.id.line_bov_textView_breedValue);
+            holder.textViewVaccineValue = convertView.findViewById(R.id.line_bov_textView_vaccineValue);
+            holder.textViewRepStatusValue = convertView.findViewById(R.id.line_bov_textView_repStatusValue);
 
             convertView.setTag(holder);
         } else {
