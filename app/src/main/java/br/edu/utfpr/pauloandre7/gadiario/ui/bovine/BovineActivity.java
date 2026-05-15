@@ -174,7 +174,7 @@ public class BovineActivity extends AppCompatActivity {
             Toast.makeText(this,
                     R.string.reg_bov_toast_text_tagMissing, Toast.LENGTH_LONG).show();
 
-            editTextName.requestFocus();
+            editTextTag.requestFocus();
             return;
         }
 
@@ -190,7 +190,7 @@ public class BovineActivity extends AppCompatActivity {
             Toast.makeText(this,
                     R.string.reg_bov_toast_text_birthMissing, Toast.LENGTH_LONG).show();
 
-            editTextName.requestFocus();
+            editTextDate.requestFocus();
             return;
         }
 
