@@ -28,6 +28,7 @@ public class BovineAdapter extends BaseAdapter {
         public TextView textViewBirthValue;
         public TextView textViewBreedValue;
         public TextView textViewVaccineValue;
+        public TextView textViewRepStatusValue;
     }
 
     @Override
@@ -86,6 +87,20 @@ public class BovineAdapter extends BaseAdapter {
                 break;
         }
 
+        switch (bovine.getRepStatus()){
+            case LACTANTE:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_lactating);
+                break;
+            case PRENHA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_pregnant);
+                break;
+            case SECA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_dry);
+                break;
+            case PRONTA:
+                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_ready);
+                break;
+        }
 
         if(bovine.getVaccines().isEmpty()){
             holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
