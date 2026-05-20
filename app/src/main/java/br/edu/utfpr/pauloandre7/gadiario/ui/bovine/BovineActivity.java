@@ -53,6 +53,11 @@ public class BovineActivity extends AppCompatActivity {
 
     private int mode;
 
+    // Atributos para gerenciar o SharedPreferences inicializados com valores padrões
+    private boolean suggestInfo = false;
+    private int     lastBreed = 0;
+    private String  lastTag = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
