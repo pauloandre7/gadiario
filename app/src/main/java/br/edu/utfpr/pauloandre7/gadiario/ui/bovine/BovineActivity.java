@@ -328,10 +328,10 @@ public class BovineActivity extends AppCompatActivity {
 
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItem_clear) {
+        if(idMenuItem == R.id.bov_menuItem_clear) {
             clearFields();
             return true;
-        }else if(idMenuItem == R.id.menuItem_save){
+        }else if(idMenuItem == R.id.bov_menuItem_save) {
             saveValues();
             return true;
         } else{
