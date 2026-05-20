@@ -44,6 +44,9 @@ public class BovinesActivity extends AppCompatActivity {
 
     BovineAdapter adapterBovine;
 
+    // arquivo de sharedPreferences setado na classe principal
+    public static final String PREFERENCES_FILE = "br.edu.utfpr.pauloandre7.gadiario.PREFERENCES";
+
     // usado para o menu de ação contextual
     private ActionMode actionMode;
 
