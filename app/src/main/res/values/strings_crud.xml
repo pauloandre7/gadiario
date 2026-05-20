@@ -30,5 +30,6 @@
     <string name="past_reg_hint_pastureName">Nome do Pasto</string>
     <string name="past_reg_hint_pastureDescription">"Descrição do Pasto "</string>
     <string name="past_reg_warning_missingDescription">Descrição não informada.</string>
+    <string name="bov_reg_suggestBasic">Sugerir Info</string>
 
 </resources>

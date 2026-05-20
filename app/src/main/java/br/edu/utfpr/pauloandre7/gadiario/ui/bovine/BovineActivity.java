@@ -1,6 +1,8 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,7 +34,12 @@ public class BovineActivity extends AppCompatActivity {
     public static final String KEY_VACCINES = "KEY_VACCINES";
     public static final String KEY_REPSTATUS = "KEY_REPSTATUS";
 
+    // Keys para usar no Shared Preferences
+    public static final String KEY_SUGGEST_BREED = "SUGGEST_BASIC";
+    public static final String KEY_LAST_BREED = "LAST_BREED";
+    public static final String KEY_LAST_TAG = "LAST_TAG";
 
+    // Keys para controlar o modo de uso da activity de cadastro
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
     public static final int MODE_EDIT = 1;
@@ -47,6 +54,11 @@ public class BovineActivity extends AppCompatActivity {
     private Bovine bovineOriginal;
 
     private int mode;
+
+    // Atributos para gerenciar o SharedPreferences inicializados com valores padrões
+    private boolean suggestInfo = false;
+    private int     lastBreed = 0;
+    private String  lastTag = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +75,9 @@ public class BovineActivity extends AppCompatActivity {
         spinnerBreed        = findViewById(R.id.bov_spinnerBreed);
         spinnerRepStatus    = findViewById(R.id.bov_spinnerRepStatus);
 
+        // Realiza a leitura das preferências na abertura da activity;
+        readPreferences();
+
         // recebe a intent que originou a activity
         Intent intentOpen = getIntent();
 
@@ -73,6 +88,12 @@ public class BovineActivity extends AppCompatActivity {
 
             if(mode == MODE_NEW){
                 setTitle(getString(R.string.reg_bov_title));
+
+                if(suggestInfo){
+                    spinnerBreed.setSelection(lastBreed);
+                    editTextTag.setText(lastTag);
+                }
+
             } else if (mode == MODE_EDIT){
                 setTitle(getString(R.string.bov_edit_title));
 
@@ -286,6 +307,9 @@ public class BovineActivity extends AppCompatActivity {
             }
         }
 
+        saveLastBreed(spinnerBreed.getSelectedItemPosition());
+        saveLastTag(editTextTag.getText().toString());
+
         // Para passar resultados entre activities, é necessário usar um Intent;
         Intent intentResult = new Intent();
 
@@ -309,7 +333,18 @@ public class BovineActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        getMenuInflater().inflate(R.menu.register_options, menu);
+        getMenuInflater().inflate(R.menu.bov_register_options, menu);
+        return true;
+    }
+
+    // Diferente do OnCreat, o OnPrepare é chamado sempre que o menu for exibido
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+
+        // Recupera o menu item para mudar sua condição com base na variável local
+        MenuItem item = menu.findItem(R.id.menuItem_suggestBasic);
+        item.setChecked(suggestInfo);
+
         return true;
     }
 
@@ -318,14 +353,76 @@ public class BovineActivity extends AppCompatActivity {
 
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItem_clear) {
+        if(idMenuItem == R.id.bov_menuItem_clear) {
             clearFields();
             return true;
-        }else if(idMenuItem == R.id.menuItem_save){
+        }else if(idMenuItem == R.id.bov_menuItem_save) {
             saveValues();
+            return true;
+
+        } else if(idMenuItem == R.id.menuItem_suggestBasic){
+            boolean value = !item.isChecked();
+
+            saveSuggestBreed(value);
+
+            // precisa forçar o menuItem a trocar o valor do check
+            item.setChecked(value);
+
+            if(suggestInfo){
+                spinnerBreed.setSelection(lastBreed);
+                editTextTag.setText(lastTag);
+            }
+
             return true;
         } else{
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void readPreferences(){
+        // abrir o sharedPreferences primeiro; NO modo privado, apenas esse app usa o arquivo.
+        // Na primeira vez, essa linha cria o arquivo, na segunda, pega um criado.
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        // O primeiro param é a key, mas o segundo é para definir qual é o valor default se não houver valor gravado
+        suggestInfo = shared.getBoolean(KEY_SUGGEST_BREED, suggestInfo);
+        lastBreed   = shared.getInt(KEY_LAST_BREED, lastBreed);
+        lastTag     = shared.getString(KEY_LAST_TAG, lastTag);
+    }
+
+    private void saveSuggestBreed(boolean newValue){
+        // abre novamente o sharedPreferences
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        // Precisa de um editor para gravar coisas no arquivo;
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putBoolean(KEY_SUGGEST_BREED, newValue);
+
+        // realiza a gravação de fato, pois antes ainda estava em memória
+        editor.commit();
+        suggestInfo = newValue;
+    }
+
+    private void saveLastBreed(int newValue){
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putInt(KEY_LAST_BREED, newValue);
+
+        editor.commit();
+        lastBreed = newValue;
+    }
+
+    private void saveLastTag(String newValue){
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        editor.putString(KEY_LAST_TAG, newValue);
+
+        editor.commit();
+        lastTag = newValue;
     }
 }
