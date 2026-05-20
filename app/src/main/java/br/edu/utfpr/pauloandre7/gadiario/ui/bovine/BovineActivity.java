@@ -32,7 +32,12 @@ public class BovineActivity extends AppCompatActivity {
     public static final String KEY_VACCINES = "KEY_VACCINES";
     public static final String KEY_REPSTATUS = "KEY_REPSTATUS";
 
+    // Keys para usar no Shared Preferences
+    public static final String KEY_SUGGEST_BREED = "SUGGEST_BASIC";
+    public static final String KEY_LAST_BREED = "LAST_BREED";
+    public static final String KEY_LAST_TAG = "LAST_TAG";
 
+    // Keys para controlar o modo de uso da activity de cadastro
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
     public static final int MODE_EDIT = 1;
