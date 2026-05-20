@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/bov_menuItem_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:title="@string/common_save"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/bov_menuItem_clear"
+        android:icon="@android:drawable/ic_notification_clear_all"
+        android:title="@string/common_clear"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menuItem_suggestBasic"
+        android:checkable="true"
+        android:title="@string/bov_reg_suggestBasic" />
+</menu>
