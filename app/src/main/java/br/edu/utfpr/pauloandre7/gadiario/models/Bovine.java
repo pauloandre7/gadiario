@@ -16,6 +16,16 @@ public class Bovine {
         }
     };
 
+    public static Comparator<Bovine> descendingTagSort = new Comparator<Bovine>() {
+        @Override
+        public int compare(Bovine bov1, Bovine bov2) {
+
+            // Compara dois objetos e retorna um inteiro
+            // Method usado pelo Collections.sort
+            return -1 * bov1.getTag().compareToIgnoreCase(bov2.getTag());
+        }
+    };
+
     private int id;
     private String tag;
     private String name;
