@@ -1,6 +1,8 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -46,6 +48,11 @@ public class BovinesActivity extends AppCompatActivity {
 
     // arquivo de sharedPreferences setado na classe principal
     public static final String PREFERENCES_FILE = "br.edu.utfpr.pauloandre7.gadiario.PREFERENCES";
+
+    private boolean sortingAscending = true;
+    public static final String KEY_ASCENDING_SORT = "ASCENDING_SORT";
+
+    private MenuItem menuItemSorting;
 
     // usado para o menu de ação contextual
     private ActionMode actionMode;
@@ -98,6 +105,8 @@ public class BovinesActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        readPreferences();
 
         fillListBovines();
 
@@ -161,10 +170,7 @@ public class BovinesActivity extends AppCompatActivity {
 
                             listBovines.add(bovine);
 
-                            Collections.sort(listBovines, Bovine.ascendingTagSort);
-
-                            // Avisa o adapter que a base de dados dele foi modificada;
-                            adapterBovine.notifyDataSetChanged();
+                            sortList();
                         }
                     }
                 }
@@ -226,6 +232,16 @@ public class BovinesActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_options, menu);
+
+        menuItemSorting = menu.findItem(R.id.menuItemSorting);
+        return true;
+    }
+
+    // Utiliza esse method toda vez que o menu for exibido.
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        updateSortingIcon();
+
         return true;
     }
 
@@ -240,6 +256,12 @@ public class BovinesActivity extends AppCompatActivity {
         } else if (idMenuItem == R.id.menuItemAbout){
             onClickAbout();
             return true;
+
+        } else if(idMenuItem == R.id.menuItemSorting){
+            saveSortingPreference(!sortingAscending);
+            updateSortingIcon();
+            return true;
+
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -292,9 +314,7 @@ public class BovinesActivity extends AppCompatActivity {
                                 bovine.setVaccines(null);
                             }
 
-                            Collections.sort(listBovines, Bovine.ascendingTagSort);
-
-                            adapterBovine.notifyDataSetChanged();
+                            sortList();
                         }
                     }
                     positionSelected = -1;
@@ -389,4 +409,42 @@ public class BovinesActivity extends AppCompatActivity {
             listViewBovines.setEnabled(true);
         }
     };
+
+    private void readPreferences(){
+        SharedPreferences shared = getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        sortingAscending = shared.getBoolean(KEY_ASCENDING_SORT, sortingAscending);
+    }
+
+    public void saveSortingPreference(boolean newValue){
+
+        SharedPreferences shared = getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putBoolean(KEY_ASCENDING_SORT, newValue);
+
+        editor.commit();
+
+        sortingAscending = newValue;
+    }
+
+    private void sortList(){
+
+        if(sortingAscending){
+            Collections.sort(listBovines, Bovine.ascendingTagSort);
+        } else {
+            Collections.sort(listBovines, Bovine.descendingTagSort);
+        }
+
+        adapterBovine.notifyDataSetChanged();
+    }
+
+    private void updateSortingIcon(){
+
+        if(sortingAscending){
+            menuItemSorting.setIcon(R.drawable.ic_action_ascending_order);
+        } else {
+            menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
+        }
+    }
 }
