@@ -49,7 +49,9 @@ public class BovinesActivity extends AppCompatActivity {
     // arquivo de sharedPreferences setado na classe principal
     public static final String PREFERENCES_FILE = "br.edu.utfpr.pauloandre7.gadiario.PREFERENCES";
 
-    private boolean sortingAscending = true;
+    private static final boolean DEFAULT_INITIAL_ASCENDING_SORT = true;
+
+    private boolean sortingAscending = DEFAULT_INITIAL_ASCENDING_SORT;
     public static final String KEY_ASCENDING_SORT = "ASCENDING_SORT";
 
     private MenuItem menuItemSorting;
@@ -260,8 +262,21 @@ public class BovinesActivity extends AppCompatActivity {
         } else if(idMenuItem == R.id.menuItemSorting){
             saveSortingPreference(!sortingAscending);
             updateSortingIcon();
+            sortList();
             return true;
 
+        } else if(idMenuItem == R.id.menuItemReset){
+
+            resetPreferences();
+            updateSortingIcon();
+            sortList();
+
+            Toast.makeText(this,
+                            R.string.common_toast_resetMessage,
+                            Toast.LENGTH_LONG)
+            .show();
+
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
@@ -446,5 +461,17 @@ public class BovinesActivity extends AppCompatActivity {
         } else {
             menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
         }
+    }
+
+    private void resetPreferences(){
+        SharedPreferences shared = getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = shared.edit();
+
+        // limpa o shared inteiro
+        editor.clear();
+        editor.commit();
+
+        sortingAscending = DEFAULT_INITIAL_ASCENDING_SORT;
     }
 }
