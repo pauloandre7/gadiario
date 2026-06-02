@@ -15,6 +15,14 @@ public class Pasture {
         }
     };
 
+    public static Comparator<Pasture> descendingNameSort = new Comparator<Pasture>(){
+        @Override
+        public int compare(Pasture past1, Pasture past2) {
+
+            return -1 * past1.getName().compareToIgnoreCase(past2.getName());
+        }
+    };
+
     public Pasture(String name, String description) {
         this.id = 0;
         this.name = name;
