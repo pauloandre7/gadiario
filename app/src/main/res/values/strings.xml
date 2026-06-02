@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="common_name">Name</string>
+    <string name="common_edit">Edit</string>
+    <string name="common_delete">Delete</string>
+    <string name="common_clear">Clear</string>
+    <string name="common_save">Save</string>
+    <string name="common_description">Description</string>
+    <string name="common_sorting">Sorting</string>
+    <string name="common_resetPreferences">Reset to Default</string>
+    <string name="common_toast_resetMessage">Settings have been reset to factory defaults</string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- About Variables -->
+    <string name="about_img_text_logoUtfpr">UTFPR Logo</string>
+    <string name="about_text_student">Student:</string>
+    <string name="about_text_course">Course:</string>
+    <string name="about_text_EngSoftware">Software Engineering</string>
+    <string name="about_text_appDescription">App to assist in cattle management.
+        The app allows recording events such as vaccination, insemination, calving,
+        pasture changes, and cattle slaughter. (Created for a university course on
+        Mobile Development).
+    </string>
+    <string name="about_class_text_about">About</string>
+    <string name="bov_list_activityTitle">Bovine List</string>
+    <string name="bov_list_btn_RegisterBovine">Register Bovine</string>
+    <!-- HTML tags preserved -->
+    <string name="about_text_author">Author: <a href="https://pauloandre7.github.io/frontend-curriculum/">Paulo André Oliveira da Silva</a></string>
+    <string name="about_class_toastError_noActivityToOpenUrl">No app found to open the website</string>
+    <string name="about_class_toastError_noActivityToEmail">No app found to send the email</string>
+    <string name="about_class_text_contactByApp">Contact via Gadiario app</string>
+    <string name="about_text_email" translatable="false"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- Bovines listing variables-->
+    <string name="bov_list_tagValue">"Tag: "</string>
+    <string name="bov_list_nameValue">"Name: "</string>
+    <string name="bov_list_birthValue">"Birth: "</string>
+    <string name="bov_list_breedValue">"Breed: "</string>
+    <string name="bov_list_sexValue">"Sex: "</string>
+    <string name="bov_list_VaccineValue">"Vaccination: "</string>
+    <string name="line_bov_label_repStatus">"Reproductive Status: "</string>
+    <string name="bov_list_with_tag">Bovine with tag \"</string>
+    <string name="bov_list_text_isVaccinated">Vaccinated Animal</string>
+    <string name="bov_list_text_notVaccinated">Non-Vaccinated Animal</string>
+    <string name="bov_list_lactating">LACTATING</string>
+    <string name="bov_list_repStatusValue_pregnant">PREGNANT</string>
+    <string name="bov_list_repStatusValue_dry">DRY</string>
+    <string name="bov_list_repStatusValue_ready">READY</string>
+
+    <string name="past_list_Title">Pasture List</string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- Register Bov Variables -->
+    <string name="reg_bov_title">Bovine Registration</string>
+    <string name="reg_bov_text_tag">Tag</string>
+    <string name="reg_bov_text_birth">Date of Birth</string>
+    <string name="reg_bov_text_male">Male</string>
+    <string name="reg_bov_text_female">Female</string>
+    <string name="reg_bov_hint_codeTag">Tag Code</string>
+    <string name="reg_bov_hint_animalName">Animal Name</string>
+    <string name="reg_bov_hint_date">05/01/2026</string>
+    <string name="reg_bov_toast_fields_cleaned">Inputs have been cleared.</string>
+    <string name="reg_bov_toast_text_nameMissing">Name is missing.</string>
+    <string name="reg_bov_toast_text_tagMissing">Tag Code is missing.</string>
+    <string name="reg_bov_toast_text_birthMissing">Date of birth is missing.</string>
+    <string name="reg_bov_text_vaccines">Applied Vaccines</string>
+    <string name="reg_bov_hint_vaccines">EX: Vaccine 1, Vaccine 2, Vaccine 3...</string>
+    <string name="reg_bov_toast_text_animalSexMissing">Animal sex was not informed!</string>
+    <string name="reg_bov_label_breed">Animal Breed</string>
+    <string name="reg_bov_toast_text_warningSpinnerEmpty">Breed Spinner has no values!</string>
+    <string name="reg_bov_label_Status">Reproductive Status</string>
+    <string name="reg_bov_toast_ReproductiveStatusMissing">Reproductive Status not informed!</string>
+    <string name="bov_edit_title">Edit Bovine</string>
+
+    <!-- Pasture variables -->
+    <string name="past_reg_title">Pasture Registration</string>
+    <string name="past_edit_Title">Edit Pasture</string>
+    <string name="past_reg_hint_pastureName">Pasture Name</string>
+    <string name="past_reg_hint_pastureDescription">"Pasture Description "</string>
+    <string name="past_reg_warning_missingDescription">Description not informed.</string>
+    <string name="bov_reg_suggestBasic">Suggest Info</string>
+</resources>
