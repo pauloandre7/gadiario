@@ -97,7 +97,7 @@
             android:onClick="sendEmailToAuthor"
             android:text="@string/about_text_email"
             android:textAlignment="center"
-            android:textColor="@color/agro_primary_green"
+            android:textColor="@color/agro_highlight_wheat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_StudName" />
