@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="common_name">Nome</string>
 
     <string name="common_edit">Editar</string>
@@ -81,4 +80,5 @@
     <string name="past_reg_hint_pastureDescription">"Descrição do Pasto "</string>
     <string name="past_reg_warning_missingDescription">Descrição não informada.</string>
     <string name="bov_reg_suggestBasic">Sugerir Info</string>
+    <string name="about_universityName">UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ</string>
 </resources>

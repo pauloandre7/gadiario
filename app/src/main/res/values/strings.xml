@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Gadiario</string>
 
     <string name="common_name">Name</string>
     <string name="common_edit">Edit</string>
@@ -30,6 +31,7 @@
     <string name="about_class_toastError_noActivityToOpenUrl">No app found to open the website</string>
     <string name="about_class_toastError_noActivityToEmail">No app found to send the email</string>
     <string name="about_class_text_contactByApp">Contact via Gadiario app</string>
+    <string name="about_text_utfprSite" translatable="false"><a href="www.utfpr.edu.br"> www.utfpr.edu.br</a></string>
     <string name="about_text_email" translatable="false"><u>paulos.2001@alunos.utfpr.edu.br</u></string>
 
     <!-- ======================================================================================================================= -->
@@ -81,4 +83,5 @@
     <string name="past_reg_hint_pastureDescription">"Pasture Description "</string>
     <string name="past_reg_warning_missingDescription">Description not informed.</string>
     <string name="bov_reg_suggestBasic">Suggest Info</string>
+    <string name="about_universityName">FEDERAL UNIVERSITY OF TECHNOLOGY - PARANÁ</string>
 </resources>
