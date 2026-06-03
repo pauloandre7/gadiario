@@ -38,6 +38,18 @@
             app:layout_constraintTop_toBottomOf="@+id/textView_Description" />
 
         <TextView
+            android:id="@+id/textView_universityName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/about_universityName"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+        <TextView
             android:id="@+id/textView_Description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -85,7 +97,7 @@
             android:onClick="sendEmailToAuthor"
             android:text="@string/about_text_email"
             android:textAlignment="center"
-            android:textColor="@color/agro_primary_green"
+            android:textColor="@color/agro_highlight_wheat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView_StudName" />
@@ -94,12 +106,12 @@
             android:id="@+id/textView_UtfprURL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="24dp"
             android:autoLink="web"
             android:text="@string/about_text_utfprSite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_universityName" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

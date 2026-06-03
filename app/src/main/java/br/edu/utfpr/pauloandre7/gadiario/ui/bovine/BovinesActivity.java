@@ -75,9 +75,6 @@ public class BovinesActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 Bovine bovine = (Bovine) parent.getItemAtPosition(position);
-
-                Toast.makeText(getApplicationContext(), getString(R.string.bov_list_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
-                        Toast.LENGTH_LONG).show();
             }
         });
 
