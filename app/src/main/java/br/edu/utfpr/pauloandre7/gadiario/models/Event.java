@@ -1,8 +1,14 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.util.Comparator;
 
+@Entity
 public class Event implements Cloneable {
 
     public static Comparator<Event> ascendingDateSort = new Comparator<Event>() {
@@ -19,25 +25,36 @@ public class Event implements Cloneable {
         }
     };
 
-    private int id;
-    private int idBovine;
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @ColumnInfo(index = true)
+    private long idBovine;
+
     private EventType type;
     private int qtyCalves;
-    private int idPastureOrigin;
-    private int idPastureDestination;
+    private long idPastureOrigin;
+    private long idPastureDestination;
+
+    @NonNull
+    @ColumnInfo(index = true)
     private String date;
+
     private String observation;
 
-    public Event(int idBovine, EventType type, String date, String observation) {
+    @Ignore
+    public Event(long idBovine, EventType type, String date, String observation) {
         this.id = 0;
         this.idBovine = idBovine;
         this.type = type;
         this.date = date;
         this.observation = observation;
         this.qtyCalves = 0;
+        this.idPastureOrigin = 0;
+        this.idPastureDestination = 0;
     }
 
-    public Event(int id, int idBovine, EventType type, int qtyCalves, int idPastureOrigin, int idPastureDestination, String date, String observation) {
+    public Event(long id, long idBovine, EventType type, int qtyCalves, long idPastureOrigin, long idPastureDestination, @NonNull String date, String observation) {
         this.id = id;
         this.idBovine = idBovine;
         this.type = type;
@@ -48,19 +65,19 @@ public class Event implements Cloneable {
         this.observation = observation;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public int getIdBovine() {
+    public long getIdBovine() {
         return idBovine;
     }
 
-    public void setIdBovine(int idBovine) {
+    public void setIdBovine(long idBovine) {
         this.idBovine = idBovine;
     }
 
@@ -80,27 +97,28 @@ public class Event implements Cloneable {
         this.qtyCalves = qtyCalves;
     }
 
-    public int getIdPastureOrigin() {
+    public long getIdPastureOrigin() {
         return idPastureOrigin;
     }
 
-    public void setIdPastureOrigin(int idPastureOrigin) {
+    public void setIdPastureOrigin(long idPastureOrigin) {
         this.idPastureOrigin = idPastureOrigin;
     }
 
-    public int getIdPastureDestination() {
+    public long getIdPastureDestination() {
         return idPastureDestination;
     }
 
-    public void setIdPastureDestination(int idPastureDestination) {
+    public void setIdPastureDestination(long idPastureDestination) {
         this.idPastureDestination = idPastureDestination;
     }
 
+    @NonNull
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(@NonNull String date) {
         this.date = date;
     }
 
@@ -116,5 +134,12 @@ public class Event implements Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return type + "\n" +
+                date + "\n" +
+                observation;
     }
 }
