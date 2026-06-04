@@ -1,6 +1,8 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -32,6 +34,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class BovinesActivity extends AppCompatActivity {
 
@@ -94,7 +97,7 @@ public class BovinesActivity extends AppCompatActivity {
                 drawableSelecionado = viewSelecionada.getBackground();
 
                 // muda a cor de fundo para um cinza claro
-                viewSelecionada.setBackgroundColor(Color.LTGRAY);
+                viewSelecionada.setBackgroundColor(getColor(R.color.itemSelected));
 
                 // desativa a view para que não seja clicada
                 listViewBovines.setEnabled(false);
@@ -264,15 +267,7 @@ public class BovinesActivity extends AppCompatActivity {
 
         } else if(idMenuItem == R.id.menuItemReset){
 
-            resetPreferences();
-            updateSortingIcon();
-            sortList();
-
-            Toast.makeText(this,
-                            R.string.common_toast_resetMessage,
-                            Toast.LENGTH_LONG)
-            .show();
-
+            confirmResetPreferences();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -359,9 +354,28 @@ public class BovinesActivity extends AppCompatActivity {
     }
 
     private void deleteBovine(){
-        listBovines.remove(positionSelected);
+        Bovine bovine = listBovines.get(positionSelected);
 
-        adapterBovine.notifyDataSetChanged();
+        String message = getString(R.string.common_confirmation_wantDelete, bovine.getName());
+
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // como o context foi passado, podemos tratar a lista dentro desse Listener como se
+                // fosse o méthod interno de BovinesACtivity.
+
+                listBovines.remove(positionSelected);
+
+                adapterBovine.notifyDataSetChanged();
+
+                // CORREÇÃO: Verifica se o actionMode não é nulo antes de finalizar
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
+            }
+        };
+
+        AlertUtils.confirmAction(this, message, listenerYes, null);
     }
 
     // O callback cuida da gestão do menu de ação contextual
@@ -396,8 +410,7 @@ public class BovinesActivity extends AppCompatActivity {
                 return true;
             } else if (idMenuItem == R.id.contextMenuItem_Delete){
                 deleteBovine();
-                // fecha o menu
-                mode.finish();
+                // O actionMode será finalizado dentro do deleteBovine se confirmado
                 return true;
             } else{
                 return false;
@@ -458,6 +471,28 @@ public class BovinesActivity extends AppCompatActivity {
         } else {
             menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
         }
+    }
+
+    private void confirmResetPreferences(){
+
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetPreferences();
+                updateSortingIcon();
+                sortList();
+
+
+                Toast.makeText(BovinesActivity.this,
+                                R.string.common_toast_resetMessage,
+                                Toast.LENGTH_LONG)
+                        .show();
+            }
+        };
+
+        AlertUtils.confirmAction(this, getString(R.string.common_dialog_deleteConfirmation),
+                listenerYes, null);
+
     }
 
     private void resetPreferences(){

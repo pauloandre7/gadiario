@@ -5,12 +5,13 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.pasture.PastureListingActivity">
+    tools:context=".ui.pasture.PastureListingActivity"
+    android:fitsSystemWindows="true">
 
     <ListView
         android:id="@+id/listViewPastures"
-        android:layout_width="409dp"
-        android:layout_height="889dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

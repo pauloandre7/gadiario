@@ -6,6 +6,7 @@
     <string name="common_delete">Excluir</string>
     <string name="common_clear">Limpar</string>
     <string name="common_save">Salvar</string>
+    <string name="common_no">Não</string>
     <string name="common_description">Descrição</string>
     <string name="common_sorting">Ordenação</string>
     <string name="common_resetPreferences">Restaurar Padrão</string>
@@ -81,4 +82,9 @@
     <string name="past_reg_warning_missingDescription">Descrição não informada.</string>
     <string name="bov_reg_suggestBasic">Sugerir Info</string>
     <string name="about_universityName">UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ</string>
+    <string name="common_alertDialog_alertTitle">Alerta</string>
+    <string name="common_confirmation">Confirmação</string>
+    <string name="common_yes">Sim</string>
+    <string name="common_confirmation_wantDelete">Deseja apagar? \\n\\\" %1$s \\</string>
+    <string name="common_dialog_deleteConfirmation">Você deseja apagar?</string>
 </resources>

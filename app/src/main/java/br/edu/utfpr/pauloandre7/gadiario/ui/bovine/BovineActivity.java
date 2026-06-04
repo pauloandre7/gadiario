@@ -22,6 +22,7 @@ import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class BovineActivity extends AppCompatActivity {
 
@@ -204,24 +205,21 @@ public class BovineActivity extends AppCompatActivity {
         String vaccines     = editTextVaccines.getText().toString();
 
         if(tag == null || tag.trim().isEmpty()){
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_tagMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_tagMissing);
 
             editTextTag.requestFocus();
             return;
         }
 
         if(name == null || name.trim().isEmpty()){
-            Toast.makeText(this,
-                            R.string.reg_bov_toast_text_nameMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_nameMissing);
 
             editTextName.requestFocus();
             return;
         }
 
         if(date == null || date.trim().isEmpty()){
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_birthMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_birthMissing);
 
             editTextDate.requestFocus();
             return;
@@ -248,8 +246,7 @@ public class BovineActivity extends AppCompatActivity {
             animalSex = AnimalSex.MALE;
         } else{
             // if the animal sex was not selected
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_animalSexMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_animalSexMissing);
 
             radioGroupSex.requestFocus();
             return;
@@ -270,8 +267,7 @@ public class BovineActivity extends AppCompatActivity {
 
             repStatus_enum = ReproductiveStatus.PRONTA;
         } else {
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_ReproductiveStatusMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_ReproductiveStatusMissing);
 
             spinnerRepStatus.requestFocus();
             return;
@@ -280,9 +276,7 @@ public class BovineActivity extends AppCompatActivity {
         String animalBreed = spinnerBreed.getSelectedItem().toString();
         if (animalBreed == null){
 
-            Toast.makeText(this,
-                            R.string.reg_bov_toast_text_warningSpinnerEmpty,
-                            Toast.LENGTH_LONG);
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_warningSpinnerEmpty);
         }
 
 

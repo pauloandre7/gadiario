@@ -7,6 +7,11 @@
     <string name="common_delete">Delete</string>
     <string name="common_clear">Clear</string>
     <string name="common_save">Save</string>
+    <string name="common_alertDialog_alertTitle">Alert</string>
+    <string name="common_ok" translatable="false">OK</string>
+    <string name="common_confirmation">Confirmation</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
     <string name="common_description">Description</string>
     <string name="common_sorting">Sorting</string>
     <string name="common_resetPreferences">Reset to Default</string>
@@ -84,4 +89,7 @@
     <string name="past_reg_warning_missingDescription">Description not informed.</string>
     <string name="bov_reg_suggestBasic">Suggest Info</string>
     <string name="about_universityName">FEDERAL UNIVERSITY OF TECHNOLOGY - PARANÁ</string>
+    <!--Definição de parâmetro na string %[ordemParam]$[tipo. "s" é string]-->
+    <string name="common_confirmation_wantDelete">"Do you want to delete \n\" %1$s \"</string>
+    <string name="common_dialog_deleteConfirmation">Do you want to delete?</string>
 </resources>

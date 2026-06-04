@@ -1,6 +1,7 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.pasture;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -30,6 +31,7 @@ import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.ui.bovine.BovineActivity;
 import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class PastureListingActivity extends AppCompatActivity {
 
@@ -69,7 +71,7 @@ public class PastureListingActivity extends AppCompatActivity {
                 viewSelected = view;
                 backgroundView = viewSelected.getBackground();
 
-                viewSelected.setBackgroundColor(Color.LTGRAY);
+                viewSelected.setBackgroundColor(getColor(R.color.itemSelected));
 
                 // desativa a view pra evitar novos clicks
                 listViewPastures.setEnabled(false);
@@ -103,9 +105,23 @@ public class PastureListingActivity extends AppCompatActivity {
     /****************************************** CRUD ABAIXO ******************************************/
 
     public void deletePasture(){
-        listPastures.remove(positionSelected);
+        Pasture pasture = listPastures.get(positionSelected);
 
-        pastureAdapter.notifyDataSetChanged();
+        String message = getString(R.string.common_confirmation_wantDelete, pasture.getName());
+
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                listPastures.remove(positionSelected);
+                pastureAdapter.notifyDataSetChanged();
+
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
+            }
+        };
+
+        AlertUtils.confirmAction(this, message, listenerYes, null);
     }
 
     // launcher e method para adicionar novo pasto

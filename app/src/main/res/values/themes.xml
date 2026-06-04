@@ -23,6 +23,8 @@
         <item name="actionBarStyle">@style/Widget.Gadiario.ActionBar</item>
     </style>
 
+    <color name="itemSelected">@color/agro_item_selected</color>
+
     <!-- Estilo customizado para a Barra -->
     <style name="Widget.Gadiario.ActionBar" parent="Widget.AppCompat.ActionBar.Solid">
         <item name="background">@color/agro_primary_green</item>
