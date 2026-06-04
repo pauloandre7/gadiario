@@ -367,6 +367,11 @@ public class BovinesActivity extends AppCompatActivity {
                 listBovines.remove(positionSelected);
 
                 adapterBovine.notifyDataSetChanged();
+
+                // CORREÇÃO: Verifica se o actionMode não é nulo antes de finalizar
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
             }
         };
 
@@ -405,8 +410,7 @@ public class BovinesActivity extends AppCompatActivity {
                 return true;
             } else if (idMenuItem == R.id.contextMenuItem_Delete){
                 deleteBovine();
-                // fecha o menu
-                mode.finish();
+                // O actionMode será finalizado dentro do deleteBovine se confirmado
                 return true;
             } else{
                 return false;
