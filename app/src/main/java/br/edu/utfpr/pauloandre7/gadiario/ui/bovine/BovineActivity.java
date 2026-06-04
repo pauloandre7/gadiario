@@ -358,7 +358,6 @@ public class BovineActivity extends AppCompatActivity {
         }
 
         saveLastBreed(spinnerBreed.getSelectedItemPosition());
-        saveLastTag(editTextTag.getText().toString());
 
         // Para passar resultados entre activities, é necessário usar um Intent;
         Intent intentResult = new Intent();
@@ -437,7 +436,6 @@ public class BovineActivity extends AppCompatActivity {
         // O primeiro param é a key, mas o segundo é para definir qual é o valor default se não houver valor gravado
         suggestInfo = shared.getBoolean(KEY_SUGGEST_BREED, suggestInfo);
         lastBreed   = shared.getInt(KEY_LAST_BREED, lastBreed);
-        lastTag     = shared.getString(KEY_LAST_TAG, lastTag);
     }
 
     private void saveSuggestBreed(boolean newValue){
@@ -463,16 +461,5 @@ public class BovineActivity extends AppCompatActivity {
 
         editor.commit();
         lastBreed = newValue;
-    }
-
-    private void saveLastTag(String newValue){
-        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = shared.edit();
-
-        editor.putString(KEY_LAST_TAG, newValue);
-
-        editor.commit();
-        lastTag = newValue;
     }
 }
