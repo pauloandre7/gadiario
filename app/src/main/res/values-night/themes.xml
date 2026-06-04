@@ -12,4 +12,6 @@
 
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <color name="itemSelected">@color/agro_item_selected</color>
 </resources>
