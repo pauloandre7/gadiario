@@ -1,8 +1,10 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
+import androidx.annotation.NonNull;
+
 import java.util.Comparator;
 
-public class Pasture {
+public class Pasture implements Cloneable {
     private int id;
     private String name;
     private String description;
@@ -57,5 +59,11 @@ public class Pasture {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
