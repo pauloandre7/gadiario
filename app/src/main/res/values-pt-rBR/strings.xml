@@ -70,7 +70,7 @@
     <string name="reg_bov_toast_text_animalSexMissing">O sexo do animal não foi informado!</string>
     <string name="reg_bov_label_breed">Raça do Animal</string>
     <string name="reg_bov_toast_text_warningSpinnerEmpty">O Spinner de raças não possui valores!</string>
-    <string name="reg_bov_label_Status">Reproductive Status</string>
+    <string name="reg_bov_label_Status">Status Reprodutivo</string>
     <string name="reg_bov_toast_ReproductiveStatusMissing">Status Reprodutivo não informado!</string>
     <string name="bov_edit_title">Editar Bovino</string>
 
@@ -85,9 +85,24 @@
     <string name="common_alertDialog_alertTitle">Alerta</string>
     <string name="common_confirmation">Confirmação</string>
     <string name="common_yes">Sim</string>
-    <string name="common_confirmation_wantDelete">Deseja apagar? \\n\\\" %1$s \\</string>
+    <string name="common_confirmation_wantDelete">Deseja apagar? \n\" %1$s \"</string>
     <string name="common_dialog_deleteConfirmation">Você deseja apagar?</string>
     <string name="common_undo">Desfazer</string>
     <string name="common_snackbar_dataUpdateDone">Atualização de dados concluída</string>
     <string name="bov_list_alert_typeConversionError">Erro de Conversão de Tipo</string>
+
+    <!-- Registro de Eventos -->
+    <string name="event_reg_title">Cadastro de Evento</string>
+    <string name="event_label_bovine">Bovino (Brinco/Nome)</string>
+    <string name="event_label_type">Tipo de Evento</string>
+    <string name="event_label_date">Data</string>
+    <string name="event_label_observations">Observações</string>
+    <string name="event_label_qty_calves">Quantidade de Bezerros</string>
+    <string name="event_label_origin_pasture">Pasto de Origem</string>
+    <string name="event_label_destination_pasture">Pasto de Destino</string>
+    <string name="event_hint_date">01/01/2024</string>
+    <string name="event_hint_observations">Adicione detalhes relevantes...</string>
+    <string name="common_alertDialog_dbErrorInsert">Erro ao tentar inserir!</string>
+    <string name="common_alertDialog_dbErrorUpdate">Erro ao tentar atualizar!</string>
+    <string name="common_alertDialog_dbErrorDelete">Erro ao tentar excluir!</string>
 </resources>
