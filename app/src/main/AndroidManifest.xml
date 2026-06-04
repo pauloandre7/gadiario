@@ -38,25 +38,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gadiario">
         <activity
-            android:name=".ui.pasture.PastureListingActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.pasture.PastureActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ui.main.AboutActivity"
-            android:exported="false"
-            android:parentActivityName=".ui.bovine.BovinesActivity" />
-        <activity
-            android:name=".ui.bovine.BovinesActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+            android:name=".ui.main.MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.event.EventsActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.event.EventActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.event.EventsActivity" />
+        <activity
+            android:name=".ui.pasture.PastureListingActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.pasture.PastureActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.pasture.PastureListingActivity" />
+        <activity
+            android:name=".ui.main.AboutActivity"
+            android:exported="false"
+            android:parentActivityName=".ui.main.MainActivity" />
+        <activity
+            android:name=".ui.bovine.BovinesActivity"
+            android:exported="true"
+            android:parentActivityName=".ui.main.MainActivity" />
         <activity
             android:name=".ui.bovine.BovineActivity"
             android:exported="true"
