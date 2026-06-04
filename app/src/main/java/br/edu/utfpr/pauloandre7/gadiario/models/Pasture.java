@@ -1,18 +1,28 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
 import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 
+@Entity
 public class Pasture implements Cloneable {
-    private int id;
+
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @NonNull
+    @ColumnInfo(index = true)
     private String name;
+
     private String description;
 
     public static Comparator<Pasture> ascendingNameSort = new Comparator<Pasture>(){
         @Override
         public int compare(Pasture past1, Pasture past2) {
-
             return past1.getName().compareToIgnoreCase(past2.getName());
         }
     };
@@ -20,28 +30,28 @@ public class Pasture implements Cloneable {
     public static Comparator<Pasture> descendingNameSort = new Comparator<Pasture>(){
         @Override
         public int compare(Pasture past1, Pasture past2) {
-
             return -1 * past1.getName().compareToIgnoreCase(past2.getName());
         }
     };
 
+    @Ignore
     public Pasture(String name, String description) {
         this.id = 0;
         this.name = name;
         this.description = description;
     }
 
-    public Pasture(int id, String name, String description) {
+    public Pasture(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -65,5 +75,10 @@ public class Pasture implements Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return name + "\n" + description;
     }
 }
