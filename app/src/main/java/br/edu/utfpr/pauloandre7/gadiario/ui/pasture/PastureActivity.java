@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class PastureActivity extends AppCompatActivity {
 
@@ -69,19 +70,15 @@ public class PastureActivity extends AppCompatActivity {
         String description = editTextDescription.getText().toString();
 
         if(name == null || name.trim().isEmpty()){
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_nameMissing);
 
             editTextName.requestFocus();
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_nameMissing, Toast.LENGTH_LONG).show();
-
             return;
         }
         if(description == null || description.trim().isEmpty()){
+            AlertUtils.showAlert(this, R.string.past_reg_warning_missingDescription);
 
             editTextDescription.requestFocus();
-            Toast.makeText(this,
-                    R.string.past_reg_warning_missingDescription, Toast.LENGTH_LONG).show();
-
             return;
         }
 
