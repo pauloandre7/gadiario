@@ -24,6 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -306,7 +309,19 @@ public class BovinesActivity extends AppCompatActivity {
                             String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
                             String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
 
-                            Bovine bovine = listBovines.get(positionSelected);
+                            final Bovine bovine = listBovines.get(positionSelected);
+                            final Bovine cloneBovine;
+
+                            try{
+                                cloneBovine = (Bovine) bovine.clone();
+                            } catch(CloneNotSupportedException e){
+                                e.printStackTrace();
+                                AlertUtils.showAlert(BovinesActivity.this,
+                                        R.string.bov_list_alert_typeConversionError);
+
+                                return;
+                            }
+
 
                             bovine.setTag(tag);
                             bovine.setName(name);
@@ -322,6 +337,27 @@ public class BovinesActivity extends AppCompatActivity {
                             }
 
                             sortList();
+
+                            final ConstraintLayout constraintLayout = findViewById(R.id.main);
+
+                            Snackbar snackbar = Snackbar.make( constraintLayout,
+                                    R.string.common_snackbar_dataUpdateDone,
+                                    Snackbar.LENGTH_LONG
+                            );
+
+                            snackbar.setAction(R.string.common_undo, new View.OnClickListener(){
+
+                                @Override
+                                public void onClick(View view){
+                                    listBovines.remove(bovine);
+                                    listBovines.add(cloneBovine);
+
+                                    sortList();
+                                }
+                            });
+
+                            snackbar.setAnchorView(listViewBovines);
+                            snackbar.show();
                         }
                     }
                     positionSelected = -1;

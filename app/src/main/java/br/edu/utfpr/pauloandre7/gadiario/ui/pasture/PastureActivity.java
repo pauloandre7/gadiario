@@ -4,11 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ScrollView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
@@ -57,11 +60,41 @@ public class PastureActivity extends AppCompatActivity {
     }
 
     public void clearFields(){
+        // Salva os valores atuais para o Undo
+        final String name = editTextName.getText().toString();
+        final String description = editTextDescription.getText().toString();
+
+        // Limpa os campos
         editTextName.setText(null);
         editTextDescription.setText(null);
 
-        Toast.makeText(this,
-                R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
+        final ScrollView scrollView = findViewById(R.id.main);
+        final View focusedView = scrollView.findFocus();
+
+        Snackbar snackbar = Snackbar.make(scrollView,
+                R.string.reg_bov_toast_fields_cleaned,
+                Snackbar.LENGTH_LONG);
+
+        snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v){
+                // refaz tudo quando clica em Undo.
+                editTextName.setText(name);
+                editTextDescription.setText(description);
+            }
+        });
+
+        // Mantém o foco onde o usuário estava ou volta para o primeiro campo
+        if(focusedView != null){
+            focusedView.requestFocus();
+            snackbar.setAnchorView(focusedView);
+        } else {
+            editTextName.requestFocus();
+            snackbar.setAnchorView(editTextName);
+        }
+
+        snackbar.show();
     }
 
     public void saveValues(){

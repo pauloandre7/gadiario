@@ -1,9 +1,11 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
+import androidx.annotation.NonNull;
+
 import java.util.Comparator;
 import java.util.List;
 
-public class Bovine {
+public class Bovine implements Cloneable{
 
     // O objeto ascendingSort vai representar um dos comparadores possíveis
     public static Comparator<Bovine> ascendingTagSort = new Comparator<Bovine>() {
@@ -116,6 +118,14 @@ public class Bovine {
 
     public void setVaccines(List<String> vaccines) {
         this.vaccines = vaccines;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        // Cópia rasa funcinoa porque essa classe tem atributos primitivos ou mutáveis (gloria)
+
+        return super.clone();
     }
 
     @Override

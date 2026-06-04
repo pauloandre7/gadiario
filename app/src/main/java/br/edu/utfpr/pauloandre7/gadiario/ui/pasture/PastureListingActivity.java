@@ -21,6 +21,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -148,9 +151,7 @@ public class PastureListingActivity extends AppCompatActivity {
                             Pasture pasture = new Pasture(name, description);
 
                             listPastures.add(pasture);
-                            Collections.sort(listPastures, Pasture.ascendingNameSort);
-
-                            pastureAdapter.notifyDataSetChanged();
+                            sortList();
                         }
                     }
                 }
@@ -185,14 +186,40 @@ public class PastureListingActivity extends AppCompatActivity {
                             String name = bundle.getString(PastureActivity.KEY_NAME);
                             String description = bundle.getString(PastureActivity.KEY_DESCRIPTION);
 
-                            Pasture pasture = listPastures.get(positionSelected);
+                            final Pasture pasture = listPastures.get(positionSelected);
+                            final Pasture clonePasture;
+
+                            try {
+                                clonePasture = (Pasture) pasture.clone();
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                                return;
+                            }
 
                             pasture.setName(name);
                             pasture.setDescription(description);
 
-                            Collections.sort(listPastures, Pasture.ascendingNameSort);
+                            sortList();
 
-                            pastureAdapter.notifyDataSetChanged();
+                            final ConstraintLayout constraintLayout = findViewById(R.id.main);
+
+                            Snackbar snackbar = Snackbar.make(constraintLayout,
+                                    R.string.common_snackbar_dataUpdateDone,
+                                    Snackbar.LENGTH_LONG
+                            );
+
+                            snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    // Remove a versão atual e restaura o clone (estado anterior)
+                                    listPastures.remove(pasture);
+                                    listPastures.add(clonePasture);
+
+                                    sortList();
+                                }
+                            });
+
+                            snackbar.show();
                         }
                     }
                     // zera a variável de posição
@@ -297,5 +324,10 @@ public class PastureListingActivity extends AppCompatActivity {
             listViewPastures.setEnabled(true);
         }
     };
+
+    private void sortList(){
+        Collections.sort(listPastures, Pasture.ascendingNameSort);
+        pastureAdapter.notifyDataSetChanged();
+    }
 
 }

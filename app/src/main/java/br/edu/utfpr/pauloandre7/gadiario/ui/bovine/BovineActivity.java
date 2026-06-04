@@ -6,14 +6,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -186,6 +190,17 @@ public class BovineActivity extends AppCompatActivity {
     */
 
     public void clearFields(){
+
+        // Define final para manter as variáveis mesmo após o término do méthod
+        final String tag = editTextTag.getText().toString();
+        final String name = editTextName.getText().toString();
+        final String birth = editTextDate.getText().toString();
+        final String vaccines = editTextVaccines.getText().toString();
+        final int radioButtonSex = radioGroupSex.getCheckedRadioButtonId();
+        final int breed = spinnerBreed.getSelectedItemPosition();
+        final int repStatus = spinnerRepStatus.getSelectedItemPosition();
+
+        // Limpa os campos
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
@@ -194,8 +209,49 @@ public class BovineActivity extends AppCompatActivity {
         spinnerBreed.setSelection(0);
         spinnerRepStatus.setSelection(0);
 
-        Toast.makeText(this,
-                R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
+
+        final ScrollView scrollView = findViewById(R.id.main);
+        final View focusedView = scrollView.findFocus();
+
+
+        Snackbar snackbar = Snackbar.make(scrollView,
+                R.string.reg_bov_toast_fields_cleaned,
+                Snackbar.LENGTH_LONG);
+
+        snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v){
+                // refaz tudo quando clica em Undo.
+
+                editTextTag.setText(tag);
+                editTextName.setText(name);
+                editTextDate.setText(birth);
+                editTextVaccines.setText(vaccines);
+
+                if (radioButtonSex == R.id.radioBtnFemale){
+
+                    radioButtonFemale.setChecked(true);
+                } else {
+
+                    radioButtonMale.setChecked(true);
+                }
+
+                spinnerBreed.setSelection(breed);
+                spinnerRepStatus.setSelection(repStatus);
+
+            }
+        });
+
+        if(focusedView != null){
+            focusedView.requestFocus();
+            snackbar.setAnchorView(focusedView);
+        } else {
+            editTextTag.requestFocus();
+            snackbar.setAnchorView(editTextTag);
+        }
+
+        snackbar.show();
     }
 
     public void saveValues(){
