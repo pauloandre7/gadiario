@@ -22,6 +22,14 @@
         <item>PRONTA</item>
     </string-array>
 
+    <string-array name="eventTypes">
+        <item>Vacinação</item>
+        <item>Inseminação</item>
+        <item>Parto</item>
+        <item>Movimentação</item>
+        <item>Abate</item>
+    </string-array>
+
     <string-array name="bovines_Tags">
         <item>BV0001</item>
         <item>BV0002</item>
