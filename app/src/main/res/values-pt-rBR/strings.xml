@@ -87,4 +87,7 @@
     <string name="common_yes">Sim</string>
     <string name="common_confirmation_wantDelete">Deseja apagar? \\n\\\" %1$s \\</string>
     <string name="common_dialog_deleteConfirmation">Você deseja apagar?</string>
+    <string name="common_undo">Desfazer</string>
+    <string name="common_snackbar_dataUpdateDone">Atualização de dados concluída</string>
+    <string name="bov_list_alert_typeConversionError">Erro de Conversão de Tipo</string>
 </resources>

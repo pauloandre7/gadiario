@@ -92,4 +92,7 @@
     <!--Definição de parâmetro na string %[ordemParam]$[tipo. "s" é string]-->
     <string name="common_confirmation_wantDelete">"Do you want to delete \n\" %1$s \"</string>
     <string name="common_dialog_deleteConfirmation">Do you want to delete?</string>
+    <string name="common_undo">Undo</string>
+    <string name="common_snackbar_dataUpdateDone">Data update done</string>
+    <string name="bov_list_alert_typeConversionError">Type Conversion Error</string>
 </resources>
