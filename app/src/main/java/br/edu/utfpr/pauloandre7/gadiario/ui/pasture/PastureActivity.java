@@ -15,12 +15,12 @@ import com.google.android.material.snackbar.Snackbar;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class PastureActivity extends AppCompatActivity {
 
-    public static final String KEY_NAME = "KEY_NAME";
-    public static final String KEY_DESCRIPTION = "KEY_DESCRIPTION";
+    public static final String KEY_ID = "ID";
 
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
@@ -43,23 +43,33 @@ public class PastureActivity extends AppCompatActivity {
         Intent intentOpen = getIntent();
 
         Bundle bundle = intentOpen.getExtras();
-        mode = bundle.getInt(KEY_MODE);
 
-        if(mode == MODE_NEW){
-            setTitle(getString(R.string.past_reg_title));
-        }else if(mode == MODE_EDIT){
-            setTitle(getString(R.string.past_edit_Title));
+        if (bundle != null) {
+            mode = bundle.getInt(KEY_MODE);
 
-            // primeiro salva um objeto original para verificar se teve mudanças
-            pastureOriginal = new Pasture(bundle.getString(KEY_NAME), bundle.getString(KEY_DESCRIPTION));
+            if (mode == MODE_NEW) {
+                setTitle(getString(R.string.past_reg_title));
+            } else if (mode == MODE_EDIT) {
+                setTitle(getString(R.string.past_edit_Title));
 
-            editTextName.setText(bundle.getString(KEY_NAME));
-            editTextDescription.setText(bundle.getString(KEY_DESCRIPTION));
+                long id = bundle.getLong(KEY_ID);
+
+                GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+
+                pastureOriginal = database.getPastureDao().queryById(id);
+
+                if (pastureOriginal != null) {
+                    editTextName.setText(pastureOriginal.getName());
+                    editTextDescription.setText(pastureOriginal.getDescription());
+
+                    editTextName.requestFocus();
+                    editTextName.setSelection(editTextName.getText().length());
+                }
+            }
         }
-
     }
 
-    public void clearFields(){
+    public void clearFields() {
         // Salva os valores atuais para o Undo
         final String name = editTextName.getText().toString();
         final String description = editTextDescription.getText().toString();
@@ -78,7 +88,7 @@ public class PastureActivity extends AppCompatActivity {
         snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
                 // refaz tudo quando clica em Undo.
                 editTextName.setText(name);
                 editTextDescription.setText(description);
@@ -86,7 +96,7 @@ public class PastureActivity extends AppCompatActivity {
         });
 
         // Mantém o foco onde o usuário estava ou volta para o primeiro campo
-        if(focusedView != null){
+        if (focusedView != null) {
             focusedView.requestFocus();
             snackbar.setAnchorView(focusedView);
         } else {
@@ -97,28 +107,30 @@ public class PastureActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    public void saveValues(){
+    public void saveValues() {
 
         String name = editTextName.getText().toString();
         String description = editTextDescription.getText().toString();
 
-        if(name == null || name.trim().isEmpty()){
+        if (name == null || name.trim().isEmpty()) {
             AlertUtils.showAlert(this, R.string.reg_bov_toast_text_nameMissing);
 
             editTextName.requestFocus();
             return;
         }
-        if(description == null || description.trim().isEmpty()){
+        if (description == null || description.trim().isEmpty()) {
             AlertUtils.showAlert(this, R.string.past_reg_warning_missingDescription);
 
             editTextDescription.requestFocus();
             return;
         }
 
+        Pasture pasture = new Pasture(name, description);
+
         // cancela a resposta se nada for alterado
-        if(mode == MODE_EDIT){
-            if(pastureOriginal.getName().equals(name) &&
-                pastureOriginal.getDescription().equals(description)){
+        if (mode == MODE_EDIT && pastureOriginal != null) {
+            if (pastureOriginal.getName().equals(name) &&
+                    pastureOriginal.getDescription().equals(description)) {
 
                 setResult(PastureActivity.RESULT_CANCELED);
                 finish();
@@ -128,8 +140,33 @@ public class PastureActivity extends AppCompatActivity {
 
         // Intent pra passar os resultados
         Intent intentResult = new Intent();
-        intentResult.putExtra(PastureActivity.KEY_NAME, name);
-        intentResult.putExtra(PastureActivity.KEY_DESCRIPTION, description);
+
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+
+        if (mode == MODE_NEW) {
+            long newId = database.getPastureDao().insert(pasture);
+
+            if (newId <= 0) {
+                AlertUtils.showAlert(this, R.string.common_alertDialog_dbErrorInsert);
+                return;
+            }
+
+            pasture.setId(newId);
+
+        } else {
+
+            pasture.setId(pastureOriginal.getId());
+
+            int updateInstances = database.getPastureDao().update(pasture);
+
+            if (updateInstances != 1) {
+                AlertUtils.showAlert(this,
+                        R.string.common_alertDialog_dbErrorUpdate);
+                return;
+            }
+        }
+
+        intentResult.putExtra(KEY_ID, pasture.getId());
 
         // seta o resultado com a resposta e o objeto de intenção de resposta;
         setResult(PastureActivity.RESULT_OK, intentResult);
@@ -147,13 +184,14 @@ public class PastureActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int idMenuItem = item.getItemId();
 
-        if(idMenuItem == R.id.menuItem_clear){
+        if (idMenuItem == R.id.menuItem_clear) {
             clearFields();
-        } else if(idMenuItem == R.id.menuItem_save){
+            return true;
+        } else if (idMenuItem == R.id.menuItem_save) {
             saveValues();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
-        return true;
     }
 }
