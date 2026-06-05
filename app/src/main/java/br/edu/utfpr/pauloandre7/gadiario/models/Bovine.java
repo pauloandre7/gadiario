@@ -195,12 +195,13 @@ public class Bovine implements Cloneable{
 
     @Override
     public String toString() {
-        return  tag + "\n" +
-                name + "\n" +
-                date + "\n" +
-                animalSex + "\n" +
-                breed + "\n" +
-                vaccines.get(0) + "\n" +
-                vaccines.get(1);
+
+        String sexString;
+
+        return  tag + " | " +
+                name + " | " +
+                date + " | " +
+                animalSex + " | " +
+                breed + " | ";
     }
 }
