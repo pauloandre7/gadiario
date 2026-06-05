@@ -23,7 +23,7 @@ public interface PastureDao {
     int update(Pasture pasture);
 
     @Query("SELECT * FROM pasture WHERE id=:id")
-    List<Pasture> queryAllAscending(long id);
+    Pasture queryById(long id);
 
     @Query("SELECT * FROM pasture ORDER BY name ASC")
     List<Pasture> queryAllAscending();
