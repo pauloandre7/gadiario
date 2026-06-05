@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -24,13 +25,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
-import br.edu.utfpr.pauloandre7.gadiario.models.EventType;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.ui.bovine.BovinesActivity;
+import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class EventsActivity extends AppCompatActivity {
@@ -43,6 +45,11 @@ public class EventsActivity extends AppCompatActivity {
     private View viewSelecionada;
     private Drawable drawableSelecionado;
     private ActionMode actionMode;
+
+    private boolean sortingAscending = false; // Por padrão, eventos mais recentes primeiro? (DESC)
+    public static final String KEY_ASCENDING_SORT_EVENT = "ASCENDING_SORT_EVENT";
+
+    private MenuItem menuItemSorting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +79,19 @@ public class EventsActivity extends AppCompatActivity {
             }
         });
 
+        readPreferences();
         fillListEvents();
     }
 
     private void fillListEvents() {
-        listEvents = new ArrayList<>();
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+
+        if (sortingAscending) {
+            listEvents = database.getEventDao().queryAllAscending();
+        } else {
+            listEvents = database.getEventDao().queryAllDownward();
+        }
+
         adapterEvent = new EventAdapter(this, listEvents);
         listViewEvents.setAdapter(adapterEvent);
     }
@@ -92,17 +107,11 @@ public class EventsActivity extends AppCompatActivity {
                         if (intent != null) {
                             Bundle bundle = intent.getExtras();
                             if (bundle != null) {
-                                int idBovine = bundle.getInt(EventActivity.KEY_BOVINE_ID);
-                                String typeStr = bundle.getString(EventActivity.KEY_TYPE);
-                                String date = bundle.getString(EventActivity.KEY_DATE);
-                                int qtyCalves = bundle.getInt(EventActivity.KEY_QTY_CALVES);
-                                int idPastOrigin = bundle.getInt(EventActivity.KEY_PASTURE_ORIGIN);
-                                int idPastDest = bundle.getInt(EventActivity.KEY_PASTURE_DESTINATION);
-                                String observations = bundle.getString(EventActivity.KEY_OBSERVATIONS);
+                                long id = bundle.getLong(EventActivity.KEY_ID);
 
-                                Event event = new Event(0, idBovine, EventType.valueOf(typeStr), qtyCalves, idPastOrigin, idPastDest, date, observations);
-                                listEvents.add(event);
-                                adapterEvent.notifyDataSetChanged();
+                                GadiarioDatabase database = GadiarioDatabase.getInstance(EventsActivity.this);
+                                listEvents.add(database.getEventDao().queryById(id));
+                                sortList();
                             }
                         }
                     }
@@ -120,31 +129,25 @@ public class EventsActivity extends AppCompatActivity {
                         if (intent != null) {
                             Bundle bundle = intent.getExtras();
                             if (bundle != null) {
-                                final Event event = listEvents.get(positionSelected);
-                                final Event cloneEvent;
-                                try {
-                                    cloneEvent = (Event) event.clone();
-                                } catch (CloneNotSupportedException e) {
-                                    return;
-                                }
+                                final Event originalEvent = listEvents.get(positionSelected);
+                                long id = bundle.getLong(EventActivity.KEY_ID);
 
-                                event.setIdBovine(bundle.getInt(EventActivity.KEY_BOVINE_ID));
-                                event.setType(EventType.valueOf(bundle.getString(EventActivity.KEY_TYPE)));
-                                event.setDate(bundle.getString(EventActivity.KEY_DATE));
-                                event.setQtyCalves(bundle.getInt(EventActivity.KEY_QTY_CALVES));
-                                event.setIdPastureOrigin(bundle.getInt(EventActivity.KEY_PASTURE_ORIGIN));
-                                event.setIdPastureDestination(bundle.getInt(EventActivity.KEY_PASTURE_DESTINATION));
-                                event.setObservation(bundle.getString(EventActivity.KEY_OBSERVATIONS));
+                                final GadiarioDatabase database = GadiarioDatabase.getInstance(EventsActivity.this);
+                                final Event eventEdited = database.getEventDao().queryById(id);
 
-                                adapterEvent.notifyDataSetChanged();
+                                listEvents.set(positionSelected, eventEdited);
+                                sortList();
 
                                 final ConstraintLayout constraintLayout = findViewById(R.id.events_main);
                                 Snackbar snackbar = Snackbar.make(constraintLayout, R.string.common_snackbar_dataUpdateDone, Snackbar.LENGTH_LONG);
                                 snackbar.setAction(R.string.common_undo, v -> {
-                                    listEvents.set(listEvents.indexOf(event), cloneEvent);
-                                    adapterEvent.notifyDataSetChanged();
+                                    int updated = database.getEventDao().update(originalEvent);
+                                    if (updated == 1) {
+                                        listEvents.remove(eventEdited);
+                                        listEvents.add(originalEvent);
+                                        sortList();
+                                    }
                                 });
-                                snackbar.setAnchorView(listViewEvents);
                                 snackbar.show();
                             }
                         }
@@ -159,21 +162,20 @@ public class EventsActivity extends AppCompatActivity {
         Intent intentOpen = new Intent(this, EventActivity.class);
         intentOpen.putExtra(EventActivity.KEY_MODE, EventActivity.MODE_EDIT);
         intentOpen.putExtra(EventActivity.KEY_ID, event.getId());
-        intentOpen.putExtra(EventActivity.KEY_BOVINE_ID, event.getIdBovine());
-        intentOpen.putExtra(EventActivity.KEY_TYPE, event.getType().toString());
-        intentOpen.putExtra(EventActivity.KEY_DATE, event.getDate());
-        intentOpen.putExtra(EventActivity.KEY_QTY_CALVES, event.getQtyCalves());
-        intentOpen.putExtra(EventActivity.KEY_PASTURE_ORIGIN, event.getIdPastureOrigin());
-        intentOpen.putExtra(EventActivity.KEY_PASTURE_DESTINATION, event.getIdPastureDestination());
-        intentOpen.putExtra(EventActivity.KEY_OBSERVATIONS, event.getObservation());
         launcherEditEvent.launch(intentOpen);
     }
 
     private void deleteEvent() {
+        Event event = listEvents.get(positionSelected);
         String message = getString(R.string.common_dialog_deleteConfirmation);
         DialogInterface.OnClickListener listenerYes = (dialog, which) -> {
-            listEvents.remove(positionSelected);
-            adapterEvent.notifyDataSetChanged();
+            GadiarioDatabase database = GadiarioDatabase.getInstance(EventsActivity.this);
+            if (database.getEventDao().delete(event) == 1) {
+                listEvents.remove(positionSelected);
+                adapterEvent.notifyDataSetChanged();
+            } else {
+                AlertUtils.showAlert(EventsActivity.this, R.string.common_alertDialog_dbErrorDelete);
+            }
             if (actionMode != null) actionMode.finish();
         };
         AlertUtils.confirmAction(this, message, listenerYes, null);
@@ -215,6 +217,13 @@ public class EventsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_options, menu);
+        menuItemSorting = menu.findItem(R.id.menuItemSorting);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        updateSortingIcon();
         return true;
     }
 
@@ -226,7 +235,68 @@ public class EventsActivity extends AppCompatActivity {
             intentOpen.putExtra(EventActivity.KEY_MODE, EventActivity.MODE_NEW);
             launcherRegEvent.launch(intentOpen);
             return true;
+        } else if (id == R.id.menuItemAbout) {
+            Intent intentOpen = new Intent(this, AboutActivity.class);
+            startActivity(intentOpen);
+            return true;
+        } else if (id == R.id.menuItemSorting) {
+            saveSortingPreference(!sortingAscending);
+            updateSortingIcon();
+            sortList();
+            return true;
+        } else if (id == R.id.menuItemReset) {
+            confirmResetPreferences();
+            return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void readPreferences() {
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        sortingAscending = shared.getBoolean(KEY_ASCENDING_SORT_EVENT, false);
+    }
+
+    public void saveSortingPreference(boolean newValue) {
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putBoolean(KEY_ASCENDING_SORT_EVENT, newValue);
+        editor.apply();
+        sortingAscending = newValue;
+    }
+
+    private void sortList() {
+        if (sortingAscending) {
+            Collections.sort(listEvents, Event.ascendingDateSort);
+        } else {
+            Collections.sort(listEvents, Event.descendingDateSort);
+        }
+        adapterEvent.notifyDataSetChanged();
+    }
+
+    private void updateSortingIcon() {
+        if (menuItemSorting == null) return;
+        if (sortingAscending) {
+            menuItemSorting.setIcon(R.drawable.ic_action_ascending_order);
+        } else {
+            menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
+        }
+    }
+
+    private void confirmResetPreferences() {
+        DialogInterface.OnClickListener listenerYes = (dialog, which) -> {
+            resetPreferences();
+            updateSortingIcon();
+            sortList();
+            Toast.makeText(this, R.string.common_toast_resetMessage, Toast.LENGTH_LONG).show();
+        };
+        AlertUtils.confirmAction(this, getString(R.string.common_dialog_deleteConfirmation), listenerYes, null);
+    }
+
+    private void resetPreferences() {
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(KEY_ASCENDING_SORT_EVENT);
+        editor.apply();
+        sortingAscending = false;
     }
 }

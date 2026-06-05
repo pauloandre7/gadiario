@@ -304,18 +304,18 @@ public class BovineActivity extends AppCompatActivity {
 
         ReproductiveStatus repStatus_enum;
         String repStatus_string = spinnerRepStatus.getSelectedItem().toString().toUpperCase();
-        if(repStatus_string.equals(ReproductiveStatus.SECA.toString())){
+        if(repStatus_string.equals(ReproductiveStatus.DRY.toString())){
 
-            repStatus_enum = ReproductiveStatus.SECA;
-        } else if (repStatus_string.equals(ReproductiveStatus.PRENHA.toString())){
+            repStatus_enum = ReproductiveStatus.DRY;
+        } else if (repStatus_string.equals(ReproductiveStatus.PREGNANT.toString())){
 
-            repStatus_enum = ReproductiveStatus.PRENHA;
-        } else if(repStatus_string.equals(ReproductiveStatus.LACTANTE.toString())){
+            repStatus_enum = ReproductiveStatus.PREGNANT;
+        } else if(repStatus_string.equals(ReproductiveStatus.LACTATING.toString())){
 
-            repStatus_enum = ReproductiveStatus.LACTANTE;
-        } else if(repStatus_string.equals(ReproductiveStatus.PRONTA.toString())){
+            repStatus_enum = ReproductiveStatus.LACTATING;
+        } else if(repStatus_string.equals(ReproductiveStatus.READY.toString())){
 
-            repStatus_enum = ReproductiveStatus.PRONTA;
+            repStatus_enum = ReproductiveStatus.READY;
         } else {
             AlertUtils.showAlert(this, R.string.reg_bov_toast_ReproductiveStatusMissing);
 

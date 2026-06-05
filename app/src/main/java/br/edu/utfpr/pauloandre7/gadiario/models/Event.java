@@ -7,6 +7,7 @@ import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 @Entity
 public class Event implements Cloneable {
@@ -137,9 +138,26 @@ public class Event implements Cloneable {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Event event = (Event) o;
+        return idBovine == event.idBovine &&
+                qtyCalves == event.qtyCalves &&
+                idPastureOrigin == event.idPastureOrigin &&
+                idPastureDestination == event.idPastureDestination &&
+                type == event.type &&
+                date.equals(event.date) &&
+                Objects.equals(observation, event.observation);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idBovine, type, qtyCalves, idPastureOrigin, idPastureDestination, date, observation);
+    }
+
+    @Override
     public String toString() {
-        return type + "\n" +
-                date + "\n" +
-                observation;
+        return type + "\n" + date + "\n" + observation;
     }
 }
