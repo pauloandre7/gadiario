@@ -107,4 +107,7 @@
     <string name="event_label_destination_pasture">Destination Pasture</string>
     <string name="event_hint_date">01/01/2024</string>
     <string name="event_hint_observations">Add any relevant details...</string>
+    <string name="common_alertDialog_dbErrorInsert">Error trying to insert!</string>
+    <string name="common_alertDialog_dbErrorUpdate">Error trying to update!</string>
+    <string name="common_alertDialog_dbErrorDelete">Error trying to delete!</string>
 </resources>

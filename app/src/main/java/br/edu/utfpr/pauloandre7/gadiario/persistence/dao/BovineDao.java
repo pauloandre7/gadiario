@@ -32,7 +32,7 @@ public interface BovineDao {
 
     // Posso definir parametros na QUery com ":[param]. O param do méttodo precisa ter mesmo nome"
     @Query("SELECT * FROM bovine WHERE id=:id")
-    List<Bovine> queryAllAscending(long id);
+    Bovine queryById(long id);
 
     // Vou ter uma lista de bovinos em um pasto, então quero todos que estão em determinado pasto
     @Query("SELECT * FROM bovine WHERE idPasture=:idPasture")

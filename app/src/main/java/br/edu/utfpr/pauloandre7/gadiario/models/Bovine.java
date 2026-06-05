@@ -1,6 +1,7 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
@@ -8,6 +9,7 @@ import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 // a Anotação entity diz que esta model deve ser uma tabela. Existem opções para colocar entre parênteses @Entity()
 @Entity
@@ -169,6 +171,26 @@ public class Bovine implements Cloneable{
         // Cópia rasa funcinoa porque essa classe tem atributos primitivos ou mutáveis (gloria)
 
         return super.clone();
+    }
+
+    // métodos equals e hash implementados pelo java
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Bovine bovine = (Bovine) o;
+
+        return tag.equals(bovine.tag) &&
+                name.equals(bovine.name) &&
+                date.equals(bovine.date) &&
+                animalSex == bovine.animalSex &&
+                breed.equals(bovine.breed) &&
+                vaccines.equals(bovine.vaccines) &&
+                repStatus == bovine.repStatus;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(tag, name, date, animalSex, breed, vaccines, repStatus);
     }
 
     @Override
