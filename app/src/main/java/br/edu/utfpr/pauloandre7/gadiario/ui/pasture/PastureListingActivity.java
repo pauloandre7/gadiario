@@ -1,9 +1,9 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.pasture;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -25,14 +26,13 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
-import br.edu.utfpr.pauloandre7.gadiario.ui.bovine.BovineActivity;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
+import br.edu.utfpr.pauloandre7.gadiario.ui.bovine.BovinesActivity;
 import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
@@ -49,6 +49,10 @@ public class PastureListingActivity extends AppCompatActivity {
 
     private ActionMode actionMode;
 
+    private boolean sortingAscending = true;
+    public static final String KEY_ASCENDING_SORT_PASTURE = "ASCENDING_SORT_PASTURE";
+
+    private MenuItem menuItemSorting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,24 +63,20 @@ public class PastureListingActivity extends AppCompatActivity {
 
         listViewPastures = findViewById(R.id.listViewPastures);
 
-        // Method para adicionar Listener de click na listview
         listViewPastures.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
-                // se o actionmode já estiver aberto, não abre denovo
                 if(actionMode != null){
                     return false;
                 }
 
-                // esses atributos serão usados em métodos de crud abaixo
                 positionSelected = position;
                 viewSelected = view;
                 backgroundView = viewSelected.getBackground();
 
                 viewSelected.setBackgroundColor(getColor(R.color.itemSelected));
 
-                // desativa a view pra evitar novos clicks
                 listViewPastures.setEnabled(false);
 
                 actionMode = startSupportActionMode(actionCallback);
@@ -85,24 +85,27 @@ public class PastureListingActivity extends AppCompatActivity {
             }
         });
 
+        readPreferences();
         fillListPastures();
         registerForContextMenu(listViewPastures);
     }
 
     private void fillListPastures(){
-        listPastures = new ArrayList<Pasture>();
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+
+        if(sortingAscending){
+            listPastures = database.getPastureDao().queryAllAscending();
+        } else {
+            listPastures = database.getPastureDao().queryAllDownward();
+        }
 
         pastureAdapter = new PastureAdapter(this, listPastures);
         listViewPastures.setAdapter(pastureAdapter);
     }
 
     public void onClickAbout(){
-        // Criação de intent explícita: digo onde estou e onde quero ir
         Intent intentOpen = new Intent(this, AboutActivity.class);
-
-        // start é um méthod da activity. Passar o intent nesse méthod irá abrir a activity desejada
         startActivity(intentOpen);
-
     }
 
     /****************************************** CRUD ABAIXO ******************************************/
@@ -115,6 +118,14 @@ public class PastureListingActivity extends AppCompatActivity {
         DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                GadiarioDatabase database = GadiarioDatabase.getInstance(PastureListingActivity.this);
+
+                if (database.getPastureDao().delete(pasture) != 1 ){
+                    AlertUtils.showAlert(PastureListingActivity.this,
+                            R.string.common_alertDialog_dbErrorDelete);
+                    return;
+                }
+
                 listPastures.remove(positionSelected);
                 pastureAdapter.notifyDataSetChanged();
 
@@ -127,7 +138,6 @@ public class PastureListingActivity extends AppCompatActivity {
         AlertUtils.confirmAction(this, message, listenerYes, null);
     }
 
-    // launcher e method para adicionar novo pasto
     ActivityResultLauncher<Intent> launcherRegPasture = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -137,20 +147,16 @@ public class PastureListingActivity extends AppCompatActivity {
                     if(result.getResultCode() == RESULT_OK){
 
                         Intent intent = result.getData();
-
-                        if(intent == null){
-                            throw new RuntimeException("Intent is null");
-                        }
+                        if(intent == null) return;
 
                         Bundle bundle = intent.getExtras();
 
                         if(bundle != null){
-                            String name = bundle.getString(PastureActivity.KEY_NAME);
-                            String description = bundle.getString(PastureActivity.KEY_DESCRIPTION);
+                            long id = bundle.getLong(PastureActivity.KEY_ID);
 
-                            Pasture pasture = new Pasture(name, description);
-
-                            listPastures.add(pasture);
+                            GadiarioDatabase database = GadiarioDatabase.getInstance(PastureListingActivity.this);
+                            listPastures.add(database.getPastureDao().queryById(id));
+                            
                             sortList();
                         }
                     }
@@ -161,12 +167,9 @@ public class PastureListingActivity extends AppCompatActivity {
     public void onClickRegisterPasture(){
         Intent intentOpen = new Intent(this, PastureActivity.class);
         intentOpen.putExtra(PastureActivity.KEY_MODE, PastureActivity.MODE_NEW);
-
-        // O launcher é quem vai gerenciar essa intent
         launcherRegPasture.launch(intentOpen);
     }
 
-    // launcher e method para editar o pasto
     ActivityResultLauncher<Intent> launcherEditPasture = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>(){
@@ -175,30 +178,18 @@ public class PastureListingActivity extends AppCompatActivity {
                 public void onActivityResult(ActivityResult result) {
                     if(result.getResultCode() == RESULT_OK){
                         Intent intent = result.getData();
-
-                        if(intent == null){
-                            throw new RuntimeException("Intent is null");
-                        }
+                        if(intent == null) return;
 
                         Bundle bundle = intent.getExtras();
 
                         if(bundle != null){
-                            String name = bundle.getString(PastureActivity.KEY_NAME);
-                            String description = bundle.getString(PastureActivity.KEY_DESCRIPTION);
+                            final Pasture originalPasture = listPastures.get(positionSelected);
+                            long id = bundle.getLong(PastureActivity.KEY_ID);
 
-                            final Pasture pasture = listPastures.get(positionSelected);
-                            final Pasture clonePasture;
+                            final GadiarioDatabase database = GadiarioDatabase.getInstance(PastureListingActivity.this);
+                            final Pasture pastureEdited = database.getPastureDao().queryById(id);
 
-                            try {
-                                clonePasture = (Pasture) pasture.clone();
-                            } catch (CloneNotSupportedException e) {
-                                e.printStackTrace();
-                                return;
-                            }
-
-                            pasture.setName(name);
-                            pasture.setDescription(description);
-
+                            listPastures.set(positionSelected, pastureEdited);
                             sortList();
 
                             final ConstraintLayout constraintLayout = findViewById(R.id.main);
@@ -211,10 +202,16 @@ public class PastureListingActivity extends AppCompatActivity {
                             snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    // Remove a versão atual e restaura o clone (estado anterior)
-                                    listPastures.remove(pasture);
-                                    listPastures.add(clonePasture);
+                                    int updatedInstances = database.getPastureDao().update(originalPasture);
 
+                                    if(updatedInstances != 1 ){
+                                        AlertUtils.showAlert(PastureListingActivity.this,
+                                                R.string.common_alertDialog_dbErrorUpdate);
+                                        return;
+                                    }
+
+                                    listPastures.remove(pastureEdited);
+                                    listPastures.add(originalPasture);
                                     sortList();
                                 }
                             });
@@ -222,7 +219,6 @@ public class PastureListingActivity extends AppCompatActivity {
                             snackbar.show();
                         }
                     }
-                    // zera a variável de posição
                     positionSelected = -1;
 
                     if(actionMode != null){
@@ -233,26 +229,28 @@ public class PastureListingActivity extends AppCompatActivity {
     );
 
     public void editPasture(){
-
         Pasture pasture = listPastures.get(positionSelected);
 
         Intent intentOpen = new Intent(this, PastureActivity.class);
         intentOpen.putExtra(PastureActivity.KEY_MODE, PastureActivity.MODE_EDIT);
-
-        intentOpen.putExtra(PastureActivity.KEY_NAME, pasture.getName());
-        intentOpen.putExtra(PastureActivity.KEY_DESCRIPTION, pasture.getDescription());
+        intentOpen.putExtra(PastureActivity.KEY_ID, pasture.getId());
 
         launcherEditPasture.launch(intentOpen);
     }
 
-    // Criar e inflar o menu options
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.listing_options, menu);
+        menuItemSorting = menu.findItem(R.id.menuItemSorting);
         return true;
     }
 
-    // tratamento de click do menu options
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        updateSortingIcon();
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int idItem = item.getItemId();
@@ -263,17 +261,22 @@ public class PastureListingActivity extends AppCompatActivity {
         } else if (idItem == R.id.menuItemAbout){
             onClickAbout();
             return true;
+        } else if(idItem == R.id.menuItemSorting){
+            saveSortingPreference(!sortingAscending);
+            updateSortingIcon();
+            sortList();
+            return true;
+        } else if(idItem == R.id.menuItemReset){
+            confirmResetPreferences();
+            return true;
         } else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-
-    // Implementar ContextMenu e Callback para o gerenciar interações na list
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-
         getMenuInflater().inflate(R.menu.list_item_selected, menu);
     }
 
@@ -282,7 +285,6 @@ public class PastureListingActivity extends AppCompatActivity {
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             MenuInflater inflater = mode.getMenuInflater();
-
             inflater.inflate(R.menu.list_item_selected, menu);
             return true;
         }
@@ -294,15 +296,12 @@ public class PastureListingActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
             int idItem = item.getItemId();
 
             if( idItem == R.id.contextMenuItem_Edit ){
-
                 editPasture();
                 return true;
             } else if( idItem== R.id.contextMenuItem_Delete ){
-
                 deletePasture();
                 return true;
             } else{
@@ -315,19 +314,62 @@ public class PastureListingActivity extends AppCompatActivity {
             if(viewSelected != null){
                 viewSelected.setBackground(backgroundView);
             }
-
-            // destroi objetos armazenados
             actionMode = null;
             viewSelected = null;
             backgroundView = null;
-
             listViewPastures.setEnabled(true);
         }
     };
 
+    private void readPreferences(){
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        sortingAscending = shared.getBoolean(KEY_ASCENDING_SORT_PASTURE, true);
+    }
+
+    public void saveSortingPreference(boolean newValue){
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.putBoolean(KEY_ASCENDING_SORT_PASTURE, newValue);
+        editor.commit();
+        sortingAscending = newValue;
+    }
+
     private void sortList(){
-        Collections.sort(listPastures, Pasture.ascendingNameSort);
+        if(sortingAscending){
+            Collections.sort(listPastures, Pasture.ascendingNameSort);
+        } else {
+            Collections.sort(listPastures, Pasture.descendingNameSort);
+        }
         pastureAdapter.notifyDataSetChanged();
     }
 
+    private void updateSortingIcon(){
+        if(menuItemSorting == null) return;
+        if(sortingAscending){
+            menuItemSorting.setIcon(R.drawable.ic_action_ascending_order);
+        } else {
+            menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
+        }
+    }
+
+    private void confirmResetPreferences(){
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetPreferences();
+                updateSortingIcon();
+                sortList();
+                Toast.makeText(PastureListingActivity.this, R.string.common_toast_resetMessage, Toast.LENGTH_LONG).show();
+            }
+        };
+        AlertUtils.confirmAction(this, getString(R.string.common_dialog_deleteConfirmation), listenerYes, null);
+    }
+
+    private void resetPreferences(){
+        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = shared.edit();
+        editor.remove(KEY_ASCENDING_SORT_PASTURE);
+        editor.commit();
+        sortingAscending = true;
+    }
 }

@@ -11,6 +11,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.Converters;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.BovineDao;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.PastureDao;
 
 /*
 * O room é intermediário, o GadiarioDatabase é o que vai gerenciar o database como um toddo.
@@ -23,6 +24,7 @@ import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.BovineDao;
 public abstract class GadiarioDatabase extends RoomDatabase {
 
     public abstract BovineDao getBovinesDao();
+    public abstract PastureDao getPastureDao();
 
     // padrão singleton para forçar apenas uma instância dessa classe
     private static GadiarioDatabase INSTANCE;
