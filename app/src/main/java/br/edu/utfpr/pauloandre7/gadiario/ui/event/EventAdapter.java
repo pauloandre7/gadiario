@@ -73,17 +73,18 @@ public class EventAdapter extends BaseAdapter {
 
         // Lógica para preencher o detalhe baseado no tipo de evento
         String details = "";
-        switch (event.getType()) {
-            case PARTO:
-                details = context.getString(R.string.event_label_qty_calves) + ": " + event.getQtyCalves();
-                break;
-            case MOVIMENTACAO:
-                // todo: Verificar - Buscar nomes dos pastos reais futuramente
-                details = "Pasto " + event.getIdPastureOrigin() + " -> Pasto " + event.getIdPastureDestination();
-                break;
-            default:
-                details = event.getObservation();
-                break;
+        if (event.getType() != null) {
+            switch (event.getType()) {
+                case CALVING:
+                    details = context.getString(R.string.event_label_qty_calves) + ": " + event.getQtyCalves();
+                    break;
+                case MOVEMENT:
+                    details = "Pasto " + event.getIdPastureOrigin() + " -> Pasto " + event.getIdPastureDestination();
+                    break;
+                default:
+                    details = event.getObservation();
+                    break;
+            }
         }
         holder.textViewDetailValue.setText(details);
 
