@@ -29,9 +29,8 @@ public interface EventDao {
     List<Event> queryAllDownward();
 
     @Query("SELECT * FROM event WHERE id=:id")
-    List<Event> queryAllAscending(long id);
+    Event queryById(long id);
 
-    //
     @Query("SELECT * FROM event WHERE idBovine=:idBovine ORDER BY date DESC")
     List<Event> queryEventsByBovine(long idBovine);
 }
