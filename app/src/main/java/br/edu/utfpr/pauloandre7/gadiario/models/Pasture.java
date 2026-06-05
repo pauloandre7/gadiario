@@ -1,16 +1,29 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
-import java.util.Comparator;
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-public class Pasture {
-    private int id;
+import java.util.Comparator;
+import java.util.Objects;
+
+@Entity
+public class Pasture implements Cloneable {
+
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+
+    @NonNull
+    @ColumnInfo(index = true)
     private String name;
+
     private String description;
 
     public static Comparator<Pasture> ascendingNameSort = new Comparator<Pasture>(){
         @Override
         public int compare(Pasture past1, Pasture past2) {
-
             return past1.getName().compareToIgnoreCase(past2.getName());
         }
     };
@@ -18,28 +31,28 @@ public class Pasture {
     public static Comparator<Pasture> descendingNameSort = new Comparator<Pasture>(){
         @Override
         public int compare(Pasture past1, Pasture past2) {
-
             return -1 * past1.getName().compareToIgnoreCase(past2.getName());
         }
     };
 
+    @Ignore
     public Pasture(String name, String description) {
         this.id = 0;
         this.name = name;
         this.description = description;
     }
 
-    public Pasture(int id, String name, String description) {
+    public Pasture(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -57,5 +70,30 @@ public class Pasture {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pasture pasture = (Pasture) o;
+        return Objects.equals(name, pasture.name) &&
+                Objects.equals(description, pasture.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description);
+    }
+
+    @Override
+    public String toString() {
+        return name + "\n" + description;
     }
 }

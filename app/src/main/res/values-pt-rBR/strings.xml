@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="common_name">Nome</string>
+
+    <string name="common_edit">Editar</string>
+    <string name="common_delete">Excluir</string>
+    <string name="common_clear">Limpar</string>
+    <string name="common_save">Salvar</string>
+    <string name="common_no">Não</string>
+    <string name="common_description">Descrição</string>
+    <string name="common_sorting">Ordenação</string>
+    <string name="common_resetPreferences">Restaurar Padrão</string>
+    <string name="common_toast_resetMessage">As configurações voltaram ao padrão de instalação</string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- About Variables -->
+    <string name="about_img_text_logoUtfpr">Logo da UTFPR</string>
+    <string name="about_text_student">Aluno:</string>
+    <string name="about_text_course">Curso:</string>
+    <string name="about_text_EngSoftware">Engenharia de Software</string>
+    <string name="about_text_appDescription">Aplicativo para auxiliar no manejo de gado.
+        O aplicativo permite o registro de eventos como vacinação, inseminação, parto,
+        mudanças de pasto e abate de bovinos. (Criado para um curso universitário de
+        Desenvolvimento Mobile).
+    </string>
+    <string name="about_class_text_about">Sobre</string>
+    <string name="bov_list_activityTitle">Lista de Bovinos</string>
+    <string name="bov_list_btn_RegisterBovine">Cadastrar Bovino</string>
+    <!--é possível usar algumas tags html, como anchor, por exemplo-->
+    <string name="about_text_author">Autoria: <a href="https://pauloandre7.github.io/frontend-curriculum/">Paulo André Oliveira da Silva</a></string>
+    <string name="about_class_toastError_noActivityToOpenUrl">Nenhum aplicativo encontrado para abrir o site</string>
+    <string name="about_class_toastError_noActivityToEmail">Nenhum aplicativo encontrado para enviar o email</string>
+    <string name="about_class_text_contactByApp">Contato pelo aplicativo Gadiario</string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- Bovines listing variables-->
+    <string name="bov_list_tagValue">"Brinco: "</string>
+    <string name="bov_list_nameValue">"Nome: "</string>
+    <string name="bov_list_birthValue">"Nascimento: "</string>
+    <string name="bov_list_breedValue">"Raça: "</string>
+    <string name="bov_list_sexValue">"Sexo: "</string>
+    <string name="bov_list_VaccineValue">"Vacinação: "</string>
+    <string name="line_bov_label_repStatus">"Status Reprodutivo: "</string>
+    <string name="bov_list_with_tag">Bovino de tag \"</string>
+    <string name="bov_list_text_isVaccinated">Animal Vacinado</string>
+    <string name="bov_list_text_notVaccinated">Animal Não Vacinado</string>
+    <string name="bov_list_lactating">LACTANTE</string>
+    <string name="bov_list_repStatusValue_pregnant">PRENHA</string>
+    <string name="bov_list_repStatusValue_dry">SECA</string>
+    <string name="bov_list_repStatusValue_ready">PRONTA</string>
+
+    <string name="past_list_Title">Lista de Pastos</string>
+
+    <!-- ======================================================================================================================= -->
+    <!-- Register Bov Variables -->
+    <string name="reg_bov_title">Cadastro de Bovinos</string>
+    <string name="reg_bov_text_tag">Brinco</string>
+    <string name="reg_bov_text_birth">Data de Nascimento</string>
+    <string name="reg_bov_text_male">Macho</string>
+    <string name="reg_bov_text_female">Fêmea</string>
+    <string name="reg_bov_hint_codeTag">Código do Brinco</string>
+    <string name="reg_bov_hint_animalName">Nome do Animal</string>
+    <string name="reg_bov_hint_date">01/05/2026</string>
+    <string name="reg_bov_toast_fields_cleaned">As entradas foram apagadas.</string>
+    <string name="reg_bov_toast_text_nameMissing">Faltou informar o nome.</string>
+    <string name="reg_bov_toast_text_tagMissing">Faltou informar o Código do Brinco.</string>
+    <string name="reg_bov_toast_text_birthMissing">Faltou informar a data de nascimento.</string>
+    <string name="reg_bov_text_vaccines">Vacinas Aplicadas</string>
+    <string name="reg_bov_hint_vaccines">EX: Vacina 1, Vacina 2, Vacina 3...</string>
+    <string name="reg_bov_toast_text_animalSexMissing">O sexo do animal não foi informado!</string>
+    <string name="reg_bov_label_breed">Raça do Animal</string>
+    <string name="reg_bov_toast_text_warningSpinnerEmpty">O Spinner de raças não possui valores!</string>
+    <string name="reg_bov_label_Status">Status Reprodutivo</string>
+    <string name="reg_bov_toast_ReproductiveStatusMissing">Status Reprodutivo não informado!</string>
+    <string name="bov_edit_title">Editar Bovino</string>
+
+    <!-- Pasture variables -->
+    <string name="past_reg_title">Cadastro de Pastos</string>
+    <string name="past_edit_Title">Edição de Pasto</string>
+    <string name="past_reg_hint_pastureName">Nome do Pasto</string>
+    <string name="past_reg_hint_pastureDescription">"Descrição do Pasto "</string>
+    <string name="past_reg_warning_missingDescription">Descrição não informada.</string>
+    <string name="bov_reg_suggestBasic">Sugerir Info</string>
+    <string name="about_universityName">UNIVERSIDADE TECNOLÓGICA FEDERAL DO PARANÁ</string>
+    <string name="common_alertDialog_alertTitle">Alerta</string>
+    <string name="common_confirmation">Confirmação</string>
+    <string name="common_yes">Sim</string>
+    <string name="common_confirmation_wantDelete">Deseja apagar? \n\" %1$s \"</string>
+    <string name="common_dialog_deleteConfirmation">Você deseja apagar?</string>
+    <string name="common_undo">Desfazer</string>
+    <string name="common_snackbar_dataUpdateDone">Atualização de dados concluída</string>
+    <string name="bov_list_alert_typeConversionError">Erro de Conversão de Tipo</string>
+
+    <!-- Registro de Eventos -->
+    <string name="event_reg_title">Cadastro de Evento</string>
+    <string name="event_label_bovine">Bovino (Brinco/Nome)</string>
+    <string name="event_label_type">Tipo de Evento</string>
+    <string name="event_label_date">Data</string>
+    <string name="event_label_observations">Observações</string>
+    <string name="event_label_qty_calves">Quantidade de Bezerros</string>
+    <string name="event_label_origin_pasture">Pasto de Origem</string>
+    <string name="event_label_destination_pasture">Pasto de Destino</string>
+    <string name="event_hint_date">01/01/2024</string>
+    <string name="event_hint_observations">Adicione detalhes relevantes...</string>
+    <string name="common_alertDialog_dbErrorInsert">Erro ao tentar inserir!</string>
+    <string name="common_alertDialog_dbErrorUpdate">Erro ao tentar atualizar!</string>
+    <string name="common_alertDialog_dbErrorDelete">Erro ao tentar excluir!</string>
+</resources>

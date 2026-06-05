@@ -6,14 +6,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +26,13 @@ import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class BovineActivity extends AppCompatActivity {
 
     // Constantes de resultado para IntentResult
-    public static final String KEY_TAG = "KEY_TAG";
-    public static final String KEY_NAME = "KEY_NAME";
-    public static final String KEY_BIRTH = "KEY_BIRTH";
-    public static final String KEY_SEX = "KEY_SEX";
-    public static final String KEY_BREED = "KEY_BREED";
-    public static final String KEY_VACCINES = "KEY_VACCINES";
-    public static final String KEY_REPSTATUS = "KEY_REPSTATUS";
+    public static final String KEY_ID = "ID";
 
     // Keys para usar no Shared Preferences
     public static final String KEY_SUGGEST_BREED = "SUGGEST_BASIC";
@@ -97,23 +97,18 @@ public class BovineActivity extends AppCompatActivity {
             } else if (mode == MODE_EDIT){
                 setTitle(getString(R.string.bov_edit_title));
 
-                String tag = bundle.getString(BovineActivity.KEY_TAG);
-                String name = bundle.getString(BovineActivity.KEY_NAME);
-                String date = bundle.getString(BovineActivity.KEY_BIRTH);
-                String animalSex = bundle.getString(BovineActivity.KEY_SEX);
-                String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
-                String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
-                String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
+                long id = bundle.getLong(KEY_ID);
 
-                AnimalSex animalSex_enum = AnimalSex.valueOf(animalSex);
-                ReproductiveStatus repStatus_enum = ReproductiveStatus.valueOf(repStatus);
+                GadiarioDatabase database = GadiarioDatabase.getInstance(this);
 
-                bovineOriginal = new Bovine(tag, name, date, animalSex_enum, animalBreed,
-                                            List.of(vaccines), repStatus_enum);
+                bovineOriginal = database.getBovinesDao().queryById(id);
 
-                editTextTag.setText(tag);
-                editTextName.setText(name);
-                editTextDate.setText(date);
+                AnimalSex animalSex_enum = bovineOriginal.getAnimalSex();
+                ReproductiveStatus repStatus_enum = bovineOriginal.getRepStatus();
+
+                editTextTag.setText(bovineOriginal.getTag());
+                editTextName.setText(bovineOriginal.getName());
+                editTextDate.setText(bovineOriginal.getDate());
                 if(animalSex_enum == AnimalSex.FEMALE){
                     radioButtonFemale.setChecked(true);
                 } else {
@@ -124,26 +119,30 @@ public class BovineActivity extends AppCompatActivity {
                 String[] breedArray = getResources().getStringArray(R.array.animalBreed);
 
                 for (int i = 0; i < breedArray.length; i++){
-                    if(breedArray[i].equals(animalBreed)){
+                    if(breedArray[i].equals(bovineOriginal.getBreed())){
                         spinnerBreed.setSelection(i);
                     }
                 }
 
                 String[] statusArray = getResources().getStringArray(R.array.reproductiveStatus);
                 for(int i = 0; i < statusArray.length; i++){
-                    if(statusArray[i].equals(repStatus)){
+                    if(statusArray[i].equals(bovineOriginal.getRepStatus())){
                         spinnerRepStatus.setSelection(i);
                     }
                 }
 
                 String vaccines_text = "";
-                for (int i = 0; i < vaccines.length; i++){
-                    if(vaccines[i] != null || !vaccines[i].isEmpty()){
-                        vaccines_text = vaccines_text + vaccines[i] + ", ";
+                for (int i = 0; i < bovineOriginal.getVaccines().size(); i++){
+                    if(bovineOriginal.getVaccines().get(i) != null || !bovineOriginal.getVaccines().get(i).isEmpty()){
+                        vaccines_text = vaccines_text + bovineOriginal.getVaccines().get(i) + ", ";
                     }
                 }
 
                 editTextVaccines.setText(vaccines_text);
+
+                // joga o cursos no final do edit text tag
+                editTextTag.requestFocus();
+                editTextTag.setSelection(editTextTag.getText().length());
             }
         }
 
@@ -185,6 +184,17 @@ public class BovineActivity extends AppCompatActivity {
     */
 
     public void clearFields(){
+
+        // Define final para manter as variáveis mesmo após o término do méthod
+        final String tag = editTextTag.getText().toString();
+        final String name = editTextName.getText().toString();
+        final String birth = editTextDate.getText().toString();
+        final String vaccines = editTextVaccines.getText().toString();
+        final int radioButtonSex = radioGroupSex.getCheckedRadioButtonId();
+        final int breed = spinnerBreed.getSelectedItemPosition();
+        final int repStatus = spinnerRepStatus.getSelectedItemPosition();
+
+        // Limpa os campos
         editTextTag.setText(null);
         editTextName.setText(null);
         editTextDate.setText(null);
@@ -193,8 +203,49 @@ public class BovineActivity extends AppCompatActivity {
         spinnerBreed.setSelection(0);
         spinnerRepStatus.setSelection(0);
 
-        Toast.makeText(this,
-                R.string.reg_bov_toast_fields_cleaned, Toast.LENGTH_LONG).show();
+
+        final ScrollView scrollView = findViewById(R.id.main);
+        final View focusedView = scrollView.findFocus();
+
+
+        Snackbar snackbar = Snackbar.make(scrollView,
+                R.string.reg_bov_toast_fields_cleaned,
+                Snackbar.LENGTH_LONG);
+
+        snackbar.setAction(R.string.common_undo, new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v){
+                // refaz tudo quando clica em Undo.
+
+                editTextTag.setText(tag);
+                editTextName.setText(name);
+                editTextDate.setText(birth);
+                editTextVaccines.setText(vaccines);
+
+                if (radioButtonSex == R.id.radioBtnFemale){
+
+                    radioButtonFemale.setChecked(true);
+                } else {
+
+                    radioButtonMale.setChecked(true);
+                }
+
+                spinnerBreed.setSelection(breed);
+                spinnerRepStatus.setSelection(repStatus);
+
+            }
+        });
+
+        if(focusedView != null){
+            focusedView.requestFocus();
+            snackbar.setAnchorView(focusedView);
+        } else {
+            editTextTag.requestFocus();
+            snackbar.setAnchorView(editTextTag);
+        }
+
+        snackbar.show();
     }
 
     public void saveValues(){
@@ -204,24 +255,21 @@ public class BovineActivity extends AppCompatActivity {
         String vaccines     = editTextVaccines.getText().toString();
 
         if(tag == null || tag.trim().isEmpty()){
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_tagMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_tagMissing);
 
             editTextTag.requestFocus();
             return;
         }
 
         if(name == null || name.trim().isEmpty()){
-            Toast.makeText(this,
-                            R.string.reg_bov_toast_text_nameMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_nameMissing);
 
             editTextName.requestFocus();
             return;
         }
 
         if(date == null || date.trim().isEmpty()){
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_birthMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_birthMissing);
 
             editTextDate.requestFocus();
             return;
@@ -248,8 +296,7 @@ public class BovineActivity extends AppCompatActivity {
             animalSex = AnimalSex.MALE;
         } else{
             // if the animal sex was not selected
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_text_animalSexMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_animalSexMissing);
 
             radioGroupSex.requestFocus();
             return;
@@ -257,21 +304,20 @@ public class BovineActivity extends AppCompatActivity {
 
         ReproductiveStatus repStatus_enum;
         String repStatus_string = spinnerRepStatus.getSelectedItem().toString().toUpperCase();
-        if(repStatus_string.equals(ReproductiveStatus.SECA.toString())){
+        if(repStatus_string.equals(ReproductiveStatus.DRY.toString())){
 
-            repStatus_enum = ReproductiveStatus.SECA;
-        } else if (repStatus_string.equals(ReproductiveStatus.PRENHA.toString())){
+            repStatus_enum = ReproductiveStatus.DRY;
+        } else if (repStatus_string.equals(ReproductiveStatus.PREGNANT.toString())){
 
-            repStatus_enum = ReproductiveStatus.PRENHA;
-        } else if(repStatus_string.equals(ReproductiveStatus.LACTANTE.toString())){
+            repStatus_enum = ReproductiveStatus.PREGNANT;
+        } else if(repStatus_string.equals(ReproductiveStatus.LACTATING.toString())){
 
-            repStatus_enum = ReproductiveStatus.LACTANTE;
-        } else if(repStatus_string.equals(ReproductiveStatus.PRONTA.toString())){
+            repStatus_enum = ReproductiveStatus.LACTATING;
+        } else if(repStatus_string.equals(ReproductiveStatus.READY.toString())){
 
-            repStatus_enum = ReproductiveStatus.PRONTA;
+            repStatus_enum = ReproductiveStatus.READY;
         } else {
-            Toast.makeText(this,
-                    R.string.reg_bov_toast_ReproductiveStatusMissing, Toast.LENGTH_LONG).show();
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_ReproductiveStatusMissing);
 
             spinnerRepStatus.requestFocus();
             return;
@@ -280,48 +326,54 @@ public class BovineActivity extends AppCompatActivity {
         String animalBreed = spinnerBreed.getSelectedItem().toString();
         if (animalBreed == null){
 
-            Toast.makeText(this,
-                            R.string.reg_bov_toast_text_warningSpinnerEmpty,
-                            Toast.LENGTH_LONG);
+            AlertUtils.showAlert(this, R.string.reg_bov_toast_text_warningSpinnerEmpty);
         }
 
+        Bovine bovine = new Bovine(tag, name, date, animalSex, animalBreed,
+                    vaccinesList, repStatus_enum);
 
+        if(bovine.equals(bovineOriginal)){
 
-        // Antes da Intent de resposta, verifica se os valores sofreram mudança
-        if(mode == MODE_EDIT) {
-
-            // Verifica se as vacinas são iguais
-            boolean isVaccinesEqual = vaccinesList.equals(bovineOriginal.getVaccines());
-
-            // Compara os outros atributos;
-            if (tag.equals(bovineOriginal.getTag())
-                    && name.equalsIgnoreCase(bovineOriginal.getName())
-                    && date.equals(bovineOriginal.getDate())
-                    && animalSex.equals(bovineOriginal.getAnimalSex())
-                    && animalBreed.equals(bovineOriginal.getBreed())
-                    && isVaccinesEqual) {
-
-                setResult(BovineActivity.RESULT_CANCELED);
-                finish();
-                return;
-            }
+            // não mudou nenhum campo, então cancela
+            setResult(BovineActivity.RESULT_CANCELED);
+            finish();
+            return;
         }
-
-        saveLastBreed(spinnerBreed.getSelectedItemPosition());
-        saveLastTag(editTextTag.getText().toString());
 
         // Para passar resultados entre activities, é necessário usar um Intent;
         Intent intentResult = new Intent();
 
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
 
-        // Para passar um objeto construído, é necessário fazer com que seja serializável (mas não é recomendado)
-        intentResult.putExtra(KEY_TAG, tag);
-        intentResult.putExtra(KEY_NAME, name);
-        intentResult.putExtra(KEY_BIRTH, date);
-        intentResult.putExtra(KEY_SEX, animalSex.toString());
-        intentResult.putExtra(KEY_REPSTATUS, repStatus_enum.toString());
-        intentResult.putExtra(KEY_BREED, animalBreed);
-        intentResult.putExtra(KEY_VACCINES, vaccinesList.toArray(new String[0]));
+        if(mode == MODE_NEW){
+            long newId = database.getBovinesDao().insert(bovine);
+
+            // Se retornar inválido, alerta o erro
+            if (newId <=0 ){
+                AlertUtils.showAlert(this, R.string.common_alertDialog_dbErrorInsert);
+                return;
+            }
+
+            // Se encontrar o id, adiciona o id nesse objeto para reaproveitamento
+            bovine.setId(newId);
+
+        } else {
+
+            bovine.setId(bovineOriginal.getId());
+
+            int updateInstances = database.getBovinesDao().update(bovine);
+
+            if(updateInstances != 1 ){
+                AlertUtils.showAlert(this,
+                        R.string.common_alertDialog_dbErrorUpdate);
+                return;
+            }
+
+        }
+
+        saveLastBreed(spinnerBreed.getSelectedItemPosition());
+
+        intentResult.putExtra(KEY_ID, bovine.getId());
 
         // seta o resultado com a resposta e o objeto de intenção de resposta;
         setResult(BovineActivity.RESULT_OK, intentResult);
@@ -387,7 +439,6 @@ public class BovineActivity extends AppCompatActivity {
         // O primeiro param é a key, mas o segundo é para definir qual é o valor default se não houver valor gravado
         suggestInfo = shared.getBoolean(KEY_SUGGEST_BREED, suggestInfo);
         lastBreed   = shared.getInt(KEY_LAST_BREED, lastBreed);
-        lastTag     = shared.getString(KEY_LAST_TAG, lastTag);
     }
 
     private void saveSuggestBreed(boolean newValue){
@@ -413,16 +464,5 @@ public class BovineActivity extends AppCompatActivity {
 
         editor.commit();
         lastBreed = newValue;
-    }
-
-    private void saveLastTag(String newValue){
-        SharedPreferences shared = getSharedPreferences(BovinesActivity.PREFERENCES_FILE, Context.MODE_PRIVATE);
-
-        SharedPreferences.Editor editor = shared.edit();
-
-        editor.putString(KEY_LAST_TAG, newValue);
-
-        editor.commit();
-        lastTag = newValue;
     }
 }

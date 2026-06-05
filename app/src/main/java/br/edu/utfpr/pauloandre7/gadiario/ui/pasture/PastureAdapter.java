@@ -10,7 +10,6 @@ import android.widget.TextView;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
-import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 
 public class PastureAdapter extends BaseAdapter {
@@ -30,7 +29,7 @@ public class PastureAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return listPastures.size();
     }
 
     @Override

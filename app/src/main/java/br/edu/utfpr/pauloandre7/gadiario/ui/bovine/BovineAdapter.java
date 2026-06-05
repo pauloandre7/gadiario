@@ -78,29 +78,33 @@ public class BovineAdapter extends BaseAdapter {
         holder.textViewBirthValue.setText(bovine.getDate());
         holder.textViewBreedValue.setText(bovine.getBreed());
 
-        switch (bovine.getAnimalSex()){
-            case MALE:
-                holder.textViewSexValue.setText(context.getString(R.string.reg_bov_text_male));
-                break;
+        if (bovine.getAnimalSex() != null) {
+            switch (bovine.getAnimalSex()){
+                case MALE:
+                    holder.textViewSexValue.setText(context.getString(R.string.reg_bov_text_male));
+                    break;
 
-            case FEMALE:
-                holder.textViewSexValue.setText(context.getString(R.string.reg_bov_text_female));
-                break;
+                case FEMALE:
+                    holder.textViewSexValue.setText(context.getString(R.string.reg_bov_text_female));
+                    break;
+            }
         }
 
-        switch (bovine.getRepStatus()){
-            case LACTANTE:
-                holder.textViewRepStatusValue.setText(R.string.bov_list_lactating);
-                break;
-            case PRENHA:
-                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_pregnant);
-                break;
-            case SECA:
-                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_dry);
-                break;
-            case PRONTA:
-                holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_ready);
-                break;
+        if (bovine.getRepStatus() != null) {
+            switch (bovine.getRepStatus()){
+                case LACTATING:
+                    holder.textViewRepStatusValue.setText(R.string.bov_list_lactating);
+                    break;
+                case PREGNANT:
+                    holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_pregnant);
+                    break;
+                case DRY:
+                    holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_dry);
+                    break;
+                case READY:
+                    holder.textViewRepStatusValue.setText(R.string.bov_list_repStatusValue_ready);
+                    break;
+            }
         }
 
         if(bovine.getVaccines() == null){
@@ -109,11 +113,11 @@ public class BovineAdapter extends BaseAdapter {
             if(bovine.getVaccines().isEmpty()){
                 holder.textViewVaccineValue.setText(context.getString(R.string.bov_list_text_notVaccinated));
             } else {
-                String vaccine_text = "";
+                StringBuilder vaccine_text = new StringBuilder();
                 for(int i = 0; i < bovine.getVaccines().size(); i++){
-                    vaccine_text = vaccine_text + bovine.getVaccines().get(i) + " | ";
+                    vaccine_text.append(bovine.getVaccines().get(i)).append(" | ");
                 }
-                holder.textViewVaccineValue.setText(vaccine_text);
+                holder.textViewVaccineValue.setText(vaccine_text.toString());
             }
         }
 

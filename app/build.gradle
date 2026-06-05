@@ -33,6 +33,18 @@ android {
 }
 
 dependencies {
+
+    /* Esse é o jeito de declarar dependências somente aqui neste arquivo
+    def room_version = ""
+    implementation "androidx.room3:room3-runtime:$room_version"
+    annotationProcessor "androidx.room3:room3-compiler:$room_version"
+    */
+
+    // Esse é o jeito de centralizar as versões no arquivo Tom para deixar apenas as declarações
+    // aqui neste arquivo. Assim as versões ficam em um e as declarações ficam aqui.
+    implementation libs.androidx.room.runtime
+    annotationProcessor libs.androidx.room.compiler
+
     implementation libs.appcompat
     implementation libs.material
     implementation libs.activity

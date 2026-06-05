@@ -9,4 +9,5 @@
     <color name="agro_accent_brown">#8D6E63</color>
     <color name="agro_highlight_wheat">#D4A373</color>
     <color name="agro_background_cream">#FDF5E6</color>
+    <color name="agro_item_selected">#EEAEC579</color>
 </resources>

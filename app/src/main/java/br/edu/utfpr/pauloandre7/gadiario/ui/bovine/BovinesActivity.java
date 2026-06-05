@@ -1,6 +1,8 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -22,6 +24,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.constraintlayout.widget.ConstraintLayout;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,7 +36,9 @@ import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.ui.main.AboutActivity;
+import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 
 public class BovinesActivity extends AppCompatActivity {
 
@@ -75,9 +82,6 @@ public class BovinesActivity extends AppCompatActivity {
                                     int position, long id) {
 
                 Bovine bovine = (Bovine) parent.getItemAtPosition(position);
-
-                Toast.makeText(getApplicationContext(), getString(R.string.bov_list_with_tag)+bovine.getTag()+ getString(R.string.bov_toast_bovClicked),
-                        Toast.LENGTH_LONG).show();
             }
         });
 
@@ -97,7 +101,7 @@ public class BovinesActivity extends AppCompatActivity {
                 drawableSelecionado = viewSelecionada.getBackground();
 
                 // muda a cor de fundo para um cinza claro
-                viewSelecionada.setBackgroundColor(Color.LTGRAY);
+                viewSelecionada.setBackgroundColor(getColor(R.color.itemSelected));
 
                 // desativa a view para que não seja clicada
                 listViewBovines.setEnabled(false);
@@ -149,28 +153,14 @@ public class BovinesActivity extends AppCompatActivity {
                         Bundle bundle = intent.getExtras();
 
                         if (bundle != null){
-                            String tag = bundle.getString(BovineActivity.KEY_TAG);
-                            String name = bundle.getString(BovineActivity.KEY_NAME);
-                            String date = bundle.getString(BovineActivity.KEY_BIRTH);
-                            String animalSex = bundle.getString(BovineActivity.KEY_SEX);
-                            String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
-                            String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
-                            String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
 
-                            Bovine bovine;
-                            if (vaccines != null){
-                                List<String> vaccines_list = List.<String>of(vaccines);
+                            // agora só retorna o id long
+                            long id = bundle.getLong(BovineActivity.KEY_ID);
 
-                                bovine = new Bovine(tag, name, date,
-                                                    AnimalSex.valueOf(animalSex), animalBreed,
-                                                    vaccines_list, ReproductiveStatus.valueOf(repStatus));
-                            } else {
-                                bovine = new Bovine(tag, name, date,
-                                        AnimalSex.valueOf(animalSex), animalBreed,
-                                        null, ReproductiveStatus.valueOf(repStatus));
-                            }
+                            GadiarioDatabase database = GadiarioDatabase.getInstance(BovinesActivity.this);
 
-                            listBovines.add(bovine);
+                            // já pega no banco pelo ID retornado e já adiciona na lista
+                            listBovines.add(database.getBovinesDao().queryById(id));
 
                             sortList();
                         }
@@ -190,40 +180,16 @@ public class BovinesActivity extends AppCompatActivity {
     }
 
     private void fillListBovines(){
-        /* ANTIGA PRÁTICA DE PEGAR VALORES DE ARRAY NO XML
-        String[] bovines_tags       = getResources().getStringArray(R.array.bovines_Tags);
-        String[] bovines_names      = getResources().getStringArray(R.array.bovines_names);
-        String[] bovines_births     = getResources().getStringArray(R.array.bovines_births);
-        int[] bovines_sex           = getResources().getIntArray(R.array.bovines_sex);
-        String[] bovines_breeds      = getResources().getStringArray(R.array.bovines_breeds);
-        */
 
-        listBovines = new ArrayList<>();
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
 
-        /* ANTIGA PRÁTICA DE CRIAR OBJETOS A PARTIR DOS VALORES DE ARRAY
-        Bovine bovine;
-        AnimalSex animalSex;
-        AnimalSex[] sex_values = AnimalSex.values();
-        List<String> vaccines_list = new ArrayList<>();
-
-        vaccines_list.add("Salmonelose");
-        vaccines_list.add("Intranasais");
-
-        for (int i = 0; i < bovines_tags.length; i++){
-
-            animalSex = sex_values[bovines_sex[i]];
-
-            bovine = new Bovine(bovines_tags[i],
-                    bovines_names[i],
-                    bovines_births[i],
-                    animalSex,
-                    bovines_breeds[i],
-                    vaccines_list
-                    );
-
-            listBovines.add(bovine);
+        // agora basta verificar a preferência de ordenação e chamar a query corresponde.
+        // O objeto retornado já é uma List
+        if(sortingAscending){
+            listBovines = database.getBovinesDao().queryAllAscending();
+        } else {
+            listBovines = database.getBovinesDao().queryAllDownward();
         }
-        */
 
         adapterBovine = new BovineAdapter(this, listBovines);
 
@@ -267,15 +233,7 @@ public class BovinesActivity extends AppCompatActivity {
 
         } else if(idMenuItem == R.id.menuItemReset){
 
-            resetPreferences();
-            updateSortingIcon();
-            sortList();
-
-            Toast.makeText(this,
-                            R.string.common_toast_resetMessage,
-                            Toast.LENGTH_LONG)
-            .show();
-
+            confirmResetPreferences();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -306,30 +264,50 @@ public class BovinesActivity extends AppCompatActivity {
                         Bundle bundle = intent.getExtras();
 
                         if (bundle != null){
-                            String tag = bundle.getString(BovineActivity.KEY_TAG);
-                            String name = bundle.getString(BovineActivity.KEY_NAME);
-                            String date = bundle.getString(BovineActivity.KEY_BIRTH);
-                            String animalSex = bundle.getString(BovineActivity.KEY_SEX);
-                            String animalBreed = bundle.getString(BovineActivity.KEY_BREED);
-                            String repStatus = bundle.getString(BovineActivity.KEY_REPSTATUS);
-                            String[] vaccines = bundle.getStringArray(BovineActivity.KEY_VACCINES);
+                            final Bovine originalBovine = listBovines.get(positionSelected);
 
-                            Bovine bovine = listBovines.get(positionSelected);
+                            long id = bundle.getLong(BovineActivity.KEY_ID);
 
-                            bovine.setTag(tag);
-                            bovine.setName(name);
-                            bovine.setDate(date);
-                            bovine.setAnimalSex(AnimalSex.valueOf(animalSex));
-                            bovine.setBreed(animalBreed);
-                            bovine.setRepStatus(ReproductiveStatus.valueOf(repStatus));
+                            final GadiarioDatabase database = GadiarioDatabase.getInstance(BovinesActivity.this);
 
-                            if (vaccines != null){
-                                bovine.setVaccines(List.of(vaccines));
-                            } else {
-                                bovine.setVaccines(null);
-                            }
+                            // agora a tela de cadastro salva no banco de dados sozinha, então pegar do banco
+                            // é trazer o objeto já alterado
+                            final Bovine bovineEdited = database.getBovinesDao().queryById(id);
+
+                            listBovines.set(positionSelected, bovineEdited);
 
                             sortList();
+
+                            final ConstraintLayout constraintLayout = findViewById(R.id.main);
+
+                            Snackbar snackbar = Snackbar.make( constraintLayout,
+                                    R.string.common_snackbar_dataUpdateDone,
+                                    Snackbar.LENGTH_LONG
+                            );
+
+                            snackbar.setAction(R.string.common_undo, new View.OnClickListener(){
+
+                                @Override
+                                public void onClick(View view){
+
+                                    // Ao clicar em undo, então é necessário fazer update no banco novamente
+                                    int updatedInstances = database.getBovinesDao().update(originalBovine);
+
+                                    if(updatedInstances != 1 ){
+                                        AlertUtils.showAlert(BovinesActivity.this,
+                                                R.string.common_alertDialog_dbErrorUpdate);
+                                        return;
+                                    }
+
+                                    // E nesse caso quem será removido é o objeto editado
+                                    listBovines.remove(bovineEdited);
+                                    listBovines.add(originalBovine);
+
+                                    sortList();
+                                }
+                            });
+
+                            snackbar.show();
                         }
                     }
                     positionSelected = -1;
@@ -349,22 +327,45 @@ public class BovinesActivity extends AppCompatActivity {
         Intent intentOpen = new Intent(this, BovineActivity.class);
         intentOpen.putExtra(BovineActivity.KEY_MODE, BovineActivity.MODE_EDIT);
 
-        // mapeia os dados do objeto para a intent
-        intentOpen.putExtra(BovineActivity.KEY_TAG, bovine.getTag());
-        intentOpen.putExtra(BovineActivity.KEY_NAME, bovine.getName());
-        intentOpen.putExtra(BovineActivity.KEY_BIRTH, bovine.getDate());
-        intentOpen.putExtra(BovineActivity.KEY_SEX, bovine.getAnimalSex().toString());
-        intentOpen.putExtra(BovineActivity.KEY_BREED, bovine.getBreed());
-        intentOpen.putExtra(BovineActivity.KEY_REPSTATUS, bovine.getRepStatus().toString());
-        intentOpen.putExtra(BovineActivity.KEY_VACCINES, bovine.getVaccines().toArray(new String[0]));
+        // passa apenas o ID para as operações no banco
+        intentOpen.putExtra(BovineActivity.KEY_ID, bovine.getId());
 
         launcherEditBovine.launch(intentOpen);
     }
 
     private void deleteBovine(){
-        listBovines.remove(positionSelected);
+        Bovine bovine = listBovines.get(positionSelected);
 
-        adapterBovine.notifyDataSetChanged();
+        String message = getString(R.string.common_confirmation_wantDelete, bovine.getName());
+
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // como o context foi passado, podemos tratar a lista dentro desse Listener como se
+                // fosse o méthod interno de BovinesACtivity.
+
+                // Apenas adiciona o delete do dabase também, mas sem excluir a ideia de apagar da lista em memória
+                GadiarioDatabase database = GadiarioDatabase.getInstance(BovinesActivity.this);
+
+                if (database.getBovinesDao().delete(bovine) != 1 ){
+                    AlertUtils.showAlert(BovinesActivity.this,
+                            R.string.common_alertDialog_dbErrorDelete);
+                    return;
+                }
+
+
+                listBovines.remove(positionSelected);
+
+                adapterBovine.notifyDataSetChanged();
+
+                // CORREÇÃO: Verifica se o actionMode não é nulo antes de finalizar
+                if (actionMode != null) {
+                    actionMode.finish();
+                }
+            }
+        };
+
+        AlertUtils.confirmAction(this, message, listenerYes, null);
     }
 
     // O callback cuida da gestão do menu de ação contextual
@@ -399,8 +400,7 @@ public class BovinesActivity extends AppCompatActivity {
                 return true;
             } else if (idMenuItem == R.id.contextMenuItem_Delete){
                 deleteBovine();
-                // fecha o menu
-                mode.finish();
+                // O actionMode será finalizado dentro do deleteBovine se confirmado
                 return true;
             } else{
                 return false;
@@ -461,6 +461,28 @@ public class BovinesActivity extends AppCompatActivity {
         } else {
             menuItemSorting.setIcon(R.drawable.ic_action_descending_order);
         }
+    }
+
+    private void confirmResetPreferences(){
+
+        DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                resetPreferences();
+                updateSortingIcon();
+                sortList();
+
+
+                Toast.makeText(BovinesActivity.this,
+                                R.string.common_toast_resetMessage,
+                                Toast.LENGTH_LONG)
+                        .show();
+            }
+        };
+
+        AlertUtils.confirmAction(this, getString(R.string.common_dialog_deleteConfirmation),
+                listenerYes, null);
+
     }
 
     private void resetPreferences(){
