@@ -10,7 +10,8 @@ import androidx.room.TypeConverters;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
-import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.Converters;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.EnumConverter;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.ListConverter;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.BovineDao;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.EventDao;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.PastureDao;
@@ -21,8 +22,8 @@ import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.PastureDao;
 * as entidades.
 * O version ajuda a controlar a versão do banco, facilitando a rastreabilidade das alterações
 * */
-@Database(entities = {Bovine.class, Pasture.class, Event.class}, version = 1, exportSchema = false)
-@TypeConverters({Converters.class})
+@Database(entities = {Bovine.class, Pasture.class, Event.class}, version = 1)
+@TypeConverters({ListConverter.class, EnumConverter.class})
 public abstract class GadiarioDatabase extends RoomDatabase {
 
     public abstract BovineDao getBovinesDao();
