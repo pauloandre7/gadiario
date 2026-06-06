@@ -5,7 +5,7 @@ import androidx.room.TypeConverter;
 import java.util.Arrays;
 import java.util.List;
 
-public class Converters {
+public class ListConverter {
 
     @TypeConverter
     public static String fromList(List<String> list){
