@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 1,
-    "identityHash": "bfcd3135f105c0e1e42b3af62e733f4e",
+    "version": 2,
+    "identityHash": "f09959ab39a46ca6d46f5b6b96e60e31",
     "entities": [
       {
         "tableName": "Bovine",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tag` TEXT NOT NULL, `name` TEXT, `date` TEXT, `animalSex` TEXT, `breed` TEXT, `vaccines` TEXT, `repStatus` TEXT, `idPasture` INTEGER NOT NULL, `idMother` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `tag` TEXT NOT NULL, `name` TEXT, `date` TEXT, `animalSex` INTEGER, `breed` TEXT, `vaccines` TEXT, `repStatus` INTEGER, `idPasture` INTEGER NOT NULL, `idMother` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "id",
@@ -35,7 +35,7 @@
           {
             "fieldPath": "animalSex",
             "columnName": "animalSex",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -53,7 +53,7 @@
           {
             "fieldPath": "repStatus",
             "columnName": "repStatus",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -132,7 +132,7 @@
       },
       {
         "tableName": "Event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idBovine` INTEGER NOT NULL, `type` TEXT, `qtyCalves` INTEGER NOT NULL, `idPastureOrigin` INTEGER NOT NULL, `idPastureDestination` INTEGER NOT NULL, `date` TEXT NOT NULL, `observation` TEXT)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `idBovine` INTEGER NOT NULL, `type` INTEGER, `qtyCalves` INTEGER NOT NULL, `idPastureOrigin` INTEGER NOT NULL, `idPastureDestination` INTEGER NOT NULL, `date` TEXT NOT NULL, `observation` TEXT)",
         "fields": [
           {
             "fieldPath": "id",
@@ -149,7 +149,7 @@
           {
             "fieldPath": "type",
             "columnName": "type",
-            "affinity": "TEXT",
+            "affinity": "INTEGER",
             "notNull": false
           },
           {
@@ -215,7 +215,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'bfcd3135f105c0e1e42b3af62e733f4e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f09959ab39a46ca6d46f5b6b96e60e31')"
     ]
   }
 }
