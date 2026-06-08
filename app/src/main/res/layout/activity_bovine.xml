@@ -193,5 +193,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/bov_reg_textViewStatus" />
 
+        <TextView
+            android:id="@+id/bov_reg_tvPasture"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/event_label_origin_pasture"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bov_spinnerRepStatus" />
+
+        <Spinner
+            android:id="@+id/bov_spinnerPasture"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bov_reg_tvPasture" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
