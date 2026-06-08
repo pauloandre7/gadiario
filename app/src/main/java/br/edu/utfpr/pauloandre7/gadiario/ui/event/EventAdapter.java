@@ -13,7 +13,9 @@ import androidx.annotation.RequiresApi;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class EventAdapter extends BaseAdapter {
@@ -74,8 +76,16 @@ public class EventAdapter extends BaseAdapter {
         
         holder.textViewDate.setText(LocalDateUtils.formatLocalDate(event.getDate()));
         
-        // todo: Verificar - Buscar o nome/tag do bovino real através do ID futuramente
-        holder.textViewBovineValue.setText("ID Bovine: " + event.getIdBovine());
+        // Busca o bovino no banco para exibir TAG e Nome
+        GadiarioDatabase database = GadiarioDatabase.getInstance(context);
+        Bovine bovine = database.getBovinesDao().queryById(event.getIdBovine());
+        
+        if (bovine != null) {
+            String bovineDisplay = bovine.getTag() + " - " + bovine.getName();
+            holder.textViewBovineValue.setText(bovineDisplay);
+        } else {
+            holder.textViewBovineValue.setText("ID Bovine: " + event.getIdBovine());
+        }
 
         // Lógica para preencher o detalhe baseado no tipo de evento
         String details = "";
