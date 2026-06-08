@@ -1,12 +1,12 @@
 package br.edu.utfpr.pauloandre7.gadiario.models;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -44,7 +44,7 @@ public class Bovine implements Cloneable{
     @ColumnInfo(index = true)
     private String tag;
     private String name;
-    private String date;
+    private LocalDate birth;
     private AnimalSex animalSex;
     private String breed;
 
@@ -58,11 +58,11 @@ public class Bovine implements Cloneable{
 
     // faz com que o room ignore este construtor e apenas utilize o outro
     @Ignore
-    public Bovine(String tag, String name, String date, AnimalSex animalSex,
+    public Bovine(String tag, String name, LocalDate birth, AnimalSex animalSex,
                   String breed, List<String> vaccines, ReproductiveStatus repStatus) {
         this.tag = tag;
         this.name = name;
-        this.date = date;
+        this.birth = birth;
         this.animalSex = animalSex;
         this.breed = breed;
         this.vaccines = vaccines;
@@ -71,12 +71,12 @@ public class Bovine implements Cloneable{
         this.idMother = 0;
     }
 
-    public Bovine(String tag, String name, String date, AnimalSex animalSex,
-                    String breed, List<String> vaccines, ReproductiveStatus repStatus,
-                    int idPasture, int idMother) {
+    public Bovine(String tag, String name, LocalDate birth, AnimalSex animalSex,
+                  String breed, List<String> vaccines, ReproductiveStatus repStatus,
+                  int idPasture, int idMother) {
         this.tag = tag;
         this.name = name;
-        this.date = date;
+        this.birth = birth;
         this.animalSex = animalSex;
         this.breed = breed;
         this.vaccines = vaccines;
@@ -109,12 +109,12 @@ public class Bovine implements Cloneable{
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public LocalDate getBirth() {
+        return birth;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setBirth(LocalDate birth) {
+        this.birth = birth;
     }
 
     public AnimalSex getAnimalSex() {
@@ -179,9 +179,13 @@ public class Bovine implements Cloneable{
         if (o == null || getClass() != o.getClass()) return false;
         Bovine bovine = (Bovine) o;
 
+        if (birth == null && bovine.getBirth() != null ) return false;
+
+        if ( birth != null && birth.equals(bovine.getBirth()) ) return false;
+
         return tag.equals(bovine.tag) &&
                 name.equals(bovine.name) &&
-                date.equals(bovine.date) &&
+                birth.equals(bovine.birth) &&
                 animalSex == bovine.animalSex &&
                 breed.equals(bovine.breed) &&
                 vaccines.equals(bovine.vaccines) &&
@@ -190,7 +194,7 @@ public class Bovine implements Cloneable{
 
     @Override
     public int hashCode() {
-        return Objects.hash(tag, name, date, animalSex, breed, vaccines, repStatus);
+        return Objects.hash(tag, name, birth, animalSex, breed, vaccines, repStatus);
     }
 
     @Override
@@ -200,7 +204,7 @@ public class Bovine implements Cloneable{
 
         return  tag + " | " +
                 name + " | " +
-                date + " | " +
+                birth + " | " +
                 animalSex + " | " +
                 breed + " | ";
     }
