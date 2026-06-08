@@ -1,16 +1,20 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class BovineAdapter extends BaseAdapter {
 
@@ -46,6 +50,7 @@ public class BovineAdapter extends BaseAdapter {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -75,7 +80,7 @@ public class BovineAdapter extends BaseAdapter {
         holder.textViewTagValue.setText(bovine.getTag());
         holder.textViewNameValue.setText(bovine.getName());
 
-        holder.textViewBirthValue.setText(bovine.getDate());
+        holder.textViewBirthValue.setText(LocalDateUtils.formatLocalDate(bovine.getBirth()));
         holder.textViewBreedValue.setText(bovine.getBreed());
 
         if (bovine.getAnimalSex() != null) {
