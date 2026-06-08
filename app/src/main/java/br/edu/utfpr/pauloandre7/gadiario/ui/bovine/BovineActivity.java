@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -29,6 +30,7 @@ import java.util.List;
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
@@ -53,7 +55,9 @@ public class BovineActivity extends AppCompatActivity {
     private EditText editTextTag, editTextName, editTextBovBirth, editTextVaccines;
     private RadioGroup radioGroupSex;
     private RadioButton radioButtonFemale, radioButtonMale;
-    private Spinner spinnerBreed, spinnerRepStatus;
+    private Spinner spinnerBreed, spinnerRepStatus, spinnerPasture;
+
+    private List<Pasture> pastures;
 
     private LocalDate bovBirth;
 
@@ -76,13 +80,14 @@ public class BovineActivity extends AppCompatActivity {
 
         editTextTag         = findViewById(R.id.editTextTag);
         editTextName        = findViewById(R.id.editTextName);
-        editTextBovBirth = findViewById(R.id.editTextBovBirth);
+        editTextBovBirth    = findViewById(R.id.editTextBovBirth);
         radioGroupSex       = findViewById(R.id.radioGroupSex);
         radioButtonFemale   = findViewById(R.id.radioBtnFemale);
         radioButtonMale     = findViewById(R.id.radioBtnMale);
         editTextVaccines    = findViewById(R.id.bov_editTextVaccines);
         spinnerBreed        = findViewById(R.id.bov_spinnerBreed);
         spinnerRepStatus    = findViewById(R.id.bov_spinnerRepStatus);
+        spinnerPasture      = findViewById(R.id.bov_spinnerPasture);
 
         //desabilita o editTextDate para usar somente picker
         editTextBovBirth.setFocusable(false);
@@ -96,6 +101,9 @@ public class BovineActivity extends AppCompatActivity {
 
         // Realiza a leitura das preferências na abertura da activity;
         readPreferences();
+
+        // Carrega os pastos do banco de dados
+        loadPasturesData();
 
         // recebe a intent que originou a activity
         Intent intentOpen = getIntent();
@@ -152,8 +160,18 @@ public class BovineActivity extends AppCompatActivity {
 
                 String[] statusArray = getResources().getStringArray(R.array.reproductiveStatus);
                 for(int i = 0; i < statusArray.length; i++){
-                    if(statusArray[i].equals(bovineOriginal.getRepStatus())){
+                    if(statusArray[i].equals(bovineOriginal.getRepStatus().toString())){
                         spinnerRepStatus.setSelection(i);
+                    }
+                }
+
+                // Seleciona o pasto correto no spinner
+                if (pastures != null) {
+                    for (int i = 0; i < pastures.size(); i++) {
+                        if (pastures.get(i).getId() == bovineOriginal.getIdPasture()) {
+                            spinnerPasture.setSelection(i);
+                            break;
+                        }
                     }
                 }
 
@@ -173,6 +191,15 @@ public class BovineActivity extends AppCompatActivity {
         }
 
         // fillSpinner();
+    }
+
+    private void loadPasturesData() {
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+        pastures = database.getPastureDao().queryAllAscending();
+
+        ArrayAdapter<Pasture> pastureAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, pastures);
+        pastureAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerPasture.setAdapter(pastureAdapter);
     }
 
     /* First Method to populate Spinner showed by teacher
@@ -223,7 +250,7 @@ public class BovineActivity extends AppCompatActivity {
             }
         };
 
-        if(bovBirth != null){
+        if(bovBirth == null){
             bovBirth = LocalDate.now();
         }
 
@@ -251,6 +278,7 @@ public class BovineActivity extends AppCompatActivity {
         final int radioButtonSex = radioGroupSex.getCheckedRadioButtonId();
         final int breed = spinnerBreed.getSelectedItemPosition();
         final int repStatus = spinnerRepStatus.getSelectedItemPosition();
+        final int pasture = spinnerPasture.getSelectedItemPosition();
 
         // Limpa os campos
         editTextTag.setText(null);
@@ -262,6 +290,7 @@ public class BovineActivity extends AppCompatActivity {
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
         spinnerRepStatus.setSelection(0);
+        spinnerPasture.setSelection(0);
 
 
         final ScrollView scrollView = findViewById(R.id.main);
@@ -286,13 +315,14 @@ public class BovineActivity extends AppCompatActivity {
                 if (radioButtonSex == R.id.radioBtnFemale){
 
                     radioButtonFemale.setChecked(true);
-                } else {
+                } else if (radioButtonSex == R.id.radioBtnMale) {
 
                     radioButtonMale.setChecked(true);
                 }
 
                 spinnerBreed.setSelection(breed);
                 spinnerRepStatus.setSelection(repStatus);
+                spinnerPasture.setSelection(pasture);
 
             }
         });
@@ -389,8 +419,20 @@ public class BovineActivity extends AppCompatActivity {
             AlertUtils.showAlert(this, R.string.reg_bov_toast_text_warningSpinnerEmpty);
         }
 
+        // Captura o ID do pasto selecionado
+        int idPasture = 0;
+        if (spinnerPasture.getSelectedItem() != null) {
+            idPasture = (int) ((Pasture) spinnerPasture.getSelectedItem()).getId();
+        }
+
+        // Preservamos o idMother como 0 por enquanto ou o valor original se estiver editando
+        int idMother = 0;
+        if (mode == MODE_EDIT && bovineOriginal != null) {
+            idMother = bovineOriginal.getIdMother();
+        }
+
         Bovine bovine = new Bovine(tag, name, date, animalSex, animalBreed,
-                    vaccinesList, repStatus_enum);
+                    vaccinesList, repStatus_enum, idPasture, idMother);
 
         if(bovine.equals(bovineOriginal)){
 
