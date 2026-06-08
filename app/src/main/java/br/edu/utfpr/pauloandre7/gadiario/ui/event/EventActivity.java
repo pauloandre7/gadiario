@@ -1,20 +1,25 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.event;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
@@ -24,6 +29,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.EventType;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
+import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class EventActivity extends AppCompatActivity {
 
@@ -40,7 +46,9 @@ public class EventActivity extends AppCompatActivity {
 
     private Event eventOriginal;
     private int mode;
+    private LocalDate dateSelected;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +62,10 @@ public class EventActivity extends AppCompatActivity {
         spinnerDestinationPasture   = findViewById(R.id.event_spinnerDestinationPasture);
         editTextObservations        = findViewById(R.id.event_etObservations);
 
+        // Desabilita digitação manual e configura o Picker
+        editTextDate.setFocusable(false);
+        editTextDate.setOnClickListener(v -> showDatePickerDialog());
+
         loadSpinnersData();
 
         Intent intentOpen = getIntent();
@@ -64,6 +76,8 @@ public class EventActivity extends AppCompatActivity {
 
             if (mode == MODE_NEW) {
                 setTitle(getString(R.string.event_reg_title));
+                dateSelected = LocalDate.now();
+                updateDateDisplay();
             } else if (mode == MODE_EDIT) {
                 setTitle(getString(R.string.event_reg_title)); // Pode ajustar se tiver string de edição
 
@@ -75,6 +89,36 @@ public class EventActivity extends AppCompatActivity {
                     fillFields();
                 }
             }
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showDatePickerDialog() {
+        DatePickerDialog.OnDateSetListener listener = (view, year, month, dayOfMonth) -> {
+            dateSelected = LocalDate.of(year, month + 1, dayOfMonth);
+            updateDateDisplay();
+        };
+
+        if (dateSelected == null) {
+            dateSelected = LocalDate.now();
+        }
+
+        DatePickerDialog picker = new DatePickerDialog(this,
+                listener,
+                dateSelected.getYear(),
+                dateSelected.getMonthValue() - 1,
+                dateSelected.getDayOfMonth()
+        );
+
+        // Impede a seleção de datas futuras, seguindo o padrão de Bovine
+        picker.getDatePicker().setMaxDate(LocalDateUtils.toMilliSeconds(LocalDate.now()));
+        picker.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void updateDateDisplay() {
+        if (dateSelected != null) {
+            editTextDate.setText(LocalDateUtils.formatLocalDate(dateSelected));
         }
     }
 
@@ -93,8 +137,11 @@ public class EventActivity extends AppCompatActivity {
         spinnerDestinationPasture.setAdapter(pastureAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void fillFields() {
-        editTextDate.setText(eventOriginal.getDate());
+        dateSelected = eventOriginal.getDate();
+        updateDateDisplay();
+        
         editTextQtyCalves.setText(String.valueOf(eventOriginal.getQtyCalves()));
         editTextObservations.setText(eventOriginal.getObservation());
 
@@ -126,10 +173,11 @@ public class EventActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void clearFields() {
         final int bovinePos = spinnerBovine.getSelectedItemPosition();
         final int typePos = spinnerType.getSelectedItemPosition();
-        final String date = editTextDate.getText().toString();
+        final LocalDate oldDate = dateSelected;
         final String qty = editTextQtyCalves.getText().toString();
         final int originPos = spinnerOriginPasture.getSelectedItemPosition();
         final int destPos = spinnerDestinationPasture.getSelectedItemPosition();
@@ -137,7 +185,8 @@ public class EventActivity extends AppCompatActivity {
 
         spinnerBovine.setSelection(0);
         spinnerType.setSelection(0);
-        editTextDate.setText(null);
+        dateSelected = LocalDate.now();
+        updateDateDisplay();
         editTextQtyCalves.setText("1");
         spinnerOriginPasture.setSelection(0);
         spinnerDestinationPasture.setSelection(0);
@@ -148,7 +197,8 @@ public class EventActivity extends AppCompatActivity {
         snackbar.setAction(R.string.common_undo, v -> {
             spinnerBovine.setSelection(bovinePos);
             spinnerType.setSelection(typePos);
-            editTextDate.setText(date);
+            dateSelected = oldDate;
+            updateDateDisplay();
             editTextQtyCalves.setText(qty);
             spinnerOriginPasture.setSelection(originPos);
             spinnerDestinationPasture.setSelection(destPos);
@@ -158,10 +208,8 @@ public class EventActivity extends AppCompatActivity {
     }
 
     public void saveValues() {
-        String date = editTextDate.getText().toString();
-        if (date.trim().isEmpty()) {
+        if (dateSelected == null) {
             AlertUtils.showAlert(this, R.string.event_reg_alertDialog_dateMissing);
-            editTextDate.requestFocus();
             return;
         }
 
@@ -172,7 +220,11 @@ public class EventActivity extends AppCompatActivity {
 
         long idBovine = ((Bovine) spinnerBovine.getSelectedItem()).getId();
         EventType type = EventType.valueOf(spinnerType.getSelectedItem().toString().toUpperCase());
-        int qtyCalves = Integer.parseInt(editTextQtyCalves.getText().toString());
+        
+        int qtyCalves = 0;
+        try {
+            qtyCalves = Integer.parseInt(editTextQtyCalves.getText().toString());
+        } catch (NumberFormatException ignored) {}
         
         long idPastOrigin = 0;
         if (spinnerOriginPasture.getSelectedItem() != null) {
@@ -186,7 +238,7 @@ public class EventActivity extends AppCompatActivity {
 
         String observations = editTextObservations.getText().toString();
 
-        Event event = new Event(idBovine, type, date, observations);
+        Event event = new Event(idBovine, type, dateSelected, observations);
         event.setQtyCalves(qtyCalves);
         event.setIdPastureOrigin(idPastOrigin);
         event.setIdPastureDestination(idPastDest);
@@ -218,6 +270,7 @@ public class EventActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();

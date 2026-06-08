@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -39,12 +40,12 @@ public class Event implements Cloneable {
 
     @NonNull
     @ColumnInfo(index = true)
-    private String date;
+    private LocalDate date;
 
     private String observation;
 
     @Ignore
-    public Event(long idBovine, EventType type, String date, String observation) {
+    public Event(long idBovine, EventType type, LocalDate date, String observation) {
         this.id = 0;
         this.idBovine = idBovine;
         this.type = type;
@@ -55,7 +56,7 @@ public class Event implements Cloneable {
         this.idPastureDestination = 0;
     }
 
-    public Event(long id, long idBovine, EventType type, int qtyCalves, long idPastureOrigin, long idPastureDestination, @NonNull String date, String observation) {
+    public Event(long id, long idBovine, EventType type, int qtyCalves, long idPastureOrigin, long idPastureDestination, @NonNull LocalDate date, String observation) {
         this.id = id;
         this.idBovine = idBovine;
         this.type = type;
@@ -115,11 +116,11 @@ public class Event implements Cloneable {
     }
 
     @NonNull
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(@NonNull String date) {
+    public void setDate(@NonNull LocalDate date) {
         this.date = date;
     }
 
