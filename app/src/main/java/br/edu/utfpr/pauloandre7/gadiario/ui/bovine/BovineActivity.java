@@ -1,24 +1,28 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.bovine;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +32,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
+import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class BovineActivity extends AppCompatActivity {
 
@@ -45,10 +50,12 @@ public class BovineActivity extends AppCompatActivity {
     public static final int MODE_EDIT = 1;
 
     // CLASS ATTRIBUTES
-    private EditText editTextTag, editTextName, editTextDate, editTextVaccines;
+    private EditText editTextTag, editTextName, editTextBovBirth, editTextVaccines;
     private RadioGroup radioGroupSex;
     private RadioButton radioButtonFemale, radioButtonMale;
     private Spinner spinnerBreed, spinnerRepStatus;
+
+    private LocalDate bovBirth;
 
     // Atributo para verificar mudanças no objeto original
     private Bovine bovineOriginal;
@@ -60,6 +67,8 @@ public class BovineActivity extends AppCompatActivity {
     private int     lastBreed = 0;
     private String  lastTag = "";
 
+    // O compilador me fez usar essa anotação para cessar o aviso no uso de LocalDate.
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,13 +76,23 @@ public class BovineActivity extends AppCompatActivity {
 
         editTextTag         = findViewById(R.id.editTextTag);
         editTextName        = findViewById(R.id.editTextName);
-        editTextDate        = findViewById(R.id.editTextDate);
+        editTextBovBirth = findViewById(R.id.editTextBovBirth);
         radioGroupSex       = findViewById(R.id.radioGroupSex);
         radioButtonFemale   = findViewById(R.id.radioBtnFemale);
         radioButtonMale     = findViewById(R.id.radioBtnMale);
         editTextVaccines    = findViewById(R.id.bov_editTextVaccines);
         spinnerBreed        = findViewById(R.id.bov_spinnerBreed);
         spinnerRepStatus    = findViewById(R.id.bov_spinnerRepStatus);
+
+        //desabilita o editTextDate para usar somente picker
+        editTextBovBirth.setFocusable(false);
+
+        editTextBovBirth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
 
         // Realiza a leitura das preferências na abertura da activity;
         readPreferences();
@@ -94,6 +113,8 @@ public class BovineActivity extends AppCompatActivity {
                     editTextTag.setText(lastTag);
                 }
 
+                bovBirth = LocalDate.now();
+
             } else if (mode == MODE_EDIT){
                 setTitle(getString(R.string.bov_edit_title));
 
@@ -108,7 +129,12 @@ public class BovineActivity extends AppCompatActivity {
 
                 editTextTag.setText(bovineOriginal.getTag());
                 editTextName.setText(bovineOriginal.getName());
-                editTextDate.setText(bovineOriginal.getDate());
+
+                bovBirth = bovineOriginal.getBirth();
+                if(bovBirth != null){
+                    editTextBovBirth.setText(LocalDateUtils.formatLocalDate(bovBirth));
+                }
+
                 if(animalSex_enum == AnimalSex.FEMALE){
                     radioButtonFemale.setChecked(true);
                 } else {
@@ -183,12 +209,44 @@ public class BovineActivity extends AppCompatActivity {
     }
     */
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void showDatePickerDialog(){
+
+        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                // month do date picker começa do 0, mas o LocalDate começa em 1. Então soma +1;
+                bovBirth = LocalDate.of(year, month + 1, dayOfMonth);
+                editTextBovBirth.setText(LocalDateUtils.formatLocalDate(bovBirth));
+            }
+        };
+
+        if(bovBirth != null){
+            bovBirth = LocalDate.now();
+        }
+
+        DatePickerDialog picker = new DatePickerDialog(this,
+                listener,
+                bovBirth.getYear(),
+                bovBirth.getMonthValue() - 1,
+                bovBirth.getDayOfMonth()
+        );
+
+        long dateMaxMillis = LocalDateUtils.toMilliSeconds(LocalDate.now());
+
+        picker.getDatePicker().setMaxDate(dateMaxMillis);
+        picker.show();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void clearFields(){
 
         // Define final para manter as variáveis mesmo após o término do méthod
         final String tag = editTextTag.getText().toString();
         final String name = editTextName.getText().toString();
-        final String birth = editTextDate.getText().toString();
+        final LocalDate birth = bovBirth;
         final String vaccines = editTextVaccines.getText().toString();
         final int radioButtonSex = radioGroupSex.getCheckedRadioButtonId();
         final int breed = spinnerBreed.getSelectedItemPosition();
@@ -197,7 +255,9 @@ public class BovineActivity extends AppCompatActivity {
         // Limpa os campos
         editTextTag.setText(null);
         editTextName.setText(null);
-        editTextDate.setText(null);
+        editTextBovBirth.setText(null);
+        bovBirth = LocalDate.now();
+
         editTextVaccines.setText(null);
         radioGroupSex.clearCheck();
         spinnerBreed.setSelection(0);
@@ -220,7 +280,7 @@ public class BovineActivity extends AppCompatActivity {
 
                 editTextTag.setText(tag);
                 editTextName.setText(name);
-                editTextDate.setText(birth);
+                editTextBovBirth.setText(LocalDateUtils.formatLocalDate(birth));
                 editTextVaccines.setText(vaccines);
 
                 if (radioButtonSex == R.id.radioBtnFemale){
@@ -251,7 +311,8 @@ public class BovineActivity extends AppCompatActivity {
     public void saveValues(){
         String tag          = editTextTag.getText().toString();
         String name         = editTextName.getText().toString();
-        String date         = editTextDate.getText().toString();
+        LocalDate date      = bovBirth;
+        String dateString   = editTextBovBirth.getText().toString();
         String vaccines     = editTextVaccines.getText().toString();
 
         if(tag == null || tag.trim().isEmpty()){
@@ -268,10 +329,9 @@ public class BovineActivity extends AppCompatActivity {
             return;
         }
 
-        if(date == null || date.trim().isEmpty()){
+        if(date == null || dateString.trim().isEmpty()){
             AlertUtils.showAlert(this, R.string.reg_bov_toast_text_birthMissing);
 
-            editTextDate.requestFocus();
             return;
         }
 
@@ -400,6 +460,7 @@ public class BovineActivity extends AppCompatActivity {
         return true;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
