@@ -13,6 +13,7 @@ import androidx.annotation.RequiresApi;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.AnimalSex;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
@@ -99,7 +100,10 @@ public class BovineAdapter extends BaseAdapter {
             }
         }
 
-        if (bovine.getRepStatus() != null) {
+        // Se for macho, mostra apenas "Macho" no status reprodutivo, ignorando o valor interno
+        if (bovine.getAnimalSex() == AnimalSex.MALE) {
+            holder.textViewRepStatusValue.setText(context.getString(R.string.reg_bov_text_male).toUpperCase());
+        } else if (bovine.getRepStatus() != null) {
             switch (bovine.getRepStatus()){
                 case LACTATING:
                     holder.textViewRepStatusValue.setText(R.string.bov_list_lactating);
