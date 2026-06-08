@@ -29,6 +29,7 @@ import java.util.Collections;
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
+import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.ui.bovine.BovinesActivity;
@@ -50,6 +51,9 @@ public class EventsActivity extends AppCompatActivity {
     public static final String KEY_ASCENDING_SORT_EVENT = "ASCENDING_SORT_EVENT";
 
     private MenuItem menuItemSorting;
+
+    // Atributo para salvar o estado do bovino antes da edição para o métod UNDO
+    private Bovine bovineBeforeEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +139,9 @@ public class EventsActivity extends AppCompatActivity {
                                 final GadiarioDatabase database = GadiarioDatabase.getInstance(EventsActivity.this);
                                 final Event eventEdited = database.getEventDao().queryById(id);
 
+                                // Guarda o estado original do bovino para o UNDO
+                                final Bovine originalBovineState = bovineBeforeEdit;
+
                                 listEvents.set(positionSelected, eventEdited);
                                 sortList();
 
@@ -143,6 +150,11 @@ public class EventsActivity extends AppCompatActivity {
                                 snackbar.setAction(R.string.common_undo, v -> {
                                     int updated = database.getEventDao().update(originalEvent);
                                     if (updated == 1) {
+                                        // Reverte o estado do bovino para o que era antes da edição
+                                        if (originalBovineState != null) {
+                                            database.getBovinesDao().update(originalBovineState);
+                                        }
+
                                         listEvents.remove(eventEdited);
                                         listEvents.add(originalEvent);
                                         sortList();
@@ -153,12 +165,18 @@ public class EventsActivity extends AppCompatActivity {
                         }
                     }
                     positionSelected = -1;
+                    bovineBeforeEdit = null;
                     if (actionMode != null) actionMode.finish();
                 }
             });
 
     private void editEvent() {
         Event event = listEvents.get(positionSelected);
+
+        // Antes de abrir a tela de edição, salva o estado atual do bovino para possibilitar o UNDO
+        GadiarioDatabase database = GadiarioDatabase.getInstance(this);
+        bovineBeforeEdit = database.getBovinesDao().queryById(event.getIdBovine());
+
         Intent intentOpen = new Intent(this, EventActivity.class);
         intentOpen.putExtra(EventActivity.KEY_MODE, EventActivity.MODE_EDIT);
         intentOpen.putExtra(EventActivity.KEY_ID, event.getId());
