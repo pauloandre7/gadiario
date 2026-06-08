@@ -1,16 +1,20 @@
 package br.edu.utfpr.pauloandre7.gadiario.ui.event;
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.RequiresApi;
+
 import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
+import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class EventAdapter extends BaseAdapter {
 
@@ -44,6 +48,7 @@ public class EventAdapter extends BaseAdapter {
         return 0;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         EventHolder holder;
@@ -66,7 +71,8 @@ public class EventAdapter extends BaseAdapter {
         Event event = listEvents.get(position);
 
         holder.textViewType.setText(event.getType().toString());
-        holder.textViewDate.setText(event.getDate());
+        
+        holder.textViewDate.setText(LocalDateUtils.formatLocalDate(event.getDate()));
         
         // todo: Verificar - Buscar o nome/tag do bovino real através do ID futuramente
         holder.textViewBovineValue.setText("ID Bovine: " + event.getIdBovine());
