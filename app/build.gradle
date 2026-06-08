@@ -35,6 +35,9 @@ android {
         }
     }
     compileOptions {
+
+        coreLibraryDesugaringEnabled true;
+
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
@@ -47,6 +50,10 @@ dependencies {
     implementation "androidx.room3:room3-runtime:$room_version"
     annotationProcessor "androidx.room3:room3-compiler:$room_version"
     */
+
+    /* Essa biblioteca realiza o Desugaring do código para versões mais básicas do Java, ou seja,
+    * traduz instruções de versões mais novas para mais antigas, permitindo maior compatibilidade.*/
+    coreLibraryDesugaring libs.desugar.jdk.libs
 
     // Esse é o jeito de centralizar as versões no arquivo Tom para deixar apenas as declarações
     // aqui neste arquivo. Assim as versões ficam em um e as declarações ficam aqui.
