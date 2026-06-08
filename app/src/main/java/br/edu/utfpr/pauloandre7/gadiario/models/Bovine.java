@@ -176,12 +176,14 @@ public class Bovine implements Cloneable{
     // métodos equals e hash implementados pelo java
     @Override
     public boolean equals(Object o) {
+        if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
         Bovine bovine = (Bovine) o;
 
         if (birth == null && bovine.getBirth() != null ) return false;
 
-        if ( birth != null && birth.equals(bovine.getBirth()) ) return false;
+        if ( birth != null && !birth.equals(bovine.getBirth()) ) return false;
 
         return tag.equals(bovine.tag) &&
                 name.equals(bovine.name) &&
@@ -199,9 +201,6 @@ public class Bovine implements Cloneable{
 
     @Override
     public String toString() {
-
-        String sexString;
-
         return  tag + " | " +
                 name + " | " +
                 birth + " | " +
