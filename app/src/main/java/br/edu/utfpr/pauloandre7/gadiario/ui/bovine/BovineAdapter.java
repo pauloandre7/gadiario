@@ -14,6 +14,8 @@ import java.util.List;
 
 import br.edu.utfpr.pauloandre7.gadiario.R;
 import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
+import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
 
 public class BovineAdapter extends BaseAdapter {
@@ -33,6 +35,7 @@ public class BovineAdapter extends BaseAdapter {
         public TextView textViewBreedValue;
         public TextView textViewVaccineValue;
         public TextView textViewRepStatusValue;
+        public TextView textViewPastureValue;
     }
 
     @Override
@@ -69,6 +72,7 @@ public class BovineAdapter extends BaseAdapter {
             holder.textViewBreedValue = convertView.findViewById(R.id.line_bov_textView_breedValue);
             holder.textViewVaccineValue = convertView.findViewById(R.id.line_bov_textView_vaccineValue);
             holder.textViewRepStatusValue = convertView.findViewById(R.id.line_bov_textView_repStatusValue);
+            holder.textViewPastureValue = convertView.findViewById(R.id.line_bov_textView_pastureValue);
 
             convertView.setTag(holder);
         } else {
@@ -126,6 +130,14 @@ public class BovineAdapter extends BaseAdapter {
             }
         }
 
+        // Busca o nome do pasto no banco de dados para exibição
+        GadiarioDatabase database = GadiarioDatabase.getInstance(context);
+        Pasture pasture = database.getPastureDao().queryById(bovine.getIdPasture());
+        if (pasture != null) {
+            holder.textViewPastureValue.setText(pasture.getName());
+        } else {
+            holder.textViewPastureValue.setText("N/A");
+        }
 
         return convertView;
     }
