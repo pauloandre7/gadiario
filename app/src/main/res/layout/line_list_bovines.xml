@@ -24,7 +24,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_tag" />
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_tag"
+        tools:text="123" />
 
     <TextView
         android:id="@+id/line_bov_textView_name"
@@ -37,6 +38,18 @@
         app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_tag" />
 
     <TextView
+        android:id="@+id/line_bov_textView_NameValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_name"
+        tools:text="Mimosa" />
+
+    <TextView
         android:id="@+id/line_bov_textView_genre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -45,6 +58,18 @@
         android:text="@string/bov_list_sexValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_name" />
+
+    <TextView
+        android:id="@+id/line_bov_textView_genreValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_genre"
+        tools:text="Fêmea" />
 
     <TextView
         android:id="@+id/line_bov_textView_birth"
@@ -57,6 +82,18 @@
         app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_genre" />
 
     <TextView
+        android:id="@+id/line_bov_textView_birthValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_birth"
+        tools:text="01/01/2020" />
+
+    <TextView
         android:id="@+id/line_bov_textView_breed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -65,6 +102,18 @@
         android:text="@string/bov_list_breedValue"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_birth" />
+
+    <TextView
+        android:id="@+id/line_bov_textView_breedValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_breed"
+        tools:text="Nelore" />
 
     <TextView
         android:id="@+id/line_bov_textView_vaccine"
@@ -77,60 +126,16 @@
         app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_breed" />
 
     <TextView
-        android:id="@+id/line_bov_textView_NameValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_name" />
-
-    <TextView
-        android:id="@+id/line_bov_textView_genreValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_genre" />
-
-    <TextView
-        android:id="@+id/line_bov_textView_birthValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_birth" />
-
-    <TextView
-        android:id="@+id/line_bov_textView_breedValue"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_breed" />
-
-    <TextView
         android:id="@+id/line_bov_textView_vaccineValue"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_breedValue" />
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_vaccine"
+        tools:text="Febre Aftosa" />
 
     <TextView
         android:id="@+id/line_bov_textView_repStatus"
@@ -138,12 +143,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="16dp"
         android:text="@string/line_bov_label_repStatus"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_vaccine"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_vaccine" />
 
     <TextView
         android:id="@+id/line_bov_textView_repStatusValue"
@@ -154,5 +156,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
-        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_repStatus" />
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_repStatus"
+        tools:text="Vazia" />
+
+    <TextView
+        android:id="@+id/line_bov_textView_pasture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/event_label_origin_pasture"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line_bov_textView_repStatus" />
+
+    <TextView
+        android:id="@+id/line_bov_textView_pastureValue"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/line_bov_textView_repStatus"
+        app:layout_constraintTop_toTopOf="@+id/line_bov_textView_pasture"
+        tools:text="Pasto Principal" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
