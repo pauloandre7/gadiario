@@ -105,4 +105,8 @@
     <string name="common_alertDialog_dbErrorInsert">Erro ao tentar inserir!</string>
     <string name="common_alertDialog_dbErrorUpdate">Erro ao tentar atualizar!</string>
     <string name="common_alertDialog_dbErrorDelete">Erro ao tentar excluir!</string>
+    <string name="event_reg_alertDialog_dateMissing">Data do evento não informada!</string>
+    <string name="event_reg_toast_stateChangedPregnant">" alterou o estado para PRENHA"</string>
+    <string name="event_reg_toast_pastureChanged">" movido para novo pasto"</string>
+    <string name="event_reg_toast_stateChangedLactating">" alterou o estado para LACTANTE"</string>
 </resources>

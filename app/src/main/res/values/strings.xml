@@ -111,4 +111,7 @@
     <string name="common_alertDialog_dbErrorUpdate">Error trying to update!</string>
     <string name="common_alertDialog_dbErrorDelete">Error trying to delete!</string>
     <string name="event_reg_alertDialog_dateMissing">Event date missing!</string>
+    <string name="event_reg_toast_stateChangedPregnant">" changed State to Pregnant"</string>
+    <string name="event_reg_toast_pastureChanged">" moved to new Pasture"</string>
+    <string name="event_reg_toast_stateChangedLactating">" changed State to Lactating"</string>
 </resources>
