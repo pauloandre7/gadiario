@@ -12,6 +12,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.Event;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.EnumConverter;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.ListConverter;
+import br.edu.utfpr.pauloandre7.gadiario.persistence.converters.LocalDateConverter;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.BovineDao;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.EventDao;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.PastureDao;
@@ -22,8 +23,8 @@ import br.edu.utfpr.pauloandre7.gadiario.persistence.dao.PastureDao;
 * as entidades.
 * O version ajuda a controlar a versão do banco, facilitando a rastreabilidade das alterações
 * */
-@Database(entities = {Bovine.class, Pasture.class, Event.class}, version = 2)
-@TypeConverters({ListConverter.class, EnumConverter.class})
+@Database(entities = {Bovine.class, Pasture.class, Event.class}, version = 3)
+@TypeConverters({ListConverter.class, EnumConverter.class, LocalDateConverter.class})
 public abstract class GadiarioDatabase extends RoomDatabase {
 
     public abstract BovineDao getBovinesDao();
@@ -65,6 +66,7 @@ public abstract class GadiarioDatabase extends RoomDatabase {
                     // builder.fallbackToDestructiveMigration();
 
                     builder.addMigrations(new Migrate_1_2());
+                    builder.addMigrations(new Migrate_2_3());
 
                     INSTANCE = (GadiarioDatabase) builder.build();
                 }
