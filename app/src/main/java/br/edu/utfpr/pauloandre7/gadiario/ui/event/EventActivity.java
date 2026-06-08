@@ -12,6 +12,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,6 +28,7 @@ import br.edu.utfpr.pauloandre7.gadiario.models.Bovine;
 import br.edu.utfpr.pauloandre7.gadiario.models.Event;
 import br.edu.utfpr.pauloandre7.gadiario.models.EventType;
 import br.edu.utfpr.pauloandre7.gadiario.models.Pasture;
+import br.edu.utfpr.pauloandre7.gadiario.models.ReproductiveStatus;
 import br.edu.utfpr.pauloandre7.gadiario.persistence.GadiarioDatabase;
 import br.edu.utfpr.pauloandre7.gadiario.utils.AlertUtils;
 import br.edu.utfpr.pauloandre7.gadiario.utils.LocalDateUtils;
@@ -37,6 +39,11 @@ public class EventActivity extends AppCompatActivity {
     public static final String KEY_MODE = "MODE";
     public static final int MODE_NEW = 0;
     public static final int MODE_EDIT = 1;
+
+    // Chaves para retornar o estado anterior do bovino para o métod UNDO
+    public static final String KEY_BOVINE_PREV_ID = "BOVINE_PREV_ID";
+    public static final String KEY_BOVINE_PREV_STATUS = "BOVINE_PREV_STATUS";
+    public static final String KEY_BOVINE_PREV_PASTURE = "BOVINE_PREV_PASTURE";
 
     private Spinner spinnerBovine, spinnerType, spinnerOriginPasture, spinnerDestinationPasture;
     private EditText editTextDate, editTextQtyCalves, editTextObservations;
@@ -207,6 +214,7 @@ public class EventActivity extends AppCompatActivity {
         snackbar.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void saveValues() {
         if (dateSelected == null) {
             AlertUtils.showAlert(this, R.string.event_reg_alertDialog_dateMissing);
@@ -219,7 +227,9 @@ public class EventActivity extends AppCompatActivity {
         }
 
         long idBovine = ((Bovine) spinnerBovine.getSelectedItem()).getId();
-        EventType type = EventType.valueOf(spinnerType.getSelectedItem().toString().toUpperCase());
+        
+        // Obter o tipo do enum pela posição do spinner para evitar erros com traduções
+        EventType type = EventType.values()[spinnerType.getSelectedItemPosition()];
         
         int qtyCalves = 0;
         try {
@@ -258,8 +268,57 @@ public class EventActivity extends AppCompatActivity {
             event.setId(newId);
         }
 
+        // Lógica para atualizar o Bovino com base no tipo de evento
+        Bovine bovine = database.getBovinesDao().queryById(idBovine);
+        
+        long prevBovineId = -1;
+        int prevStatusOrdinal = -1;
+        int prevPastureId = -1;
+
+        if (bovine != null) {
+            // SALVA O ESTADO ANTERIOR PARA O MÉTOD UNDO NA LISTAGEM
+            prevBovineId = bovine.getId();
+            prevStatusOrdinal = bovine.getRepStatus().ordinal();
+            prevPastureId = bovine.getIdPasture();
+
+            boolean changed = false;
+            String toastMsg = "";
+
+            // modifica o status do animal de acordo com o Tipo de Evento (implementado para os mais básicos inicialmente)
+            switch (type) {
+                case INSEMINATION:
+                    bovine.setRepStatus(ReproductiveStatus.PREGNANT);
+                    changed = true;
+                    toastMsg = bovine.getName() + getString(R.string.event_reg_toast_stateChangedPregnant);
+                    break;
+                case MOVEMENT:
+                    bovine.setIdPasture((int) idPastDest);
+                    changed = true;
+                    toastMsg = bovine.getName() + getString(R.string.event_reg_toast_pastureChanged);
+                    break;
+                case CALVING:
+                    bovine.setRepStatus(ReproductiveStatus.LACTATING);
+                    changed = true;
+                    toastMsg = bovine.getName() + getString(R.string.event_reg_toast_stateChangedLactating);
+                    break;
+            }
+
+            if (changed) {
+                database.getBovinesDao().update(bovine);
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
+        }
+
         Intent intentResult = new Intent();
         intentResult.putExtra(KEY_ID, event.getId());
+        
+        // Retorna os dados para reversão do bovino caso o usuário clique em UNDO na listagem
+        if (prevBovineId != -1) {
+            intentResult.putExtra(KEY_BOVINE_PREV_ID, prevBovineId);
+            intentResult.putExtra(KEY_BOVINE_PREV_STATUS, prevStatusOrdinal);
+            intentResult.putExtra(KEY_BOVINE_PREV_PASTURE, prevPastureId);
+        }
+
         setResult(RESULT_OK, intentResult);
         finish();
     }
